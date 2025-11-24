@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@scarf/scarf'
+  - esbuild
+  - unrs-resolver
+  - vue-demi
