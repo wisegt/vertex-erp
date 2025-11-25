@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { LngLatLike } from 'mapbox-gl'
 import mapboxgl from 'mapbox-gl'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay } from 'vuetify'
 import fleetImg from '@images/misc/fleet-car.png'
@@ -10,7 +10,7 @@ import fleetImg from '@images/misc/fleet-car.png'
 const { isLeftSidebarOpen } = useResponsiveLeftSidebar()
 
 const accessToken = useRuntimeConfig().public.mapboxAccessToken
-const map = ref()
+const map = ref<mapboxgl.Map | null>(null)
 
 const vuetifyDisplay = useDisplay()
 

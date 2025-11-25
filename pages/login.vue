@@ -149,10 +149,10 @@ const onSubmit = () => {
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Welcome to <span class="text-capitalize">{{ themeConfig.app.title }}!</span> 👋🏻
+            Bienvenidos a <span class="text-capitalize">{{ themeConfig.app.title }}!</span> 👋🏻
           </h4>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Por favor ingresa con tu cuenta y que empiece la aventura
           </p>
         </VCardText>
         <VCardText>
@@ -205,13 +205,13 @@ const onSubmit = () => {
                 <div class="d-flex align-center flex-wrap justify-space-between my-5 gap-2">
                   <VCheckbox
                     v-model="rememberMe"
-                    label="Remember me"
+                    label="Recordarme"
                   />
                   <NuxtLink
                     class="text-primary"
                     :to="{ name: 'forgot-password' }"
                   >
-                    Forgot Password?
+                    ¿Olvidaste tu contraseña?
                   </NuxtLink>
                 </div>
 
@@ -228,11 +228,11 @@ const onSubmit = () => {
                 cols="12"
                 class="text-center text-base"
               >
-                <span>New on our platform?</span> <NuxtLink
+                <span>¿Nuevo en la plataforma?</span> <NuxtLink
                   class="text-primary d-inline-block"
                   :to="{ name: 'register' }"
                 >
-                  Create an account
+                  Crea tu cuenta
                 </NuxtLink>
               </VCol>
               <VCol

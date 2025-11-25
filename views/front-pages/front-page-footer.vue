@@ -35,7 +35,7 @@ const menus: Menu[] = [
               <div class="d-flex align-center gap-x-3 mb-6">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <div class="footer-title">
-                  MATERIO
+                  VERTEX
                 </div>
               </div>
               <div class="text-body-1 footer-text mb-6">
@@ -175,22 +175,21 @@ const menus: Menu[] = [
           <span class="d-flex align-center">
             &copy;
 
-            {{ new Date().getFullYear() }},
-            Made with ❤️  by <a
-              href="https://themeselection.com"
+            {{ new Date().getFullYear() }}.
+            Hecho con ❤️ por <a
+              href="https://waisconsultores.io"
               target="_blank"
               rel="noopener noreferrer"
               class="ms-1 font-weight-medium"
               style="color: rgba(255, 255, 255, var(--v-high-emphasis-opacity));"
-            >ThemeSelection</a>
+            >Wais Consultores</a>
           </span>
           <div class="d-flex gap-x-2">
             <template
               v-for="(item, index) in [
-                { title: 'github', icon: 'bxl-github', href: 'https://github.com/themeselection' },
-                { title: 'facebook', icon: 'bxl-facebook', href: 'https://www.facebook.com/ThemeSelections/' },
-                { title: 'twitter', icon: 'bxl-twitter', href: 'https://twitter.com/Theme_Selection' },
-                { title: 'instagram', icon: 'bxl-linkedin', href: 'https://in.linkedin.com/company/themeselection' },
+                { title: 'facebook', icon: 'bxl-facebook', href: 'https://www.facebook.com/' },
+                { title: 'twitter', icon: 'bxl-twitter', href: 'https://twitter.com/' },
+                { title: 'instagram', icon: 'bxl-linkedin', href: 'https://in.linkedin.com/' },
               ]"
               :key="index"
             >

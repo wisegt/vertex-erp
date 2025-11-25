@@ -3,39 +3,35 @@
     <!-- 👉 Footer: left content -->
     <span class="d-flex align-center">
       &copy;
-      {{ new Date().getFullYear() }}
-      Made With
+      {{ new Date().getFullYear() }}.
+      Hecho con
       <VIcon
         icon="ri-heart-line"
         color="error"
         size="1.25rem"
         class="mx-1"
       />
-      By <a
-        href="https://themeselection.com"
+      por <a
+        href="https://waisconsultores.io"
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary ms-1"
-      >ThemeSelection</a>
+      >Wais Consultores</a>
     </span>
     <!-- 👉 Footer: right content -->
     <span class="d-md-flex gap-x-4 text-primary d-none">
       <a
-        href="https://themeselection.com/license/"
+        href="#"
         target="noopener noreferrer"
-      >License</a>
+      >Licencia</a>
       <a
-        href="https://themeselection.com/"
+        href="#"
         target="noopener noreferrer"
-      >More Themes</a>
+      >Documentación</a>
       <a
-        href="https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/documentation/"
+        href="#"
         target="noopener noreferrer"
-      >Documentation</a>
-      <a
-        href="https://themeselection.com/support/"
-        target="noopener noreferrer"
-      >Support</a>
+      >Soporte</a>      
     </span>
   </div>
 </template>

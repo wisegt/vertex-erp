@@ -6,8 +6,8 @@ import vuetify from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   app: {
     head: {
-      titleTemplate: '%s - NuxtJS Admin Template',
-      title: 'Materio',
+      titleTemplate: '%s - Plataforma de Recursos Empresariales',
+      title: 'VERTEX',
 
       link: [{
         rel: 'icon',

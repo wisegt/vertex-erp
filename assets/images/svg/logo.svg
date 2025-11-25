@@ -1,0 +1,52 @@
+<svg width="800" height="900" viewBox="0 0 800 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Definición de gradientes -->
+  <defs>
+    <linearGradient id="gradV" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F6FF"/>
+      <stop offset="100%" stop-color="#14A8FF"/>
+    </linearGradient>
+
+    <filter id="neon" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feBlend in="SourceGraphic" in2="blur" mode="screen"/>
+    </filter>
+  </defs>
+
+  <!-- Fondo opcional (lo podés quitar) -->
+  <rect width="800" height="900" fill="#0E0A25"/>
+
+  <!-- Hexágono (stroke glow) -->
+  <path d="M400 180 L540 260 L540 420 L400 500 L260 420 L260 260 Z"
+        stroke="url(#gradV)"
+        stroke-width="18"
+        fill="none"
+        filter="url(#neon)"/>
+
+  <!-- Letra V interna -->
+  <path d="M340 250 L380 450 L420 450 L460 250 L425 250 L400 390 L375 250 Z"
+        fill="url(#gradV)"
+        filter="url(#neon)"/>
+
+  <!-- Título VERTEX -->
+  <text x="400" y="630"
+        font-family="Montserrat, Helvetica, Arial"
+        font-size="90"
+        fill="url(#gradV)"
+        text-anchor="middle"
+        filter="url(#neon)">
+        VERTEX
+  </text>
+
+  <!-- Subtítulo ERP -->
+  <text x="400" y="710"
+        font-family="Montserrat, Helvetica, Arial"
+        font-size="60"
+        fill="url(#gradV)"
+        text-anchor="middle"
+        letter-spacing="8"
+        filter="url(#neon)">
+        ERP
+  </text>
+
+</svg>
