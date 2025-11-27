@@ -39,6 +39,10 @@
 
 import type { User as NextAuthUser } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import FacebookProvider from 'next-auth/providers/facebook'
+import GoogleProvider from 'next-auth/providers/google'
+
+// import AppleProvider from 'next-auth/providers/apple' // Descomentar cuando tengas credenciales de Apple
 import { NuxtAuthHandler } from '#auth'
 
 // CAMBIO 1: Importación directa de la base de datos en lugar de hacer petición HTTP
@@ -69,11 +73,34 @@ interface ExtendedUser extends NextAuthUser {
 export default NuxtAuthHandler({
   secret: process.env.AUTH_SECRET, // Secreto para firmar tokens JWT
   providers: [
+    // ============================================================================
+    // PROVEEDORES SOCIALES
+    // ============================================================================
 
-    // GoogleProvider.default({
-    //   clientId: runtimeConfig.public.AUTH_PROVIDER_GOOGLE_CLIENT_ID,
-    //   clientSecret: runtimeConfig.AUTH_PROVIDER_GOOGLE_CLIENT_SECRET,
+    // 🔵 Google Provider
+    // @ts-expect-error SSR compatibility fix
+    GoogleProvider.default({
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    }),
+
+    // 🔵 Facebook Provider
+    // @ts-expect-error SSR compatibility fix
+    FacebookProvider.default({
+      clientId: process.env.FACEBOOK_CLIENT_ID || '',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
+    }),
+
+    // 🍎 Apple Provider (descomentar cuando tengas credenciales)
+    // @ts-expect-error SSR compatibility fix
+    // AppleProvider.default({
+    //   clientId: process.env.APPLE_ID || '',
+    //   clientSecret: process.env.APPLE_SECRET || '',
     // }),
+
+    // ============================================================================
+    // CREDENCIALES (Email/Password)
+    // ============================================================================
 
     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
     CredentialsProvider.default({

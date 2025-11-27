@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+/* eslint-enable @typescript-eslint/ban-ts-comment */
 import AnalyticsAward from '@/views/dashboards/analytics/AnalyticsAward.vue'
 import AnalyticsDepositWithdraw from '@/views/dashboards/analytics/AnalyticsDepositWithdraw.vue'
 import AnalyticsPerformance from '@/views/dashboards/analytics/AnalyticsPerformance.vue'
@@ -127,5 +130,6 @@ const newProject = {
 </template>
 
 <style lang="scss">
+/* stylelint-disable scss/load-partial-extension */
 @use "@core/scss/template/libs/apex-chart.scss";
 </style>

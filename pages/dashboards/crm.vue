@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+/* eslint-enable @typescript-eslint/ban-ts-comment */
 import CrmActivityTimeline from '@/views/dashboards/crm/CrmActivityTimeline.vue'
 import CrmDeveloperMeetup from '@/views/dashboards/crm/CrmDeveloperMeetup.vue'
 import CrmMeetingSchedule from '@/views/dashboards/crm/CrmMeetingSchedule.vue'

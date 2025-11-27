@@ -1,4 +1,9 @@
 {
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.validate.enable": false,
+  "vue.server.hybridMode": "typeScriptPluginOnly",
+  "vue.inlayHints.missingProps": false,
+  "vue.server.diagnosticModel": "syntactic",
   "editor.formatOnSave": true,
   "files.insertFinalNewline": true,
   "javascript.updateImportsOnFileMove.enabled": "always",

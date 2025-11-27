@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
-import svgLoader from 'vite-svg-loader'
 import vuetify from 'vite-plugin-vuetify'
+import svgLoader from 'vite-svg-loader'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -36,10 +36,22 @@ export default defineNuxtConfig({
     AUTH_ORIGIN: process.env.AUTH_ORIGIN,
     AUTH_SECRET: process.env.AUTH_SECRET,
 
+    // Social Auth Providers (server-side only - secrets)
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+    FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+    APPLE_ID: process.env.APPLE_ID,
+    APPLE_SECRET: process.env.APPLE_SECRET,
+
     // Public keys that are exposed to the client.
     public: {
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+
+      // Supabase
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
     },
   },
   components: {
@@ -59,11 +71,15 @@ export default defineNuxtConfig({
   },
 
   auth: {
-    baseURL: process.env.AUTH_ORIGIN,
+    // baseURL: URL completa donde está la API de auth (incluyendo /api/auth)
+    // En .env debe ser: AUTH_ORIGIN=https://tudominio.com/api/auth (producción)
+    // o AUTH_ORIGIN=http://localhost:3000/api/auth (desarrollo)
+    baseURL: process.env.AUTH_ORIGIN || 'http://localhost:3000/api/auth',
     globalAppMiddleware: false,
 
     provider: {
       type: 'authjs',
+      addDefaultCallbackUrl: true,
     },
   },
 
