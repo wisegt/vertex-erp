@@ -201,4 +201,12 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
   ],
+
+  // Configuración de Nitro para compatibilidad con módulos ESM
+  nitro: {
+    // Externalizar @supabase/supabase-js para evitar problemas de ESM
+    externals: {
+      inline: ['@supabase/supabase-js'],
+    },
+  },
 })
