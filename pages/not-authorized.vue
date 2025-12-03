@@ -19,8 +19,8 @@ definePageMeta({
   <div class="misc-wrapper">
     <ErrorHeader
       status-code="401"
-      title="You are not authorized! 🔐"
-      description="You don't have permission to access this page. Go Home!"
+      title="No tienes autorización 🔐"
+      description="No tienes permisos para acceder a esta página. Regresa a Inicio."
       class="mb-10"
     />
 
@@ -28,7 +28,7 @@ definePageMeta({
     <div class="misc-avatar w-100 text-center">
       <VImg
         :src="pages401"
-        alt="Coming Soon"
+        alt="Muy pronto"
         :max-width="785"
         :height="500"
         class="mx-auto"
@@ -38,7 +38,7 @@ definePageMeta({
         class="mt-10"
         style="z-index: 1;"
       >
-        Back to Home
+        Regresar a Inicio
       </VBtn>
 
       <div class="d-md-flex gap-x-2 misc-footer-tree d-none">
