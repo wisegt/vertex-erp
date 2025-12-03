@@ -1,5 +1,5 @@
-import type { RouteRecordRaw } from 'vue-router'
 import type { RouterConfig } from '@nuxt/schema'
+import type { RouteRecordRaw } from 'vue-router'
 
 const emailRouteComponent = () => import('@/pages/apps/email/index.vue')
 
@@ -16,10 +16,13 @@ const redirects: RouteRecordRaw[] = [
 
         const userRole = sessionData.value?.user.role
 
-        if (userRole === 'admin')
+        // Roles de Supabase: SUPER_ADMIN, ADMIN, ACCOUNTANT, SALES, etc.
+        if (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN')
           return { name: 'dashboards-crm' }
-        if (userRole === 'client')
-          return { name: 'access-control' }
+        if (userRole === 'ACCOUNTANT' || userRole === 'ACCOUNTING_ASSISTANT')
+          return { name: 'dashboards-crm' }
+        if (userRole)
+          return { name: 'dashboards-crm' }
 
         return { name: 'login', query: to.query }
       },

@@ -12,7 +12,7 @@ import PricingPlans from '@/views/front-pages/landing-page/pricing-plans.vue'
 import ProductStats from '@/views/front-pages/landing-page/product-stats.vue'
 import { useConfigStore } from '@core/stores/config'
 
-const store = useConfigStore()  
+const store = useConfigStore()
 
 store.skin = 'default'
 definePageMeta({

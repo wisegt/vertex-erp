@@ -31,9 +31,8 @@ const testConnection = async () => {
     // Verificar conexión con auth
     const { error: pingError } = await supabase.auth.getSession()
 
-    if (pingError && !pingError.message.includes('session')) {
+    if (pingError && !pingError.message.includes('session'))
       throw pingError
-    }
 
     connectionStatus.value = 'success'
   }
@@ -166,7 +165,7 @@ onMounted(() => {
                     </template>
                     <VListItemTitle>Anon Key</VListItemTitle>
                     <VListItemSubtitle>
-                      {{ useRuntimeConfig().public.supabaseAnonKey ? '••••••••' + useRuntimeConfig().public.supabaseAnonKey.slice(-8) : 'No configurada' }}
+                      {{ useRuntimeConfig().public.supabaseAnonKey ? `••••••••${useRuntimeConfig().public.supabaseAnonKey.slice(-8)}` : 'No configurada' }}
                     </VListItemSubtitle>
                   </VListItem>
                 </VList>
@@ -331,4 +330,3 @@ onMounted(() => {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 </style>
-

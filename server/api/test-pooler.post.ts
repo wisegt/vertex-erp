@@ -12,7 +12,7 @@ import { Pool } from 'pg'
  *   password: string
  * }
  */
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   // Solo permitir POST
   if (event.node.req.method !== 'POST') {
     throw createError({
@@ -64,12 +64,14 @@ export default defineEventHandler(async (event) => {
   try {
     // Probar conexión
     const client = await pool.connect()
+
     connectionTime = Date.now() - startTime
 
     try {
       // Ejecutar query de prueba
       const queryStartTime = Date.now()
       const result = await client.query('SELECT version(), current_database(), current_user, NOW() as server_time')
+
       queryTime = Date.now() - queryStartTime
 
       serverVersion = result.rows[0].version
@@ -133,4 +135,3 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
-

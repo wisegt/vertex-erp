@@ -31,7 +31,7 @@
       <a
         href="#"
         target="noopener noreferrer"
-      >Soporte</a>      
+      >Soporte</a>
     </span>
   </div>
 </template>

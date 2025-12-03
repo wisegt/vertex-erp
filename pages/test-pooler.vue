@@ -197,8 +197,8 @@ onMounted(() => {
                     </template>
                     <VListItemTitle>Tiempos</VListItemTitle>
                     <VListItemSubtitle>
-                      Conexión: {{ result.timing.connectionTime }} | 
-                      Query: {{ result.timing.queryTime }} | 
+                      Conexión: {{ result.timing.connectionTime }} |
+                      Query: {{ result.timing.queryTime }} |
                       Total: {{ result.timing.totalTime }}
                     </VListItemSubtitle>
                   </VListItem>
@@ -233,8 +233,12 @@ onMounted(() => {
                       <div class="mt-2">
                         <div><strong>Código:</strong> {{ result.error.code }}</div>
                         <div><strong>Mensaje:</strong> {{ result.error.message }}</div>
-                        <div v-if="result.error.detail"><strong>Detalle:</strong> {{ result.error.detail }}</div>
-                        <div v-if="result.error.hint"><strong>Hint:</strong> {{ result.error.hint }}</div>
+                        <div v-if="result.error.detail">
+                          <strong>Detalle:</strong> {{ result.error.detail }}
+                        </div>
+                        <div v-if="result.error.hint">
+                          <strong>Hint:</strong> {{ result.error.hint }}
+                        </div>
                       </div>
                     </VListItemSubtitle>
                   </VListItem>
@@ -268,4 +272,3 @@ onMounted(() => {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 </style>
-

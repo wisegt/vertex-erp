@@ -74,7 +74,8 @@ export default defineNuxtConfig({
     // baseURL: URL completa donde está la API de auth (incluyendo /api/auth)
     // En .env debe ser: AUTH_ORIGIN=https://tudominio.com/api/auth (producción)
     // o AUTH_ORIGIN=http://localhost:3000/api/auth (desarrollo)
-    baseURL: process.env.AUTH_ORIGIN || 'http://localhost:3000/api/auth',
+    // Por defecto usa el puerto expuesto por el dev server (PORT) para evitar timeouts cuando el dev server corre en un puerto distinto a 3000.
+    baseURL: process.env.AUTH_ORIGIN || `http://localhost:${process.env.PORT || 3000}/api/auth`,
     globalAppMiddleware: false,
 
     provider: {

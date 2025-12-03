@@ -37,8 +37,8 @@ export default defineEventHandler(async () => {
         httpStatus: status,
         httpStatusText: statusText,
         config: {
-          url: url.substring(0, 40) + '...',
-          keyPrefix: key.substring(0, 20) + '...',
+          url: `${url.substring(0, 40)}...`,
+          keyPrefix: `${key.substring(0, 20)}...`,
         },
       }
     }
