@@ -1,19 +1,43 @@
 <script setup lang="ts">
 import sectionTitleIcon from '@images/pages/section-title-icon.png'
-import SelectSolid from '@images/svg/3d-select-solid.svg'
-import Edit from '@images/svg/edit.svg'
-import GoogleDocs from '@images/svg/google-docs.svg'
-import LaptopCharging from '@images/svg/laptop-charging.svg'
-import Lifebelt from '@images/svg/lifebelt.svg'
-import TransitionUp from '@images/svg/transition-up.svg'
 
 const featuresData = [
-  { title: 'Quality Code', desc: 'Code structure that all developers will easily understand and fall in love with.', img: LaptopCharging },
-  { title: 'Continuous Updates', desc: 'Free updates for the next 12 months, including new demos and features.', img: TransitionUp },
-  { title: 'Starter Kit', desc: 'Start your project quickly without having to remove unnecessary features.', img: Edit },
-  { title: 'API Ready', desc: 'Just change the endpoint and see your own data loaded within seconds.', img: SelectSolid },
-  { title: 'Well Documented', desc: 'An easy-to-follow doc with lots of references and code examples.', img: Lifebelt },
-  { title: 'Excellent Support', desc: 'An easy-to-follow doc with lots of references and code examples.', img: GoogleDocs },
+  { 
+    title: 'Facturación Electrónica', 
+    desc: 'Emisión de facturas FEL certificadas por SAT Guatemala. Notas de crédito, débito y documentos fiscales integrados.', 
+    icon: 'ri-file-text-line',
+    color: 'primary'
+  },
+  { 
+    title: 'Punto de Venta (POS)', 
+    desc: 'Sistema de caja táctil ultrarrápido. Funciona offline, integra lectores de código de barras y genera FEL automáticamente.', 
+    icon: 'ri-store-2-line',
+    color: 'success'
+  },
+  { 
+    title: 'Contabilidad', 
+    desc: 'Catálogo de cuentas flexible, pólizas automáticas, libro mayor, balances y estados financieros en tiempo real.', 
+    icon: 'ri-calculator-line',
+    color: 'warning'
+  },
+  { 
+    title: 'Inventario', 
+    desc: 'Control de stock multi-bodega, kardex, ajustes, traslados y costeo automático (promedio, FIFO, LIFO).', 
+    icon: 'ri-archive-line',
+    color: 'info'
+  },
+  { 
+    title: 'Bancos', 
+    desc: 'Gestión de cuentas bancarias, conciliación automática, flujo de caja y proyecciones financieras.', 
+    icon: 'ri-bank-line',
+    color: 'error'
+  },
+  { 
+    title: 'Cuentas por Cobrar y Pagar', 
+    desc: 'Seguimiento de clientes y proveedores, antigüedad de saldos, estados de cuenta y gestión inteligente.', 
+    icon: 'ri-exchange-dollar-line',
+    color: 'secondary'
+  },
 ]
 </script>
 
@@ -32,7 +56,7 @@ const featuresData = [
             class="text-body-1 text-high-emphasis font-weight-medium"
             style="letter-spacing: 0.15px !important;"
           >
-            USEFUL FEATURES
+            MÓDULOS INTEGRADOS
           </div>
         </div>
 
@@ -41,15 +65,15 @@ const featuresData = [
             class="text-h4 d-inline-block font-weight-bold"
             style="line-height: 2rem;"
           >
-            Everything you need
-          </span> <span class="text-h5 d-inline-block">to start your next project</span>
+            Todo lo que necesitas
+          </span> <span class="text-h5 d-inline-block">para gestionar tu empresa</span>
         </div>
 
         <p
           class="text-body-1 font-weight-medium text-center"
           style="letter-spacing: 0.15px !important;"
         >
-          Not just a set of tools, the package includes ready-to-deploy conceptual application.
+          Desde el punto de venta hasta los reportes financieros, cada módulo trabaja en conjunto para darte control total de tu negocio.
         </p>
       </div>
 
@@ -65,10 +89,13 @@ const featuresData = [
             <VAvatar
               variant="outlined"
               size="84"
-              color="primary"
+              :color="data.color"
               class="mb-2"
             >
-              <Component :is="data.img" />
+              <VIcon
+                :icon="data.icon"
+                size="40"
+              />
             </VAvatar>
 
             <h5 class="text-h5">
@@ -113,7 +140,8 @@ const featuresData = [
 .feature{
   .v-avatar{
     &.v-avatar--variant-outlined{
-      border: 2px solid rgba(var(--v-theme-primary), 0.32);
+      border: 2px solid currentColor;
+      border-opacity: 0.32;
 
       &:hover{
         background: rgba(var(--v-theme-primary), 0.16);

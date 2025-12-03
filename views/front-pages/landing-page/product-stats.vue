@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const statData = ref([
-  { title: 'Completed Sites', value: 137, icon: 'ri-layout-line', color: 'primary', isHover: false },
-  { title: 'Working Hours', value: 1100, icon: 'ri-time-line', color: 'success', isHover: false },
-  { title: 'Happy Customers', value: 137, icon: 'ri-user-smile-line', color: 'warning', isHover: false },
-  { title: 'Awards Winning', value: 23, icon: 'ri-award-line', color: 'info', isHover: false },
+  { title: 'Facturas Emitidas', value: 50000, icon: 'ri-file-text-line', color: 'primary', isHover: false },
+  { title: 'Empresas Activas', value: 150, icon: 'ri-building-line', color: 'success', isHover: false },
+  { title: 'Usuarios Registrados', value: 500, icon: 'ri-user-smile-line', color: 'warning', isHover: false },
+  { title: 'Años de Experiencia', value: 10, icon: 'ri-award-line', color: 'info', isHover: false },
 ])
 </script>
 

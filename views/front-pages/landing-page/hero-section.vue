@@ -57,27 +57,38 @@ onMounted(() => {
         <div class="text-center px-6">
           <div class="mb-4">
             <div class="landing-page-title">
-              All in one sass application
+              El ERP que impulsa
             </div>
             <div class="landing-page-title">
-              for your business
+              tu negocio en Guatemala
             </div>
           </div>
           <div class="text-body-1 font-weight-medium text-high-emphasis pb-8">
             <p class="mb-0">
-              No coding required to make customization
+              Facturación electrónica FEL, contabilidad, inventario, bancos y más.
             </p>
             <p class="mb-0">
-              The live customer has everything your marketing needs
+              Todo integrado en una plataforma moderna y fácil de usar.
             </p>
           </div>
-          <VBtn
-            :to="{ name: 'front-pages-landing-page', hash: `#pricing-plan` }"
-            size="large"
-            :active="false"
-          >
-            Get Early Access
-          </VBtn>
+          <div class="d-flex gap-4 justify-center flex-wrap">
+            <VBtn
+              :to="{ name: 'front-pages-checkout' }"
+              size="large"
+              color="primary"
+            >
+              <VIcon icon="ri-rocket-line" class="me-2" />
+              Comenzar Gratis
+            </VBtn>
+            <VBtn
+              href="#contact-us"
+              size="large"
+              class="neon-btn"
+            >
+              <VIcon icon="ri-video-chat-line" class="me-2" />
+              Solicitar Demo
+            </VBtn>
+          </div>
         </div>
 
         <div class="position-relative hero-animation-img">
@@ -178,6 +189,45 @@ section {
   .hero-animation-img {
     inset-block-start: 1rem;
     margin-block-end: -2rem;
+  }
+}
+
+// Botón neón
+.neon-btn {
+  position: relative;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%) !important;
+  color: white !important;
+  font-weight: 600;
+  border: none !important;
+  border-radius: 50px;
+  box-shadow: 
+    0 0 20px rgba(247, 147, 30, 0.5),
+    0 0 40px rgba(247, 147, 30, 0.3),
+    0 0 60px rgba(247, 147, 30, 0.1);
+  transition: all 0.3s ease;
+  animation: neon-pulse 2s ease-in-out infinite;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 0 25px rgba(247, 147, 30, 0.7),
+      0 0 50px rgba(247, 147, 30, 0.5),
+      0 0 75px rgba(247, 147, 30, 0.3);
+  }
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(247, 147, 30, 0.5),
+      0 0 40px rgba(247, 147, 30, 0.3),
+      0 0 60px rgba(247, 147, 30, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px rgba(247, 147, 30, 0.6),
+      0 0 50px rgba(247, 147, 30, 0.4),
+      0 0 75px rgba(247, 147, 30, 0.2);
   }
 }
 </style>

@@ -14,6 +14,7 @@ import { useConfigStore } from '@core/stores/config'
 const store = useConfigStore()
 
 store.skin = 'default'
+
 definePageMeta({
   layout: 'blank',
   public: true,

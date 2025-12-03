@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { themeConfig } from '@themeConfig'
 import type { User } from 'next-auth'
+import { emailValidator, requiredValidator } from '@/@core/utils/validators'
 
 import tree1 from '@images/misc/tree1.png'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
@@ -29,6 +30,7 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 
 definePageMeta({
   layout: 'blank',
+  public: true,
   unauthenticatedOnly: true,
 })
 
@@ -54,6 +56,9 @@ const credentials = ref({
 const rememberMe = ref(false)
 const isSubmitting = ref(false)
 
+// Ruta por defecto después del login (dashboard)
+const defaultRedirect = '/dashboards/crm'
+
 onMounted(() => {
   isHydrated.value = true
 })
@@ -67,7 +72,7 @@ async function login() {
   try {
     console.log('[login] Iniciando login con:', credentials.value.email)
     response = await signIn('credentials', {
-      callbackUrl: '/',
+      callbackUrl: defaultRedirect,
       redirect: false,
       ...credentials.value,
     })
@@ -103,10 +108,6 @@ async function login() {
   // Reset error on successful login
   errors.value = {}
 
-  // Update user abilities
-  // ⚠️ TEMPORAL: Comentado para evitar deadlock
-  // const session = await getSession()
-
   // Usar sessionData que ya está disponible
   console.log('[login] Usando sessionData:', sessionData.value?.user?.email)
 
@@ -128,15 +129,37 @@ async function login() {
 
   isSubmitting.value = false
 
-  console.log('[login] Redirigiendo a:', route.query.to ? String(route.query.to) : '/')
-  await navigateTo(route.query.to ? String(route.query.to) : '/', { replace: true })
+  // Determinar a dónde redirigir:
+  // 1. Si hay un query param "to", usar ese (pero no si es "/" que es la landing)
+  // 2. Si no, usar el dashboard por defecto
+  const redirectTo = route.query.to 
+    ? (String(route.query.to) === '/' ? defaultRedirect : String(route.query.to))
+    : defaultRedirect
+
+  console.log('[login] Redirigiendo a:', redirectTo)
+  await navigateTo(redirectTo, { replace: true })
 }
 
 const onSubmit = () => {
-  refVForm.value?.validate()
+  console.log('[onSubmit] Intentando validar formulario...')
+  
+  if (!refVForm.value) {
+    console.error('[onSubmit] refVForm no está definido')
+    login()
+    return
+  }
+
+  refVForm.value.validate()
     .then(({ valid: isValid }: { valid: boolean }) => {
+      console.log('[onSubmit] Validación completada, isValid:', isValid)
       if (isValid)
         login()
+      else
+        console.warn('[onSubmit] Formulario no válido')
+    })
+    .catch((err: any) => {
+      console.error('[onSubmit] Error en validación:', err)
+      login()
     })
 }
 </script>

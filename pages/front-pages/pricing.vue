@@ -11,116 +11,217 @@ store.skin = 'default'
 definePageMeta({
   layout: 'blank',
   public: true,
-
 })
 
-const features = [
+// Función para formatear moneda en Quetzales
+const formatCurrency = (amount: number): string => {
+  return amount.toLocaleString('es-GT', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
+
+const pricingTab = ref('empresa')
+const billingPeriod = ref('yearly') // 'monthly' o 'yearly'
+
+const planesEmpresa = [
   {
-    feature: '14-days free trial',
-    starter: true,
-    pro: true,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: false,
-      enterprise: false,
-    },
+    name: 'Starter',
+    value: 'starter',
+    tagLine: 'Ideal para pequeños negocios',
+    icon: 'ri-rocket-line',
+    iconColor: 'info',
+    monthlyPrice: 299,
+    yearlyPrice: 2990,
+    isPopular: false,
+    features: [
+      'Hasta 3 usuarios',
+      '500 facturas FEL/mes',
+      'Contabilidad básica',
+      '1 bodega',
+      'Punto de Venta (POS)',
+      'Soporte por email',
+    ],
   },
   {
-    feature: 'No user limit',
-    starter: false,
-    pro: false,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: false,
-      enterprise: false,
-    },
+    name: 'Business',
+    value: 'business',
+    tagLine: 'Para empresas en crecimiento',
+    icon: 'ri-line-chart-line',
+    iconColor: 'primary',
+    monthlyPrice: 599,
+    yearlyPrice: 5990,
+    isPopular: true,
+    features: [
+      'Hasta 10 usuarios',
+      '2,000 facturas FEL/mes',
+      'Contabilidad completa',
+      '3 bodegas + Bancos',
+      'CxC y CxP',
+      'Soporte prioritario',
+    ],
   },
   {
-    feature: 'Product Support',
-    starter: false,
-    pro: true,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: false,
-      enterprise: false,
-    },
-  },
-  {
-    feature: 'Email Support',
-    starter: false,
-    pro: false,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: true,
-      enterprise: false,
-    },
-  },
-  {
-    feature: 'Integrations',
-    starter: false,
-    pro: true,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: false,
-      enterprise: false,
-    },
-  },
-  {
-    feature: 'Removal of Front branding',
-    starter: false,
-    pro: false,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: true,
-      enterprise: false,
-    },
-  },
-  {
-    feature: 'Active maintenance & support',
-    starter: false,
-    pro: false,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: false,
-      enterprise: false,
-    },
-  },
-  {
-    feature: 'Data storage for 365 days',
-    starter: false,
-    pro: false,
-    enterprise: true,
-    addOnAvailable: {
-      starter: false,
-      pro: false,
-      enterprise: false,
-    },
+    name: 'Enterprise',
+    value: 'enterprise',
+    tagLine: 'Solución completa para operaciones',
+    icon: 'ri-building-2-line',
+    iconColor: 'warning',
+    monthlyPrice: 999,
+    yearlyPrice: 9990,
+    isPopular: false,
+    features: [
+      'Usuarios ilimitados',
+      'Facturas ilimitadas',
+      'Multi-empresa',
+      'Bodegas ilimitadas',
+      'API e Integraciones',
+      'Soporte dedicado 24/7',
+    ],
   },
 ]
 
+const planesContador = [
+  {
+    name: 'Independiente',
+    value: 'independiente',
+    tagLine: 'Para contadores con pocos clientes',
+    icon: 'ri-user-line',
+    iconColor: 'info',
+    monthlyPrice: 199,
+    yearlyPrice: 1990,
+    isPopular: false,
+    features: [
+      'Hasta 5 empresas',
+      '1 usuario contador',
+      'Contabilidad completa',
+      'Reportes SAT',
+      'Libros contables',
+      'Soporte por email',
+    ],
+  },
+  {
+    name: 'Despacho',
+    value: 'despacho',
+    tagLine: 'Para despachos con cartera de clientes',
+    icon: 'ri-team-line',
+    iconColor: 'primary',
+    monthlyPrice: 499,
+    yearlyPrice: 4990,
+    isPopular: true,
+    features: [
+      'Hasta 20 empresas',
+      '5 usuarios del despacho',
+      'Portal para clientes',
+      'Reportes avanzados',
+      'Marca blanca',
+      'Soporte prioritario',
+    ],
+  },
+  {
+    name: 'Firma',
+    value: 'firma',
+    tagLine: 'Para firmas de auditoría',
+    icon: 'ri-bank-line',
+    iconColor: 'warning',
+    monthlyPrice: 899,
+    yearlyPrice: 8990,
+    isPopular: false,
+    features: [
+      'Empresas ilimitadas',
+      'Usuarios ilimitados',
+      'Consolidación',
+      'API completa',
+      'Capacitación incluida',
+      'Gerente de cuenta',
+    ],
+  },
+]
+
+const currentPlans = computed(() => {
+  return pricingTab.value === 'empresa' ? planesEmpresa : planesContador
+})
+
+// Función para obtener el precio a mostrar
+const getDisplayPrice = (plan: typeof planesEmpresa[0]) => {
+  if (billingPeriod.value === 'yearly') {
+    return Math.floor(plan.yearlyPrice / 12)
+  }
+  return plan.monthlyPrice
+}
+
+const featuresEmpresa = [
+  { feature: 'Prueba gratuita 14 días', starter: true, business: true, enterprise: true },
+  { feature: 'Usuarios incluidos', starter: '3', business: '10', enterprise: 'Ilimitados' },
+  { feature: 'Facturas FEL mensuales', starter: '500', business: '2,000', enterprise: 'Ilimitadas' },
+  { feature: 'Bodegas', starter: '1', business: '3', enterprise: 'Ilimitadas' },
+  { feature: 'Punto de Venta (POS)', starter: true, business: true, enterprise: true },
+  { feature: 'Contabilidad completa', starter: false, business: true, enterprise: true },
+  { feature: 'Módulo de Bancos', starter: false, business: true, enterprise: true },
+  { feature: 'CxC y CxP', starter: false, business: true, enterprise: true },
+  { feature: 'Multi-empresa', starter: false, business: false, enterprise: true },
+  { feature: 'API e Integraciones', starter: false, business: false, enterprise: true },
+  { feature: 'Soporte prioritario', starter: false, business: true, enterprise: true },
+  { feature: 'Soporte dedicado 24/7', starter: false, business: false, enterprise: true },
+]
+
+const featuresContador = [
+  { feature: 'Prueba gratuita 14 días', independiente: true, despacho: true, firma: true },
+  { feature: 'Empresas incluidas', independiente: '5', despacho: '20', firma: 'Ilimitadas' },
+  { feature: 'Usuarios del despacho', independiente: '1', despacho: '5', firma: 'Ilimitados' },
+  { feature: 'Contabilidad completa', independiente: true, despacho: true, firma: true },
+  { feature: 'Reportes SAT', independiente: true, despacho: true, firma: true },
+  { feature: 'Portal para clientes', independiente: false, despacho: true, firma: true },
+  { feature: 'Marca blanca', independiente: false, despacho: true, firma: true },
+  { feature: 'Consolidación', independiente: false, despacho: false, firma: true },
+  { feature: 'API completa', independiente: false, despacho: false, firma: true },
+  { feature: 'Capacitación incluida', independiente: false, despacho: false, firma: true },
+]
+
+const currentFeatures = computed(() => {
+  return pricingTab.value === 'empresa' ? featuresEmpresa : featuresContador
+})
+
+const planHeaders = computed(() => {
+  if (pricingTab.value === 'empresa') {
+    return [
+      { plan: 'STARTER', value: 'starter', price: getDisplayPrice(planesEmpresa[0]) },
+      { plan: 'BUSINESS', value: 'business', price: getDisplayPrice(planesEmpresa[1]), popular: true },
+      { plan: 'ENTERPRISE', value: 'enterprise', price: getDisplayPrice(planesEmpresa[2]) },
+    ]
+  }
+  return [
+    { plan: 'INDEPENDIENTE', value: 'independiente', price: getDisplayPrice(planesContador[0]) },
+    { plan: 'DESPACHO', value: 'despacho', price: getDisplayPrice(planesContador[1]), popular: true },
+    { plan: 'FIRMA', value: 'firma', price: getDisplayPrice(planesContador[2]) },
+  ]
+})
+
+const getFeatureValue = (feature: any, planIndex: number) => {
+  if (pricingTab.value === 'empresa') {
+    const keys = ['starter', 'business', 'enterprise']
+    return feature[keys[planIndex]]
+  }
+  const keys = ['independiente', 'despacho', 'firma']
+  return feature[keys[planIndex]]
+}
+
 const faqs = [
   {
-    question: 'What counts towards the 100 responses limit?',
-    answer: 'Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet.Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet.',
+    question: '¿Qué incluye la prueba gratuita de 14 días?',
+    answer: 'La prueba gratuita incluye acceso completo a todas las funcionalidades del plan que elijas. No se requiere tarjeta de crédito para iniciar. Al finalizar los 14 días, puedes elegir continuar con un plan de pago o tus datos serán archivados por 30 días adicionales.',
   },
   {
-    question: 'How do you process payments?',
-    answer: 'We accept Visa®, MasterCard®, American Express®, and PayPal®. So you can be confident that your credit card information will be kept safe and secure.',
+    question: '¿Cómo se procesan los pagos?',
+    answer: 'Aceptamos pagos con tarjeta de crédito/débito (Visa, MasterCard), PayPal, transferencia bancaria y depósito monetario. Para clientes empresariales, también ofrecemos facturación mensual con crédito previa aprobación.',
   },
   {
-    question: 'Do you have a money-back guarantee?',
-    answer: '2Checkout accepts all types of credit and debit cards.',
+    question: '¿Puedo cambiar de plan después?',
+    answer: 'Sí, puedes subir o bajar de plan en cualquier momento. Si subes de plan, se te cobrará la diferencia prorrateada. Si bajas de plan, el cambio se aplicará en tu próximo ciclo de facturación.',
   },
   {
-    question: 'I have more questions. Where can I get help?',
-    answer: 'Yes. You may request a refund within 30 days of your purchase without any additional explanations.',
+    question: '¿Tienen garantía de devolución?',
+    answer: 'Sí, ofrecemos garantía de satisfacción de 30 días. Si por cualquier razón no estás satisfecho con VERTEX ERP, te devolvemos el 100% de tu pago sin preguntas.',
   },
 ]
 </script>
@@ -130,183 +231,303 @@ const faqs = [
     <Navbar />
 
     <VCard class="pricing-card">
-      <!-- 👉 App Pricing components -->
       <VContainer>
         <div class="pricing-section">
-          <AppPricing
-            md="4"
-            cols="12"
-          >
-            <template #heading>
-              <h2 class="text-h2 pb-2">
-                Pricing Plans
-              </h2>
-            </template>
-          </AppPricing>
+          <!-- Header -->
+          <div class="text-center mb-6">
+            <h2 class="text-h2 pb-2">
+              Planes y Precios
+            </h2>
+            <p class="text-body-1 mb-0">
+              Elige la modalidad y el plan que mejor se adapte a tu negocio.
+              <br>
+              Todos los planes incluyen actualizaciones y soporte técnico.
+            </p>
+          </div>
+
+          <!-- Tabs -->
+          <div class="d-flex justify-center mb-6">
+            <VCard variant="outlined" class="pricing-tabs-card">
+              <div class="d-flex">
+                <VBtn
+                  :variant="pricingTab === 'empresa' ? 'flat' : 'text'"
+                  :color="pricingTab === 'empresa' ? 'primary' : 'default'"
+                  size="large"
+                  class="pricing-tab-btn"
+                  @click="pricingTab = 'empresa'"
+                >
+                  <VIcon icon="ri-building-line" class="me-2" />
+                  Empresas
+                </VBtn>
+                <VBtn
+                  :variant="pricingTab === 'contador' ? 'flat' : 'text'"
+                  :color="pricingTab === 'contador' ? 'primary' : 'default'"
+                  size="large"
+                  class="pricing-tab-btn"
+                  @click="pricingTab = 'contador'"
+                >
+                  <VIcon icon="ri-user-settings-line" class="me-2" />
+                  Contadores
+                </VBtn>
+              </div>
+            </VCard>
+          </div>
+
+          <div class="text-center mb-6">
+            <VChip
+              v-if="pricingTab === 'empresa'"
+              color="primary"
+              variant="tonal"
+              size="small"
+            >
+              Para comercios, distribuidoras e industrias
+            </VChip>
+            <VChip
+              v-else
+              color="success"
+              variant="tonal"
+              size="small"
+            >
+              Para contadores independientes, despachos y firmas
+            </VChip>
+          </div>
+
+          <!-- Toggle mensual/anual -->
+          <div class="d-flex align-center justify-center flex-wrap gap-4 mb-6">
+            <VCard variant="outlined" class="billing-tabs-card">
+              <div class="d-flex">
+                <VBtn
+                  :variant="billingPeriod === 'monthly' ? 'flat' : 'text'"
+                  :color="billingPeriod === 'monthly' ? 'primary' : 'default'"
+                  class="billing-tab-btn"
+                  @click="billingPeriod = 'monthly'"
+                >
+                  Mensual
+                </VBtn>
+                <VBtn
+                  :variant="billingPeriod === 'yearly' ? 'flat' : 'text'"
+                  :color="billingPeriod === 'yearly' ? 'primary' : 'default'"
+                  class="billing-tab-btn"
+                  @click="billingPeriod = 'yearly'"
+                >
+                  Anual
+                  <VChip color="success" size="x-small" class="ms-2">−17%</VChip>
+                </VBtn>
+              </div>
+            </VCard>
+          </div>
+
+          <!-- Alert de ahorro cuando es anual -->
+          <div v-if="billingPeriod === 'yearly'" class="text-center mb-6">
+            <VChip color="success" variant="flat" size="small">
+              <VIcon icon="ri-gift-line" size="16" class="me-1" />
+              ¡Paga 10 meses y obtén 12! Ahorra 2 meses completos
+            </VChip>
+          </div>
+
+          <!-- Pricing Cards -->
+          <VRow>
+            <VCol
+              v-for="plan in currentPlans"
+              :key="`${pricingTab}-${billingPeriod}-${plan.value}`"
+              cols="12"
+              md="4"
+            >
+              <VCard
+                flat
+                border
+                :class="plan.isPopular ? 'border-primary border-opacity-100' : ''"
+              >
+                <VCardText class="text-end pt-4" style="block-size: 3.75rem;">
+                  <VChip v-show="plan.isPopular" color="primary" size="small">
+                    Popular
+                  </VChip>
+                </VCardText>
+
+                <VCardText class="text-center">
+                  <VAvatar
+                    :color="plan.iconColor"
+                    variant="tonal"
+                    size="100"
+                    class="mb-5"
+                  >
+                    <VIcon :icon="plan.icon" size="48" />
+                  </VAvatar>
+                  <h4 class="text-h4 mb-1">
+                    {{ plan.name }}
+                  </h4>
+                  <p class="mb-0 text-body-1">
+                    {{ plan.tagLine }}
+                  </p>
+                </VCardText>
+
+                <VCardText class="position-relative text-center">
+                  <div>
+                    <div class="d-flex justify-center align-center">
+                      <span class="text-body-1 font-weight-medium align-self-start">Q</span>
+                      <h1 class="text-h1 font-weight-medium text-primary">
+                        {{ formatCurrency(getDisplayPrice(plan)) }}
+                      </h1>
+                      <span class="text-body-1 font-weight-medium align-self-end">/mes</span>
+                    </div>
+                    <!-- Precio original tachado si es anual -->
+                    <div v-if="billingPeriod === 'yearly'" class="text-center">
+                      <span class="text-body-2 text-medium-emphasis text-decoration-line-through">
+                        Q{{ formatCurrency(plan.monthlyPrice) }}/mes
+                      </span>
+                      <div class="text-caption text-success font-weight-medium">
+                        Q{{ formatCurrency(plan.yearlyPrice) }}/año
+                      </div>
+                    </div>
+                  </div>
+                </VCardText>
+
+                <VCardText class="pt-2">
+                  <VList class="card-list pb-5">
+                    <VListItem v-for="feature in plan.features" :key="feature">
+                      <VListItemTitle class="text-body-1 d-flex align-center">
+                        <VIcon :size="14" icon="ri-checkbox-circle-line" color="primary" class="me-2" />
+                        <div class="text-truncate">
+                          {{ feature }}
+                        </div>
+                      </VListItemTitle>
+                    </VListItem>
+                  </VList>
+
+                  <VBtn
+                    :active="false"
+                    block
+                    color="primary"
+                    :variant="plan.isPopular ? 'elevated' : 'outlined'"
+                    :to="{ 
+                      name: 'front-pages-payment', 
+                      query: { 
+                        modalidad: pricingTab, 
+                        plan: plan.value,
+                        billing: billingPeriod
+                      } 
+                    }"
+                  >
+                    Comenzar
+                  </VBtn>
+                </VCardText>
+              </VCard>
+            </VCol>
+          </VRow>
+
+          <!-- Botón solicitar demo -->
+          <div class="text-center mt-8">
+            <p class="text-body-1 text-medium-emphasis mb-4">
+              ¿Prefieres una demostración personalizada antes de decidir?
+            </p>
+            <VBtn
+              size="large"
+              class="neon-btn"
+              :to="{ name: 'index', hash: '#contact-us' }"
+            >
+              <VIcon icon="ri-video-chat-line" class="me-2" />
+              Solicitar Demo
+            </VBtn>
+          </div>
         </div>
       </VContainer>
 
-      <!-- 👉 Free trial Banner -->
+      <!-- Banner prueba gratis -->
       <div class="page-pricing-free-trial-banner-bg">
         <VContainer>
           <div class="d-flex align-center flex-md-row flex-column position-relative">
             <div class="text-center text-md-start py-10 px-10 px-sm-0">
               <h4 class="text-h4 text-primary mb-2">
-                Still not convinced? Start with a 14-day FREE trial!
+                ¿Aún no estás seguro? Comienza con 14 días GRATIS
               </h4>
               <p class="text-body-1">
-                You will get full access to all the features for 14 days.
+                Acceso completo a todas las funcionalidades. Sin tarjeta de crédito.
               </p>
-              <VBtn
-                class="mt-4"
-                :to="{ name: 'front-pages-payment' }"
-              >
-                Start-14-day FREE trial
+              <VBtn class="mt-4" :to="{ name: 'front-pages-checkout' }">
+                Comenzar Prueba Gratuita
               </VBtn>
             </div>
             <div class="free-trial-illustrator">
-              <VImg
-                :src="poseFs9"
-                :width="250"
-              />
+              <VImg :src="poseFs9" :width="250" />
             </div>
           </div>
         </VContainer>
       </div>
 
-      <!-- 👉 Plans -->
+      <!-- Tabla comparativa -->
       <VContainer>
         <div class="pricing-section">
           <div class="text-center pb-6">
             <h4 class="text-h4 mb-2">
-              Pick a plan that works best for you
+              Comparación detallada de planes
             </h4>
             <p class="text-body-1 mb-0">
-              Stay cool, we have a 48-hour money back guarantee!
+              Todas las funcionalidades para que elijas mejor
             </p>
           </div>
-          <!-- 👉 Features & Tables -->
+
           <VTable class="text-no-wrap border rounded pricing-table">
-            <!-- 👉 Table head -->
             <thead>
               <tr>
+                <th scope="col" class="py-4">CARACTERÍSTICA</th>
                 <th
-                  scope="col"
-                  class="py-4"
-                >
-                  TIME
-                </th>
-                <th
-                  v-for="{ plan, price } in [
-                    { plan: 'STARTER', price: 'Free' },
-                    { plan: 'PRO', price: '$7.5/Month' },
-                    { plan: 'ENTERPRISE', price: '$16/Month' },
-                  ]"
-                  :key="plan"
+                  v-for="(header, index) in planHeaders"
+                  :key="header.plan"
                   scope="col"
                   class="text-center py-4"
                 >
                   <div class="position-relative">
-                    {{ plan }}
+                    {{ header.plan }}
                     <VAvatar
-                      v-if="plan === 'PRO'"
+                      v-if="header.popular"
                       rounded="lg"
                       color="primary"
                       size="18"
                       class="position-absolute ms-2"
                       style="inset-block-start: -0.25rem;"
                     >
-                      <VIcon
-                        icon="ri-star-s-fill"
-                        size="14"
-                      />
+                      <VIcon icon="ri-star-s-fill" size="14" />
                     </VAvatar>
                   </div>
-                  <div class="text-body-2">
-                    {{ price }}
-                  </div>
+                  <div class="text-body-2">Q{{ formatCurrency(header.price) }}/mes</div>
                 </th>
               </tr>
             </thead>
-            <!-- 👉 Table Body -->
             <tbody>
-              <tr
-                v-for="feature in features"
-                :key="feature.feature"
-              >
-                <td class="text-high-emphasis">
-                  {{ feature.feature }}
-                </td>
-                <td class="text-center">
-                  <VIcon
-                    v-if="!feature.addOnAvailable.starter"
-                    :color="feature.starter ? 'primary' : ''"
-                    size="20"
-                    :icon="feature.starter ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                  />
-                  <VChip
-                    v-if="feature.addOnAvailable.starter"
-                    color="primary"
-                    size="small"
-                  >
-                    Add-On-Available
-                  </VChip>
-                </td>
-                <td class="text-center">
-                  <VIcon
-                    v-if="!feature.addOnAvailable.pro"
-                    :color="feature.pro ? 'primary' : ''"
-                    size="20"
-                    :icon="feature.pro ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                  />
-                  <VChip
-                    v-if="feature.addOnAvailable.pro"
-                    color="primary"
-                    size="small"
-                  >
-                    Add-On-Available
-                  </VChip>
-                </td>
-                <td class="text-center">
-                  <VIcon
-                    v-if="!feature.addOnAvailable.enterprise"
-                    :color="feature.enterprise ? 'primary' : ''"
-                    size="20"
-                    :icon="feature.enterprise ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
-                  />
-                  <VChip
-                    v-if="feature.addOnAvailable.enterprise"
-                    color="primary"
-                    size="small"
-                  >
-                    Add-On-Available
-                  </VChip>
+              <tr v-for="feature in currentFeatures" :key="feature.feature">
+                <td class="text-high-emphasis">{{ feature.feature }}</td>
+                <td v-for="(_, index) in 3" :key="index" class="text-center">
+                  <template v-if="typeof getFeatureValue(feature, index) === 'boolean'">
+                    <VIcon
+                      :color="getFeatureValue(feature, index) ? 'primary' : ''"
+                      size="20"
+                      :icon="getFeatureValue(feature, index) ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
+                    />
+                  </template>
+                  <template v-else>
+                    <span class="text-body-1 font-weight-medium">
+                      {{ getFeatureValue(feature, index) }}
+                    </span>
+                  </template>
                 </td>
               </tr>
             </tbody>
-            <!-- 👉 Table footer -->
             <tfoot>
               <tr>
                 <td class="py-4" />
-                <td class="text-center py-4">
+                <td v-for="(header, index) in planHeaders" :key="index" class="text-center py-4">
                   <VBtn
-                    variant="outlined"
-                    :to="{ name: 'front-pages-payment' }"
+                    :variant="header.popular ? 'elevated' : 'outlined'"
+                    :to="{ 
+                      name: 'front-pages-payment',
+                      query: {
+                        modalidad: pricingTab,
+                        plan: header.value,
+                        billing: billingPeriod
+                      }
+                    }"
                   >
-                    Choose Plan
-                  </VBtn>
-                </td>
-                <td class="text-center py-4">
-                  <VBtn :to="{ name: 'front-pages-payment' }">
-                    Choose Plan
-                  </VBtn>
-                </td>
-                <td class="text-center py-4">
-                  <VBtn
-                    variant="outlined"
-                    :to="{ name: 'front-pages-payment' }"
-                  >
-                    Choose Plan
+                    Elegir Plan
                   </VBtn>
                 </td>
               </tr>
@@ -315,17 +536,13 @@ const faqs = [
         </div>
       </VContainer>
 
-      <!-- 👉 FAQ -->
+      <!-- FAQ -->
       <div class="bg-background">
         <VContainer>
           <div class="pricing-section">
             <div class="text-center">
-              <h4 class="text-h4 mb-2">
-                FAQ's
-              </h4>
-              <p class="text-body-1 mb-0">
-                Let us help answer the most common questions.
-              </p>
+              <h4 class="text-h4 mb-2">Preguntas Frecuentes</h4>
+              <p class="text-body-1 mb-0">Resolvemos tus dudas sobre precios y facturación</p>
             </div>
             <div class="pt-6">
               <VExpansionPanels>
@@ -346,13 +563,12 @@ const faqs = [
 </template>
 
 <style lang="scss" scoped>
-.pricing-section{
+.pricing-section {
   padding-block: 5.25rem !important;
   padding-inline: 0 !important;
 }
 
 .page-pricing-free-trial-banner-bg {
-  /* stylelint-disable-next-line color-function-notation */
   background-color: rgba(var(--v-theme-primary), 0.16);
 }
 
@@ -360,11 +576,63 @@ const faqs = [
   padding-block-start: 4rem !important;
 }
 
-.pricing-table-title{
-  color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
-  font-size: 2rem;
-  font-weight: 500;
-  line-height: 2.625rem;
+.pricing-tabs-card,
+.billing-tabs-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pricing-tab-btn {
+  border-radius: 0;
+  min-width: 160px;
+}
+
+.billing-tab-btn {
+  border-radius: 0;
+  min-width: 120px;
+}
+
+.card-list {
+  --v-card-list-gap: 1rem;
+}
+
+// Botón neón
+.neon-btn {
+  position: relative;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%) !important;
+  color: white !important;
+  font-weight: 600;
+  border: none !important;
+  border-radius: 50px;
+  box-shadow: 
+    0 0 20px rgba(247, 147, 30, 0.5),
+    0 0 40px rgba(247, 147, 30, 0.3),
+    0 0 60px rgba(247, 147, 30, 0.1);
+  transition: all 0.3s ease;
+  animation: neon-pulse 2s ease-in-out infinite;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 0 25px rgba(247, 147, 30, 0.7),
+      0 0 50px rgba(247, 147, 30, 0.5),
+      0 0 75px rgba(247, 147, 30, 0.3);
+  }
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(247, 147, 30, 0.5),
+      0 0 40px rgba(247, 147, 30, 0.3),
+      0 0 60px rgba(247, 147, 30, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px rgba(247, 147, 30, 0.6),
+      0 0 50px rgba(247, 147, 30, 0.4),
+      0 0 75px rgba(247, 147, 30, 0.2);
+  }
 }
 
 @media screen and (min-width: 960px) {
@@ -384,31 +652,24 @@ const faqs = [
 </style>
 
 <style lang="scss">
-.pricing-table{
+.pricing-table {
   --v-table-header-color: rgb(var(--v-theme-surface));
 
-  &.v-table{
-    .v-table__wrapper{
-      table{
-        thead {
-          tr{
-            th{
-              border-block-end: 1px solid rgba(var(--v-theme-on-surface), var(--v-border-opacity)) !important;
-            }
-          }
+  &.v-table {
+    .v-table__wrapper {
+      table {
+        thead tr th {
+          border-block-end: 1px solid rgba(var(--v-theme-on-surface), var(--v-border-opacity)) !important;
         }
-
-        tbody{
-          tr:nth-child(even){
-            background: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
-          }
+        tbody tr:nth-child(even) {
+          background: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
         }
       }
     }
   }
 }
 
-.pricing-page{
+.pricing-page {
   @media (min-width: 600px) and (max-width: 960px) {
     .v-container {
       padding-inline: 2rem !important;

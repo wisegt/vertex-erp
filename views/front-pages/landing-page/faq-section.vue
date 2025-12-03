@@ -4,27 +4,34 @@ import sectionTitleIcon from '@images/pages/section-title-icon.png'
 
 const faqData = [
   {
-    question: 'Do you charge for each upgrade?',
-    answer: 'Lemon drops chocolate cake gummies carrot cake chupa chups muffin topping. Sesame snaps icing marzipan gummi bears macaroon dragée danish caramels powder. Bear claw dragée pastry topping soufflé. Wafer gummi bears marshmallow pastry pie.',
+    question: '¿VERTEX está certificado para Facturación Electrónica FEL?',
+    answer: 'Sí, VERTEX ERP está completamente certificado por la SAT de Guatemala para la emisión de Facturas Electrónicas en Línea (FEL). Emitimos facturas, notas de crédito, notas de débito y todos los documentos tributarios electrónicos requeridos. La certificación se renueva automáticamente y cumplimos con todas las normativas vigentes.',
   },
   {
-    question: 'What is regular license?',
-    answer: 'Regular license can be used for end products that do not charge users for access or service(access is free and there will be no monthly subscription fee). Single regular license can be used for single end product and end product can be used by you or your client. If you want to sell end product to multiple clients then you will need to purchase separate license for each client. The same rule applies if you want to use the same end product on multiple domains(unique setup). For more info on regular license you can check official description.',
+    question: '¿Puedo migrar mis datos desde otro sistema?',
+    answer: 'Absolutamente. Ofrecemos un servicio de migración de datos que incluye: catálogo de cuentas, saldos iniciales, clientes, proveedores, productos e inventario. Nuestro equipo técnico te acompaña durante todo el proceso para garantizar una transición sin pérdida de información. El tiempo de migración depende del volumen de datos, pero típicamente se completa en 1-2 semanas.',
   },
   {
-    question: 'What is extended license?',
-    answer: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis et aliquid quaerat possimus maxime! Mollitia reprehenderit neque repellat deleniti delectus architecto dolorum maxime, blanditiis earum ea, incidunt quam possimus cumque.',
+    question: '¿Qué incluye el soporte técnico?',
+    answer: 'Todos los planes incluyen soporte técnico por email con respuesta en 24 horas hábiles. Los planes Business y superiores incluyen soporte prioritario con chat en vivo y respuesta en menos de 4 horas. El plan Enterprise incluye un gerente de cuenta dedicado y soporte telefónico 24/7. Además, todos los usuarios tienen acceso a nuestra base de conocimientos y tutoriales en video.',
   },
   {
-    question: 'Which license is applicable for SASS application?',
-    answer: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi molestias exercitationem ab cum nemo facere voluptates veritatis quia, eveniet veniam at et repudiandae mollitia ipsam quasi labore enim architecto non!',
+    question: '¿Puedo probar VERTEX antes de contratar?',
+    answer: 'Sí, ofrecemos una prueba gratuita de 14 días con acceso completo a todas las funcionalidades. No requiere tarjeta de crédito para iniciar. Durante la prueba, tendrás acceso a soporte técnico y podrás cargar tus propios datos para evaluar el sistema con información real de tu negocio.',
+  },
+  {
+    question: '¿Cómo funciona la modalidad para Contadores?',
+    answer: 'La modalidad Contador está diseñada específicamente para profesionales de la contabilidad que gestionan múltiples empresas. Desde un solo panel puedes acceder a todas las empresas de tus clientes, generar reportes consolidados y cumplir con las obligaciones fiscales. Tus clientes pueden tener acceso limitado para consultas sin costo adicional.',
+  },
+  {
+    question: '¿Mis datos están seguros en la nube?',
+    answer: 'Tu información está protegida con los más altos estándares de seguridad. Utilizamos encriptación AES-256 para datos en reposo y TLS 1.3 para datos en tránsito. Realizamos respaldos automáticos cada hora y mantenemos copias en múltiples ubicaciones geográficas. Cumplimos con las mejores prácticas de seguridad de la industria y realizamos auditorías de seguridad periódicas.',
   },
 ]
 </script>
 
 <template>
   <VContainer id="faq">
-    <!-- 👉 Header  -->
     <div class="faq-section">
       <div class="headers d-flex justify-center flex-column align-center my-12">
         <div class="d-flex gap-x-3 mb-6">
@@ -38,16 +45,16 @@ const faqData = [
             class="text-body-1 text-high-emphasis font-weight-medium"
             style="letter-spacing: 0.15px !important;"
           >
-            FAQ
+            PREGUNTAS FRECUENTES
           </div>
         </div>
 
         <div class="mb-2 text-center">
-          <span class="text-h5 d-inline-block">Frequently Asked</span> <span
+          <span class="text-h5 d-inline-block">Resolvemos tus</span> <span
             class="text-h4 d-inline-block font-weight-bold"
             style="line-height: 2rem;"
           >
-            questions
+            dudas
           </span>
         </div>
 
@@ -55,7 +62,7 @@ const faqData = [
           class="text-body-1 font-weight-medium text-center mb-0"
           style="letter-spacing: 0.15px !important;"
         >
-          Browse through these FAQs to find answers to commonly asked questions.
+          Encuentra respuestas a las preguntas más comunes sobre VERTEX ERP.
         </p>
       </div>
 

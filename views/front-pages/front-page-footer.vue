@@ -1,21 +1,37 @@
 <script setup lang="ts">
-import appleImg from '@images/front-pages/landing-page/apple-icon.png'
-import googlePlayImg from '@images/front-pages/landing-page/google-play-icon.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 
-interface Menu {
-  name: string
-  to: any
-  isNew?: boolean
-}
-
-const menus: Menu[] = [
-  { name: 'Pricing', to: { name: 'front-pages-pricing' } },
-  { name: 'Payment', to: { name: 'front-pages-payment' }, isNew: true },
-  { name: 'Maintenance', to: { name: 'pages-misc-under-maintenance' } },
-  { name: 'Comming Soon', to: { name: 'pages-misc-coming-soon' } },
+const productLinks = [
+  { name: 'Facturación FEL', hash: '#features' },
+  { name: 'Contabilidad', hash: '#features' },
+  { name: 'Inventario', hash: '#features' },
+  { name: 'Bancos', hash: '#features' },
 ]
+
+const companyLinks = [
+  { name: 'Precios', hash: '#pricing-plan' },
+  { name: 'Preguntas Frecuentes', hash: '#faq' },
+  { name: 'Contacto', hash: '#contact-us' },
+]
+
+const legalLinks = [
+  { name: 'Términos de Servicio', to: '#' },
+  { name: 'Política de Privacidad', to: '#' },
+]
+
+const email = ref('')
+const isSubscribing = ref(false)
+
+const handleSubscribe = () => {
+  if (!email.value) return
+  isSubscribing.value = true
+  // TODO: Implementar suscripción
+  setTimeout(() => {
+    isSubscribing.value = false
+    email.value = ''
+  }, 1500)
+}
 </script>
 
 <template>
@@ -26,143 +42,141 @@ const menus: Menu[] = [
     >
       <VContainer>
         <VRow>
-          <!-- 👉 Footer  -->
+          <!-- Logo y descripción -->
           <VCol
             cols="12"
-            md="5"
+            md="4"
           >
             <div class="mb-4 footer-form">
               <div class="d-flex align-center gap-x-3 mb-6">
                 <VNodeRenderer :nodes="themeConfig.app.logo" />
                 <div class="footer-title">
-                  VERTEX
+                  VERTEX ERP
                 </div>
               </div>
               <div class="text-body-1 footer-text mb-6">
-                Most Powerful & Comprehensive 🤩 Vuejs Admin Template with Elegant Material Design & Unique Layouts.
+                Sistema ERP en la nube para Guatemala. Facturación electrónica FEL, contabilidad, inventario y más. Todo integrado en una plataforma moderna.
               </div>
-              <VForm class="subscribe-form d-flex align-center gap-4">
+              <VForm
+                class="subscribe-form d-flex align-center gap-4"
+                @submit.prevent="handleSubscribe"
+              >
                 <VTextField
-                  label="Subscribe to newsletter"
-                  placeholder="john@email.com"
+                  v-model="email"
+                  label="Recibe novedades"
+                  placeholder="tu@email.com"
                   theme="dark"
                   density="compact"
                   class="footer-text"
+                  type="email"
                 />
-                <VBtn>Subscribe</VBtn>
+                <VBtn
+                  type="submit"
+                  :loading="isSubscribing"
+                >
+                  Suscribir
+                </VBtn>
               </VForm>
             </div>
           </VCol>
 
-          <!-- 👉 Pages  -->
+          <!-- Módulos -->
           <VCol
             md="2"
             sm="4"
-            xs="6"
+            cols="6"
           >
             <div class="footer-links">
               <div class="footer-heading mb-6">
-                Pages
+                Módulos
               </div>
               <ul style="list-style: none;">
                 <li
-                  v-for="(item, index) in menus"
+                  v-for="(item, index) in productLinks"
                   :key="index"
                   class="mb-4"
+                >
+                  <NuxtLink
+                    class="footer-text text-no-wrap"
+                    :to="{ name: 'index', hash: item.hash }"
+                  >
+                    {{ item.name }}
+                  </NuxtLink>
+                </li>
+              </ul>
+            </div>
+          </VCol>
+
+          <!-- Empresa -->
+          <VCol
+            md="2"
+            sm="4"
+            cols="6"
+          >
+            <div class="footer-links">
+              <div class="footer-heading mb-6">
+                Empresa
+              </div>
+              <ul style="list-style: none;">
+                <li
+                  v-for="(item, index) in companyLinks"
+                  :key="index"
+                  class="mb-4"
+                >
+                  <NuxtLink
+                    class="footer-text text-no-wrap"
+                    :to="{ name: 'index', hash: item.hash }"
+                  >
+                    {{ item.name }}
+                  </NuxtLink>
+                </li>
+              </ul>
+            </div>
+          </VCol>
+
+          <!-- Legal y contacto -->
+          <VCol
+            cols="12"
+            md="4"
+            sm="4"
+          >
+            <div>
+              <div class="footer-heading mb-6">
+                Contacto
+              </div>
+
+              <div class="d-flex flex-column gap-4 mb-6">
+                <div class="d-flex align-center gap-3 footer-text">
+                  <VIcon icon="ri-map-pin-line" size="20" />
+                  <span>Ciudad de Guatemala, Guatemala</span>
+                </div>
+                <div class="d-flex align-center gap-3 footer-text">
+                  <VIcon icon="ri-phone-line" size="20" />
+                  <span>+502 2222-3333</span>
+                </div>
+                <div class="d-flex align-center gap-3 footer-text">
+                  <VIcon icon="ri-mail-line" size="20" />
+                  <span>info@vertexerp.app</span>
+                </div>
+              </div>
+
+              <div class="footer-heading mb-4">
+                Legal
+              </div>
+              <ul style="list-style: none;">
+                <li
+                  v-for="(item, index) in legalLinks"
+                  :key="index"
+                  class="mb-2"
                 >
                   <NuxtLink
                     class="footer-text text-no-wrap"
                     :to="item.to"
                   >
-                    <div class="d-flex align-center">
-                      <div>{{ item.name }}</div>
-                      <template v-if="item.isNew">
-                        <VChip
-                          color="primary"
-                          variant="elevated"
-                          size="small"
-                          class="ms-2"
-                        >
-                          New
-                        </VChip>
-                      </template>
-                    </div>
+                    {{ item.name }}
                   </NuxtLink>
                 </li>
               </ul>
-            </div>
-          </VCol>
-
-          <!-- 👉 Products -->
-          <VCol
-            md="2"
-            sm="4"
-            xs="6"
-          >
-            <div class="footer-links">
-              <div class="footer-heading mb-6">
-                Products
-              </div>
-              <ul>
-                <li
-                  v-for="(item, index) in ['Page Builder', 'Admin Dashboards', 'UI Kits', 'Illustrations']"
-                  :key="index"
-                  class="mb-4"
-                  style="list-style: none;"
-                >
-                  <NuxtLink
-                    to=""
-                    class="footer-text text-no-wrap"
-                  >
-                    {{ item }}
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div>
-          </VCol>
-
-          <!-- 👉 Download App -->
-          <VCol
-            cols="12"
-            md="3"
-            sm="4"
-          >
-            <div>
-              <div class="footer-heading mb-6">
-                Download our app
-              </div>
-              <div>
-                <VBtn
-                  v-for="(item, index) in [
-                    { image: appleImg, store: 'App Store' },
-                    { image: googlePlayImg, store: 'Google Play' },
-                  ]"
-                  :key="index"
-                  color="#211B2C"
-                  size="x-large"
-                  class="mb-4 d-block"
-                >
-                  <template #default>
-                    <div class="d-flex gap-x-3">
-                      <div>
-                        <VImg
-                          :src="item.image"
-                          height="34"
-                          width="34"
-                        />
-                      </div>
-                      <div>
-                        <div class="text-body-2 text-white">
-                          Download on the
-                        </div>
-                        <div class="text-body-2 font-weight-medium text-white">
-                          {{ item.store }}
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </VBtn>
-              </div>
             </div>
           </VCol>
         </VRow>
@@ -171,38 +185,57 @@ const menus: Menu[] = [
 
     <div class="footer-line w-100">
       <VContainer>
-        <div class="d-flex justify-space-between flex-wrap gap-y-4">
+        <div class="d-flex justify-space-between flex-wrap gap-y-4 py-4">
           <span class="d-flex align-center">
-            &copy;
-
-            {{ new Date().getFullYear() }}.
-            Hecho con ❤️ por <a
+            &copy; {{ new Date().getFullYear() }} VERTEX ERP.
+            Hecho con ❤️ por
+            <a
               href="https://waisconsultores.io"
               target="_blank"
               rel="noopener noreferrer"
               class="ms-1 font-weight-medium"
               style="color: rgba(255, 255, 255, var(--v-high-emphasis-opacity));"
-            >Wais Consultores</a>
+            >
+              Wais Consultores
+            </a>
           </span>
           <div class="d-flex gap-x-2">
-            <template
-              v-for="(item, index) in [
-                { title: 'facebook', icon: 'bxl-facebook', href: 'https://www.facebook.com/' },
-                { title: 'twitter', icon: 'bxl-twitter', href: 'https://twitter.com/' },
-                { title: 'instagram', icon: 'bxl-linkedin', href: 'https://in.linkedin.com/' },
-              ]"
-              :key="index"
+            <IconBtn
+              href="https://www.facebook.com/"
+              size="small"
+              target="_blank"
+              color="#fff"
+              rel="noopener noreferrer"
             >
-              <IconBtn
-                :href="item.href"
-                size="small"
-                target="_blank"
-                color="#fff"
-                rel="noopener noreferrer"
-              >
-                <VIcon :icon="item.icon" />
-              </IconBtn>
-            </template>
+              <VIcon icon="ri-facebook-fill" />
+            </IconBtn>
+            <IconBtn
+              href="https://www.instagram.com/"
+              size="small"
+              target="_blank"
+              color="#fff"
+              rel="noopener noreferrer"
+            >
+              <VIcon icon="ri-instagram-line" />
+            </IconBtn>
+            <IconBtn
+              href="https://www.linkedin.com/"
+              size="small"
+              target="_blank"
+              color="#fff"
+              rel="noopener noreferrer"
+            >
+              <VIcon icon="ri-linkedin-fill" />
+            </IconBtn>
+            <IconBtn
+              href="https://wa.me/50222223333"
+              size="small"
+              target="_blank"
+              color="#fff"
+              rel="noopener noreferrer"
+            >
+              <VIcon icon="ri-whatsapp-line" />
+            </IconBtn>
           </div>
         </div>
       </VContainer>
