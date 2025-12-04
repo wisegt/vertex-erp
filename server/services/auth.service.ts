@@ -56,7 +56,7 @@ export async function authenticateUser(
           id,
           name
         ),
-        user_roles (
+        user_roles!user_roles_user_id_fkey (
           role:roles (
             id,
             code,
@@ -72,26 +72,31 @@ export async function authenticateUser(
 
     if (userError) {
       console.error('[Auth] Error consultando usuario:', userError.message)
+
       return null
     }
 
     if (!dbUser) {
       console.warn('[Auth] Usuario no encontrado:', normalizedEmail)
+
       return null
     }
 
     if (!dbUser.password_hash) {
       console.warn('[Auth] Usuario sin contraseña:', normalizedEmail)
+
       return null
     }
 
     // Verificar contraseña
     const passwordCheckStart = Date.now()
     const passwordValid = await bcrypt.compare(password, dbUser.password_hash)
+
     console.log(`[Auth] Verificación password: ${Date.now() - passwordCheckStart}ms`)
 
     if (!passwordValid) {
       console.warn('[Auth] Contraseña incorrecta para:', normalizedEmail)
+
       return null
     }
 
@@ -109,20 +114,24 @@ export async function authenticateUser(
     if (dbUser.is_super_admin) {
       // Super admin tiene acceso total
       abilityRules = [{ action: 'manage', subject: 'all' }]
-    } else if (roleId) {
+    }
+    else if (roleId) {
       // Cargar permisos del rol
       const permissionsStart = Date.now()
+
       abilityRules = await loadRolePermissions(supabase, roleId)
       console.log(`[Auth] Carga permisos: ${Date.now() - permissionsStart}ms`)
 
       // Cargar privilegios personalizados del usuario
       const privilegesStart = Date.now()
       const customPrivileges = await loadUserPrivileges(supabase, dbUser.id, dbUser.tenant_id)
+
       console.log(`[Auth] Carga privilegios: ${Date.now() - privilegesStart}ms`)
 
       // Merge de permisos (privilegios personalizados sobrescriben permisos de rol)
       abilityRules = mergePermissions(abilityRules, customPrivileges)
-    } else {
+    }
+    else {
       // Sin rol asignado - permisos mínimos
       abilityRules = [{ action: 'read', subject: 'Auth' }]
     }
@@ -136,7 +145,7 @@ export async function authenticateUser(
       fullName: `${dbUser.first_name || ''} ${dbUser.last_name || ''}`.trim() || dbUser.email,
       avatar: dbUser.profile_picture,
       role: roleCode,
-      roleName: roleName,
+      roleName,
       tenantId: dbUser.tenant_id || '',
       tenantName: tenant?.name || 'Mi Empresa',
       isSuperAdmin: dbUser.is_super_admin || false,
@@ -145,6 +154,7 @@ export async function authenticateUser(
   }
   catch (error) {
     console.error('[Auth] Error durante autenticación:', error)
+
     return null
   }
 }
@@ -168,6 +178,7 @@ async function loadRolePermissions(
 
   if (error || !rolePerms) {
     console.error('[Auth] Error cargando permisos del rol:', error?.message)
+
     return []
   }
 
@@ -220,7 +231,9 @@ async function loadUserPrivileges(
     .eq('tenant_id', tenantId)
 
   if (error || !privileges) {
-    if (error) console.error('[Auth] Error cargando privilegios:', error.message)
+    if (error)
+      console.error('[Auth] Error cargando privilegios:', error.message)
+
     return []
   }
 
@@ -229,7 +242,8 @@ async function loadUserPrivileges(
 
   for (const priv of privileges) {
     const formCode = (priv.form as { code: string } | null)?.code
-    if (!formCode) continue
+    if (!formCode)
+      continue
 
     // Mapeo de campos a acciones CASL
     const actionMap: Record<string, string> = {
@@ -268,25 +282,24 @@ function mergePermissions(
 ): Array<{ action: string; subject: string }> {
   // Crear mapa de permisos del rol
   const permMap = new Map<string, boolean>()
-  
-  for (const rule of roleRules) {
+
+  for (const rule of roleRules)
     permMap.set(`${rule.action}-${rule.subject}`, true)
-  }
 
   // Aplicar privilegios personalizados
   for (const priv of customPrivileges) {
     const key = `${priv.action}-${priv.subject}`
-    if (priv.granted) {
+    if (priv.granted)
       permMap.set(key, true) // Conceder acceso
-    } else {
+    else
       permMap.delete(key) // Revocar acceso
-    }
   }
 
   // Convertir de vuelta a array
   const result: Array<{ action: string; subject: string }> = []
   for (const [key, _] of permMap) {
     const [action, subject] = key.split('-')
+
     result.push({ action, subject })
   }
 
