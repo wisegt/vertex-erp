@@ -20,6 +20,7 @@ interface Plan {
   description: string
   price: number
   yearlyPrice: number
+  billingInterval: 'monthly' | 'annual' // Para filtrar planes mensuales vs anuales
   features: string[]
   limits: Record<string, number>
   displayOrder: number
@@ -265,16 +266,38 @@ export const usePricing = () => {
 
   // Precio a mostrar según billing period
   const getDisplayPrice = (plan: Plan, billingPeriod: 'monthly' | 'yearly') => {
+    // Con la nueva estructura donde los planes están separados por billing_interval:
+    // El plan filtrado ya tiene el precio correcto en plan.price
+    
     if (billingPeriod === 'yearly') {
-      return Math.floor(plan.yearlyPrice / 12)
+      // Si es anual, el plan.price es el precio anual total
+      // Mostramos el equivalente mensual
+      return Math.floor(plan.price / 12)
     }
+    
+    // Si es mensual, plan.price es el precio mensual
     return plan.price
   }
 
   // Ahorro anual para un plan
   const getYearlySavings = (plan: Plan) => {
+    // Con la nueva estructura de billing_interval:
+    // - Planes anuales: plan.price YA es el precio anual total (ej: Q11,988/año)
+    // - El ahorro es equivalente a 2 meses gratis (paga 10, obtiene 12)
+    
+    // Si el plan tiene billing_interval='annual'
+    if (plan.billingInterval === 'annual') {
+      // Precio anual = 10 meses pagados (plan.price)
+      // Precio mensual = plan.price / 10
+      // Ahorro = precio mensual * 2 (2 meses gratis)
+      const precioMensual = plan.price / 10
+      return Math.round(precioMensual * 2)
+    }
+    
+    // Para planes mensuales (si aún se usa esta lógica)
+    // yearlyPrice debería ser el precio de 10 meses
     const fullYearPrice = plan.price * 12
-    return fullYearPrice - plan.yearlyPrice
+    return fullYearPrice - (plan.yearlyPrice || plan.price * 10)
   }
 
   // Calcular IVA

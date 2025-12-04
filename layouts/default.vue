@@ -7,10 +7,23 @@ const DefaultLayoutWithHorizontalNav = defineAsyncComponent(() => import('./comp
 const DefaultLayoutWithVerticalNav = defineAsyncComponent(() => import('./components/DefaultLayoutWithVerticalNav.vue'))
 
 const configStore = useConfigStore()
+const route = useRoute()
 
 // ℹ️ This will switch to vertical nav when define breakpoint is reached when in horizontal nav layout
 // Remove below composable usage if you are not using horizontal nav layout in your app
 switchToVerticalNavOnLtOverlayNavBreakpoint()
+
+// Forzar navegación vertical para TODAS las páginas del layout default
+onMounted(() => {
+  configStore.appContentLayoutNav = AppContentLayoutNav.Vertical
+})
+
+// También con watchEffect para cambios de ruta
+watchEffect(() => {
+  if (configStore.appContentLayoutNav !== AppContentLayoutNav.Vertical) {
+    configStore.appContentLayoutNav = AppContentLayoutNav.Vertical
+  }
+})
 
 const { layoutAttrs, injectSkinClasses } = useSkins()
 

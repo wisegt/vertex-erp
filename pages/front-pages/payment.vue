@@ -2,12 +2,8 @@
 import Footer from '@/views/front-pages/front-page-footer.vue'
 import Navbar from '@/views/front-pages/front-page-navbar.vue'
 
-import paypalDark from '@images/icons/payments/img/paypal-dark.png'
-import paypalLight from '@images/icons/payments/img/paypal-light.png'
-
 import { useConfigStore } from '@core/stores/config'
 
-const paypal = useGenerateImageVariant(paypalLight, paypalDark)
 const store = useConfigStore()
 const route = useRoute()
 
@@ -17,11 +13,9 @@ const {
   isLoading,
   loadPricingData,
   getDisplayPrice,
-  getYearlySavings,
   calculateTax,
   formatCurrency,
   discountLabel,
-  discountPromoText,
   monthsFree,
   taxPercentage,
   taxName,
@@ -67,6 +61,34 @@ const billingData = ref({
 const { status: authStatus } = useAuth()
 const isLoadingUserData = ref(false)
 
+// Estado de suscripción existente
+const existingSubscription = ref<any>(null)
+
+const hasActiveSubscription = computed(() => {
+  if (!existingSubscription.value)
+    return false
+  const status = existingSubscription.value.status
+
+  return ['active', 'trial', 'past_due'].includes(status)
+})
+
+// Verificar suscripción existente
+const checkExistingSubscription = async () => {
+  if (authStatus.value !== 'authenticated')
+    return
+
+  try {
+    const response = await $fetch('/api/subscription/status')
+    if (response.success && response.data) {
+      existingSubscription.value = response.data
+      console.log('📋 Suscripción existente:', response.data)
+    }
+  }
+  catch (error) {
+    console.warn('No se pudo verificar suscripción existente:', error)
+  }
+}
+
 const loadUserBillingData = async () => {
   if (authStatus.value !== 'authenticated')
     return
@@ -110,10 +132,25 @@ const clearSavedBillingData = () => {
     localStorage.removeItem('vertex_billing_data')
 }
 
+// Función para limpiar los campos del formulario
+const clearBillingForm = () => {
+  clearSavedBillingData()
+  billingData.value = {
+    businessName: '',
+    nit: '',
+    email: '',
+    phone: '',
+    phoneCode: '+502',
+    address: '',
+  }
+}
+
 // Cargar al montar si está autenticado
 onMounted(() => {
-  if (authStatus.value === 'authenticated')
+  if (authStatus.value === 'authenticated') {
     loadUserBillingData()
+    checkExistingSubscription()
+  }
 })
 
 // Códigos de teléfono por país (Centroamérica + principales)
@@ -194,10 +231,18 @@ onMounted(async () => {
   await loadPricingData()
 })
 
-// Planes filtrados por modalidad actual
+// Mapear billing del frontend ('monthly'/'yearly') a la BD ('monthly'/'annual')
+const billingIntervalMap = {
+  monthly: 'monthly',
+  yearly: 'annual',
+} as const
+
+// Planes filtrados por modalidad Y billing interval
 const currentPlans = computed(() => {
+  const dbBillingInterval = billingIntervalMap[selectedBilling.value]
+
   return plans.value
-    .filter(p => p.planType === selectedModalidad.value)
+    .filter(p => p.planType === selectedModalidad.value && p.billingInterval === dbBillingInterval)
     .sort((a, b) => a.displayOrder - b.displayOrder)
 })
 
@@ -208,9 +253,14 @@ const selectedPlanDetails = computed(() => {
     || currentPlans.value[0]
 })
 
-// Watch for modalidad changes to reset plan selection to the popular plan
-watch(selectedModalidad, newVal => {
-  const plansForType = plans.value.filter(p => p.planType === newVal)
+// Watch for modalidad OR billing changes to reset plan selection
+watch([selectedModalidad, selectedBilling], ([newModalidad, newBilling]) => {
+  const dbBillingInterval = billingIntervalMap[newBilling]
+
+  const plansForType = plans.value.filter(
+    p => p.planType === newModalidad && p.billingInterval === dbBillingInterval,
+  )
+
   const popularPlan = plansForType.find(p => p.isPopular)
 
   selectedPlanCode.value = popularPlan?.code || plansForType[0]?.code || ''
@@ -224,27 +274,29 @@ const basePrice = computed(() => {
   return getDisplayPrice(selectedPlanDetails.value, selectedBilling.value)
 })
 
-// Precio total anual
-const yearlyTotal = computed(() => {
-  return selectedPlanDetails.value?.yearlyPrice || 0
+// Precio total según el billing seleccionado
+const totalBase = computed(() => {
+  if (!selectedPlanDetails.value)
+    return 0
+
+  // Con la nueva estructura:
+  // - Planes anuales (billing_interval='annual'): price es el precio anual
+  // - Planes mensuales (billing_interval='monthly'): price es el precio mensual
+  // El plan filtrado ya tiene el precio correcto en plan.price
+  return selectedPlanDetails.value.price
 })
 
-// Ahorro anual
+// Ahorro anual (solo aplica cuando billing='yearly')
 const yearlySavings = computed(() => {
   if (!selectedPlanDetails.value || selectedBilling.value !== 'yearly')
     return 0
 
-  return getYearlySavings(selectedPlanDetails.value)
-})
+  // Para planes anuales, el ahorro es 2 meses gratis
+  // Precio anual = 10 meses pagados
+  // Ahorro = (precio anual / 10) * 2
+  const precioMensual = selectedPlanDetails.value.price / 10
 
-// Para pago mensual: precio mensual sin descuento
-const monthlyTotal = computed(() => {
-  return selectedPlanDetails.value?.price || 0
-})
-
-// Total base según billing
-const totalBase = computed(() => {
-  return selectedBilling.value === 'yearly' ? yearlyTotal.value : monthlyTotal.value
+  return Math.round(precioMensual * 2)
 })
 
 // IVA
@@ -260,6 +312,18 @@ const totalAmount = computed(() => {
 // Función para obtener el precio a mostrar de cada plan en el selector
 const getPlanDisplayPrice = (plan: any) => {
   return getDisplayPrice(plan, selectedBilling.value)
+}
+
+// Función para obtener el precio mensual original (para mostrar tachado en planes anuales)
+const getOriginalMonthlyPrice = (annualPlan: any) => {
+  // Buscar el plan mensual correspondiente (mismo nombre, mismo tipo, pero monthly)
+  const monthlyPlan = plans.value.find(
+    p => p.name === annualPlan.name
+      && p.planType === annualPlan.planType
+      && p.billingInterval === 'monthly',
+  )
+
+  return monthlyPlan?.price || annualPlan.price
 }
 
 const checkoutUrl = ref<string | null>(null)
@@ -398,6 +462,13 @@ const handlePayment = async () => {
     return
   }
 
+  // Validar si ya tiene suscripción activa (no trial)
+  if (hasActiveSubscription.value && existingSubscription.value?.status === 'active') {
+    alert('Ya tienes una suscripción activa. Para cambiar de plan, ve a la sección de facturación en tu cuenta.')
+
+    return
+  }
+
   // Validar datos de facturación
   if (!billingData.value.businessName || !billingData.value.nit || !billingData.value.email || !billingData.value.phone || !billingData.value.address) {
     alert('Por favor completa todos los datos de facturación')
@@ -477,6 +548,21 @@ const handlePayment = async () => {
     isProcessing.value = false
   }
 }
+
+// Manejar navegación a gestión de suscripción
+const handleManageSubscription = () => {
+  if (authStatus.value === 'authenticated') {
+    // Usuario autenticado, navegar con recarga completa para cargar el layout correcto
+    window.location.href = '/pages/account-settings/billing-plans'
+  }
+  else {
+    // No autenticado, ir a login
+    navigateTo({
+      path: '/login',
+      query: { to: '/pages/account-settings/billing-plans' },
+    })
+  }
+}
 </script>
 
 <template>
@@ -517,6 +603,136 @@ const handlePayment = async () => {
                     Completa los datos de pago para activar tu cuenta.
                   </div>
                 </div>
+
+                <!-- Alerta si ya tiene suscripción activa -->
+                <!-- Alert de suscripción activa -->
+                <VCard
+                  v-if="hasActiveSubscription"
+                  class="mt-6 subscription-active-card"
+                  variant="elevated"
+                >
+                  <VCardText class="pa-6">
+                    <div class="d-flex align-start gap-4">
+                      <!-- Ícono -->
+                      <VAvatar
+                        color="primary"
+                        variant="tonal"
+                        size="64"
+                        class="flex-shrink-0"
+                      >
+                        <VIcon
+                          icon="ri-shield-check-fill"
+                          size="40"
+                        />
+                      </VAvatar>
+
+                      <!-- Contenido -->
+                      <div class="flex-grow-1">
+                        <!-- Título -->
+                        <div class="d-flex align-center gap-2 mb-3">
+                          <h4 class="text-h5 mb-0">
+                            {{ existingSubscription?.status === 'trial' ? 'Periodo de Prueba Activo' : 'Suscripción Activa' }}
+                          </h4>
+                          <VIcon
+                            icon="ri-checkbox-circle-fill"
+                            color="success"
+                            size="24"
+                          />
+                        </div>
+
+                        <!-- Información del plan - Layout compacto -->
+                        <div
+                          v-if="existingSubscription?.plan"
+                          class="mb-3"
+                        >
+                          <div class="d-flex align-center gap-3 mb-3">
+                            <VAvatar
+                              :color="existingSubscription.plan.iconColor || 'primary'"
+                              size="40"
+                              variant="tonal"
+                            >
+                              <VIcon
+                                :icon="existingSubscription.plan.icon || 'ri-vip-crown-line'"
+                                size="24"
+                              />
+                            </VAvatar>
+                            <div class="flex-grow-1">
+                              <div class="d-flex align-center gap-2 flex-wrap">
+                                <span class="text-h6">{{ existingSubscription.plan.name }}</span>
+                                <span class="text-body-2 text-medium-emphasis">• Plan {{ existingSubscription.plan.billingInterval === 'monthly' ? 'Mensual' : 'Anual' }}</span>
+                                <VChip
+                                  v-if="existingSubscription.plan.isPopular"
+                                  color="primary"
+                                  size="x-small"
+                                  variant="flat"
+                                >
+                                  <VIcon
+                                    start
+                                    icon="ri-star-fill"
+                                    size="12"
+                                  />
+                                  Popular
+                                </VChip>
+                              </div>
+                              <div class="d-flex align-center gap-3 flex-wrap mt-1">
+                                <!-- Fecha de renovación o días restantes -->
+                                <div
+                                  v-if="existingSubscription?.isTrialing"
+                                  class="d-flex align-center gap-1"
+                                >
+                                  <VIcon
+                                    icon="ri-time-line"
+                                    size="16"
+                                    color="warning"
+                                  />
+                                  <span class="text-caption">
+                                    <strong class="text-warning">{{ existingSubscription?.daysRemaining }}d</strong> restantes
+                                  </span>
+                                </div>
+                                <div
+                                  v-else-if="existingSubscription?.currentPeriodEnd"
+                                  class="d-flex align-center gap-1"
+                                >
+                                  <VIcon
+                                    icon="ri-calendar-check-line"
+                                    size="16"
+                                  />
+                                  <span class="text-caption">
+                                    {{ new Date(existingSubscription.currentPeriodEnd).toLocaleDateString('es-GT', { day: 'numeric', month: 'short', year: 'numeric' }) }}
+                                  </span>
+                                </div>
+                                <!-- Precio -->
+                                <div
+                                  v-if="existingSubscription?.plan?.price"
+                                  class="d-flex align-center gap-1"
+                                >
+                                  <VIcon
+                                    icon="ri-price-tag-3-line"
+                                    size="16"
+                                  />
+                                  <span class="text-caption">
+                                    <strong>Q{{ formatCurrency(existingSubscription.plan.price) }}</strong>{{ existingSubscription.plan.billingInterval === 'monthly' ? '/mes' : '/año' }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Botón de acción -->
+                        <VBtn
+                          color="primary"
+                          variant="elevated"
+                          block
+                          prepend-icon="ri-settings-3-line"
+                          @click="handleManageSubscription"
+                        >
+                          Gestionar Suscripción
+                        </VBtn>
+                      </div>
+                    </div>
+                  </VCardText>
+                </VCard>
 
                 <!-- Método de pago -->
                 <div class="my-8">
@@ -571,13 +787,17 @@ const handlePayment = async () => {
                             value="paypal"
                             class="mb-2"
                           />
-                          <img
-                            :src="paypal"
-                            height="28"
+                          <VIcon
+                            icon="ri-paypal-line"
+                            size="32"
+                            color="primary"
                             class="mb-2"
-                          >
+                          />
                           <div class="text-body-2">
                             PayPal
+                          </div>
+                          <div class="text-caption text-medium-emphasis">
+                            Pago seguro
                           </div>
                         </VCardText>
                       </VCard>
@@ -600,12 +820,15 @@ const handlePayment = async () => {
                           />
                           <VIcon
                             icon="ri-bank-line"
-                            size="28"
+                            size="32"
                             color="primary"
                             class="mb-2"
                           />
                           <div class="text-body-2">
                             Transferencia Bancaria
+                          </div>
+                          <div class="text-caption text-medium-emphasis">
+                            Depósito directo
                           </div>
                         </VCardText>
                       </VCard>
@@ -629,7 +852,7 @@ const handlePayment = async () => {
                           variant="text"
                           size="small"
                           color="error"
-                          @click="clearSavedBillingData(); billingData = loadSavedBillingData()"
+                          @click="clearBillingForm"
                         >
                           <VIcon
                             icon="ri-delete-bin-line"
@@ -1043,7 +1266,7 @@ const handlePayment = async () => {
                               v-if="selectedBilling === 'yearly'"
                               class="text-caption text-medium-emphasis text-decoration-line-through"
                             >
-                              {{ currencySymbol }}{{ formatCurrency(plan.price) }}
+                              {{ currencySymbol }}{{ formatCurrency(getOriginalMonthlyPrice(plan)) }}
                             </div>
                           </div>
                         </VCardText>
@@ -1233,6 +1456,33 @@ const handlePayment = async () => {
     border: none;
     border-radius: 8px;
     inline-size: 100%;
+  }
+}
+
+.subscription-active-card {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(var(--v-theme-primary), 0.2);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(var(--v-theme-surface), 1) 0%,
+      rgba(var(--v-theme-primary), 0.02) 100%
+    );
+
+  &::before {
+    position: absolute;
+    background:
+      linear-gradient(
+        to bottom,
+        rgb(var(--v-theme-primary)),
+        rgb(var(--v-theme-success))
+      );
+    block-size: 100%;
+    content: "";
+    inline-size: 4px;
+    inset-block-start: 0;
+    inset-inline-start: 0;
   }
 }
 </style>

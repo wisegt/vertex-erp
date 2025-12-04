@@ -23,6 +23,15 @@ export default defineNuxtRouteMiddleware(to => {
       return undefined
   }
 
+  // Rutas que solo requieren estar autenticado (sin verificación de permisos CASL específicos)
+  const authOnlyRoutes = ['/pages/account-settings', '/dashboards', '/apps']
+  const isAuthOnlyRoute = authOnlyRoutes.some(route => to.path.startsWith(route))
+
+  // Si es una ruta que solo requiere autenticación y el usuario está logueado, permitir acceso
+  if (isAuthOnlyRoute && isLoggedIn) {
+    return
+  }
+
   if (!canNavigate(to) && to.matched.length) {
     /* eslint-disable indent */
     return navigateTo(isLoggedIn

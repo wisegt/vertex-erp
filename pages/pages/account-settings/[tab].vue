@@ -14,16 +14,18 @@ const activeTab = computed({
 
 // tabs
 const tabs = [
-  { title: 'Account', icon: 'ri-group-line', tab: 'account' },
-  { title: 'Security', icon: 'ri-lock-line', tab: 'security' },
-  { title: 'Billing & Plans', icon: 'ri-bookmark-line', tab: 'billing-plans' },
-  { title: 'Notifications', icon: 'ri-notification-3-line', tab: 'notification' },
-  { title: 'Connections', icon: 'ri-link', tab: 'connection' },
+  { title: 'Cuenta', icon: 'ri-group-line', tab: 'account' },
+  { title: 'Seguridad', icon: 'ri-lock-line', tab: 'security' },
+  { title: 'Facturación & Planes', icon: 'ri-bookmark-line', tab: 'billing-plans' },
+  { title: 'Notificaciones', icon: 'ri-notification-3-line', tab: 'notification' },
+  { title: 'Conexiones', icon: 'ri-link', tab: 'connection' },
 ]
 
 definePageMeta({
+  layout: 'default',
   navActiveLink: 'pages-account-settings-tab',
-
+  action: 'read',
+  subject: 'Auth',
 })
 </script>
 

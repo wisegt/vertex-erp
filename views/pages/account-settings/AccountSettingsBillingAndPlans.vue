@@ -107,6 +107,53 @@ const formattedEndDate = computed(() => {
   })
 })
 
+// Computed: días hasta renovación (para planes activos)
+const daysUntilRenewal = computed(() => {
+  if (isTrialing.value) return 0
+  
+  const endDate = billingData.value.subscription.currentPeriodEnd
+  if (!endDate) return 0
+  
+  const now = new Date()
+  const end = new Date(endDate)
+  const diffTime = end.getTime() - now.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  
+  return Math.max(0, diffDays)
+})
+
+// Computed: color e ícono de estado de suscripción según proximidad de vencimiento
+const subscriptionStatusColor = computed(() => {
+  const days = daysUntilRenewal.value
+  
+  if (days <= 7) return 'error'      // Rojo - 7 días o menos
+  if (days <= 15) return 'warning'   // Amarillo - 15 días o menos
+  if (days <= 30) return 'info'      // Azul - 30 días o menos
+  return 'success'                    // Verde - más de 30 días
+})
+
+const subscriptionStatusIcon = computed(() => {
+  const days = daysUntilRenewal.value
+  
+  if (days <= 7) return 'ri-alert-line'           // Alerta
+  if (days <= 15) return 'ri-time-line'           // Reloj
+  if (days <= 30) return 'ri-calendar-line'       // Calendario
+  return 'ri-checkbox-circle-line'                 // Check
+})
+
+// Computed: fecha de renovación en formato dd/mm/aaaa
+const renewalDateFormatted = computed(() => {
+  const dateStr = billingData.value.subscription.currentPeriodEnd
+  if (!dateStr) return ''
+  
+  const date = new Date(dateStr)
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  
+  return `${day}/${month}/${year}`
+})
+
 // Computed: color del alert según días restantes
 const alertType = computed(() => {
   if (daysRemaining.value <= 0) return 'error'
@@ -236,66 +283,12 @@ watch(() => billingData.value.tenant, (tenant) => {
             <VProgressCircular indeterminate color="primary" />
           </div>
 
+          <!-- Alert para trial O Card para suscripción activa -->
           <VRow v-else>
-            <VCol cols="12" md="6">
-              <div class="d-flex flex-column gap-y-6">
-                <!-- Plan name -->
-                <div class="d-flex flex-column gap-y-1">
-                  <h6 class="text-h6">
-                    Tu plan actual es {{ billingData.plan.name }}
-                  </h6>
-                  <div class="text-body-2 text-medium-emphasis">
-                    {{ billingData.plan.code === 'trial' 
-                      ? 'Acceso completo a todas las funcionalidades durante tu período de prueba' 
-                      : billingData.plan.description || 'Plan activo para tu empresa' 
-                    }}
-                  </div>
-                </div>
-
-                <!-- Active until -->
-                <div class="d-flex flex-column gap-y-1">
-                  <h6 class="text-h6">
-                    {{ isTrialing ? 'Prueba activa hasta' : 'Activo hasta' }} {{ formattedEndDate }}
-                  </h6>
-                  <div class="text-body-2 text-medium-emphasis">
-                    Te enviaremos una notificación antes de que expire tu {{ isTrialing ? 'prueba' : 'suscripción' }}
-                  </div>
-                </div>
-
-                <!-- Price -->
-                <div class="d-flex flex-column gap-y-1">
-                  <div class="d-flex align-center gap-x-2">
-                    <h6 class="text-h6">
-                      {{ formattedPrice }} {{ formattedPeriod }}
-                    </h6>
-                    <VChip
-                      v-if="isTrialing"
-                      color="success"
-                      size="small"
-                    >
-                      Gratis
-                    </VChip>
-                    <VChip
-                      v-else-if="billingData.plan.code?.includes('plus') || billingData.plan.code?.includes('5')"
-                      color="primary"
-                      size="small"
-                    >
-                      Popular
-                    </VChip>
-                  </div>
-                  <p class="text-body-2 text-medium-emphasis mb-0">
-                    {{ isTrialing 
-                      ? 'Sin tarjeta de crédito requerida durante la prueba' 
-                      : `Plan ${billingData.plan.planType === 'contador' ? 'para contadores' : 'empresarial'}`
-                    }}
-                  </p>
-                </div>
-              </div>
-            </VCol>
-
-            <VCol cols="12" md="6">
-              <!-- Alert de atención -->
+            <VCol cols="12">
+              <!-- Para trial -->
               <VAlert
+                v-if="isTrialing"
                 :type="alertType"
                 variant="tonal"
                 class="mb-4"
@@ -308,7 +301,43 @@ watch(() => billingData.value.tenant, (tenant) => {
                 {{ alertMessage }}
               </VAlert>
 
-              <!-- Progress bar -->
+              <!-- Para suscripción activa -->
+              <VCard
+                v-else
+                :color="subscriptionStatusColor"
+                variant="tonal"
+                class="mb-4"
+              >
+                <VCardText class="pa-4">
+                  <div class="d-flex align-center gap-3">
+                    <VAvatar
+                      :color="subscriptionStatusColor"
+                      size="48"
+                      variant="tonal"
+                    >
+                      <VIcon
+                        :icon="subscriptionStatusIcon"
+                        size="28"
+                      />
+                    </VAvatar>
+                    <div class="flex-grow-1">
+                      <div class="text-h6 mb-1">
+                        Activo hasta {{ formattedEndDate }}
+                      </div>
+                      <div class="text-body-2 text-medium-emphasis">
+                        Te enviaremos una notificación antes de que expire tu suscripción
+                      </div>
+                    </div>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+
+            <!-- Progress bar para trial -->
+            <VCol
+              v-if="isTrialing"
+              cols="12"
+            >
               <h6 class="d-flex text-h6 justify-space-between mb-1">
                 <div>Días</div>
                 <div>{{ 14 - daysRemaining }} de 14 Días</div>
@@ -325,6 +354,114 @@ watch(() => billingData.value.tenant, (tenant) => {
                   : 'Tu período de prueba ha terminado'
                 }}
               </p>
+            </VCol>
+
+            <!-- Stats con iconos elegantes (4 cards iguales) -->
+            <VCol
+              v-if="!isTrialing"
+              cols="12"
+            >
+              <VRow>
+                <!-- Card 1: Precio -->
+                <VCol cols="6" md="3">
+                  <VCard variant="tonal" color="warning" class="text-center">
+                    <VCardText class="pa-4">
+                      <VAvatar
+                        color="warning"
+                        size="64"
+                        variant="tonal"
+                        class="mb-2"
+                      >
+                        <VIcon
+                          icon="ri-money-dollar-circle-line"
+                          size="32"
+                        />
+                      </VAvatar>
+                      <div class="text-caption text-medium-emphasis mb-2">
+                        Precio
+                      </div>
+                      <div class="text-h6">
+                        {{ formattedPrice }}/{{ formattedPeriod }}
+                      </div>
+                    </VCardText>
+                  </VCard>
+                </VCol>
+
+                <!-- Card 2: Próxima Renovación -->
+                <VCol cols="6" md="3">
+                  <VCard variant="tonal" :color="subscriptionStatusColor" class="text-center">
+                    <VCardText class="pa-4">
+                      <VAvatar
+                        :color="subscriptionStatusColor"
+                        size="64"
+                        variant="tonal"
+                        class="mb-2"
+                      >
+                        <VIcon
+                          icon="ri-calendar-check-line"
+                          size="32"
+                        />
+                      </VAvatar>
+                      <div class="text-caption text-medium-emphasis mb-2">
+                        Próxima Renovación
+                      </div>
+                      <div class="text-h6">
+                        {{ daysUntilRenewal }} días ({{ renewalDateFormatted }})
+                      </div>
+                    </VCardText>
+                  </VCard>
+                </VCol>
+
+                <!-- Card 3: Estado -->
+                <VCol cols="6" md="3">
+                  <VCard variant="tonal" color="success" class="text-center">
+                    <VCardText class="pa-4">
+                      <VAvatar
+                        color="success"
+                        size="64"
+                        variant="tonal"
+                        class="mb-2"
+                      >
+                        <VIcon
+                          icon="ri-shield-check-line"
+                          size="32"
+                        />
+                      </VAvatar>
+                      <div class="text-caption text-medium-emphasis">
+                        Estado
+                      </div>
+                      <div class="text-h6 mt-1">
+                        Activo
+                      </div>
+                    </VCardText>
+                  </VCard>
+                </VCol>
+
+                <!-- Card 4: Plan -->
+                <VCol cols="6" md="3">
+                  <VCard variant="tonal" color="info" class="text-center">
+                    <VCardText class="pa-4">
+                      <VAvatar
+                        :color="billingData.plan.iconColor || 'info'"
+                        size="64"
+                        variant="tonal"
+                        class="mb-2"
+                      >
+                        <VIcon
+                          :icon="billingData.plan.icon || 'ri-vip-crown-line'"
+                          size="32"
+                        />
+                      </VAvatar>
+                      <div class="text-caption text-medium-emphasis">
+                        Plan
+                      </div>
+                      <div class="text-h6 mt-1">
+                        {{ billingData.plan.name }}
+                      </div>
+                    </VCardText>
+                  </VCard>
+                </VCol>
+              </VRow>
             </VCol>
 
             <VCol cols="12">

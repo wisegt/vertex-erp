@@ -29,6 +29,7 @@ onMounted(() => {
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
+        <!-- Botón hamburguesa para mostrar/ocultar menú lateral (solo en móviles) -->
         <IconBtn
           id="vertical-nav-toggle-btn"
           class="ms-n2 d-lg-none"

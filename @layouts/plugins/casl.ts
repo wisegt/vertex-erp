@@ -13,10 +13,14 @@ import type { NavGroup } from '@layouts/types'
  * @param {string} subject CASL Subject // https://casl.js.org/v4/en/guide/intro#basics
  */
 export const can = (action: string | undefined, subject: string | undefined) => {
+  // Si no hay action y subject definidos, permitir acceso (item público)
+  if (!action && !subject)
+    return true
+
   const vm = getCurrentInstance()
 
   if (!vm)
-    return false
+    return true // Cambiar a true para permitir renderizado inicial
 
   const localCan = vm.proxy && '$can' in vm.proxy
 

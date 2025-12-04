@@ -8,6 +8,7 @@ interface Plan {
   price: number
   yearlyPrice: number
   billingPeriod: string
+  billingInterval: string // 'monthly' | 'annual'
   features: string[]
   limits: Record<string, number>
   displayOrder: number
@@ -41,8 +42,6 @@ const {
   plans,
   isLoading,
   loadPricingData,
-  getDisplayPrice,
-  getYearlySavings,
   formatCurrency,
   discountLabel,
   discountPromoText,
@@ -64,10 +63,20 @@ watch(() => props.isDialogVisible, async (visible) => {
   }
 })
 
-// Computed: filtered plans by type
+// Computed: filtered plans by type and billing interval
 const filteredPlans = computed(() => {
+  // Mapear isYearly a billing_interval
+  const targetInterval = isYearly.value ? 'annual' : 'monthly'
+  
   return plans.value
-    .filter(p => p.planType === selectedTab.value)
+    .filter(p => {
+      // Filtrar por tipo de plan
+      if (p.planType !== selectedTab.value) return false
+      
+      // Filtrar por intervalo de facturación
+      const planInterval = p.billingInterval || p.billingPeriod
+      return planInterval === targetInterval
+    })
     .sort((a, b) => a.displayOrder - b.displayOrder)
 })
 
@@ -86,7 +95,8 @@ const getMainLimit = (plan: Plan): string => {
 
 // Handle plan selection - navigate to checkout
 const handleSelectPlan = (plan: Plan) => {
-  const billing = isYearly.value ? 'yearly' : 'monthly'
+  // Determinar billing basado en el intervalo del plan seleccionado
+  const billing: 'monthly' | 'yearly' = plan.billingInterval === 'annual' ? 'yearly' : 'monthly'
   
   // Emit event for parent component
   emit('select-plan', plan, billing)
@@ -295,17 +305,17 @@ const getIconColor = (plan: Plan): string => {
                 <div class="d-flex flex-column align-center mb-2">
                   <div class="d-flex align-center justify-center">
                     <span class="text-h6 font-weight-medium align-self-start mt-1">{{ currencySymbol }}</span>
-                    <span class="text-h2 font-weight-bold">{{ formatCurrency(getDisplayPrice(plan, isYearly ? 'yearly' : 'monthly')) }}</span>
+                    <span class="text-h2 font-weight-bold">{{ formatCurrency(isYearly ? Math.floor(plan.price / 12) : plan.price) }}</span>
                     <span class="text-body-1 align-self-end mb-1 ms-1 text-medium-emphasis">/mes</span>
                   </div>
 
-                  <!-- Original price (crossed out) for yearly -->
+                  <!-- Annual price info for yearly -->
                   <div v-if="isYearly" class="text-center">
-                    <span class="text-body-2 text-medium-emphasis text-decoration-line-through">
-                      {{ currencySymbol }}{{ formatCurrency(plan.price) }}/mes
-                    </span>
                     <div class="text-caption text-success font-weight-medium">
-                      {{ currencySymbol }}{{ formatCurrency(plan.yearlyPrice) }}/año
+                      {{ currencySymbol }}{{ formatCurrency(plan.price) }}/año
+                    </div>
+                    <div class="text-caption text-medium-emphasis">
+                      Ahorras {{ currencySymbol }}{{ formatCurrency(Math.round((plan.price / 10) * 2)) }}
                     </div>
                   </div>
                 </div>
