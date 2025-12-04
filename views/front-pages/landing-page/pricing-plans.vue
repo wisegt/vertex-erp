@@ -1,165 +1,37 @@
 <script setup lang="ts">
 import sectionTitleIcon from '@images/pages/section-title-icon.png'
 
+const {
+  plans,
+  isLoading,
+  loadPricingData,
+  getPlansByType,
+  getDisplayPrice,
+  formatCurrency,
+  discountLabel,
+  discountPromoText,
+  currencySymbol,
+  isRealtimeConnected,
+} = usePricing()
+
 const pricingTab = ref('empresa')
-const billingPeriod = ref('yearly') // 'monthly' o 'yearly'
+const billingPeriod = ref<'monthly' | 'yearly'>('yearly')
 
-// Función para formatear moneda en Quetzales
-const formatCurrency = (amount: number): string => {
-  return amount.toLocaleString('es-GT', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
-}
-
-const planesEmpresa = [
-  {
-    title: 'Starter',
-    value: 'starter',
-    monthlyPrice: 299,
-    yearlyPrice: 2990,
-    currency: 'Q',
-    description: 'Ideal para pequeños negocios que inician su transformación digital',
-    icon: 'ri-rocket-line',
-    iconColor: 'info',
-    features: [
-      'Hasta 3 usuarios',
-      '500 facturas FEL/mes',
-      'Contabilidad básica',
-      '1 bodega',
-      'Punto de Venta (POS)',
-      'Soporte por email',
-    ],
-    highlighted: false,
-    buttonText: 'Comenzar',
-    buttonVariant: 'outlined' as const,
-  },
-  {
-    title: 'Business',
-    value: 'business',
-    monthlyPrice: 599,
-    yearlyPrice: 5990,
-    currency: 'Q',
-    description: 'Para empresas en crecimiento que necesitan más control',
-    icon: 'ri-line-chart-line',
-    iconColor: 'primary',
-    features: [
-      'Hasta 10 usuarios',
-      '2,000 facturas FEL/mes',
-      'Contabilidad completa',
-      '3 bodegas + Bancos',
-      'CxC y CxP',
-      'Soporte prioritario',
-    ],
-    highlighted: true,
-    buttonText: 'Más Popular',
-    buttonVariant: 'elevated' as const,
-  },
-  {
-    title: 'Enterprise',
-    value: 'enterprise',
-    monthlyPrice: 999,
-    yearlyPrice: 9990,
-    currency: 'Q',
-    description: 'Solución completa para operaciones complejas',
-    icon: 'ri-building-2-line',
-    iconColor: 'warning',
-    features: [
-      'Usuarios ilimitados',
-      'Facturas ilimitadas',
-      'Multi-empresa',
-      'Bodegas ilimitadas',
-      'API e Integraciones',
-      'Soporte dedicado 24/7',
-    ],
-    highlighted: false,
-    buttonText: 'Contactar Ventas',
-    buttonVariant: 'outlined' as const,
-  },
-]
-
-const planesContador = [
-  {
-    title: 'Independiente',
-    value: 'independiente',
-    monthlyPrice: 199,
-    yearlyPrice: 1990,
-    currency: 'Q',
-    description: 'Para contadores que manejan pocos clientes',
-    icon: 'ri-user-line',
-    iconColor: 'info',
-    features: [
-      'Hasta 5 empresas',
-      '1 usuario contador',
-      'Contabilidad completa',
-      'Reportes SAT',
-      'Libros contables',
-      'Soporte por email',
-    ],
-    highlighted: false,
-    buttonText: 'Comenzar',
-    buttonVariant: 'outlined' as const,
-  },
-  {
-    title: 'Despacho',
-    value: 'despacho',
-    monthlyPrice: 499,
-    yearlyPrice: 4990,
-    currency: 'Q',
-    description: 'Para despachos contables con cartera de clientes',
-    icon: 'ri-team-line',
-    iconColor: 'primary',
-    features: [
-      'Hasta 20 empresas',
-      '5 usuarios del despacho',
-      'Portal para clientes',
-      'Reportes avanzados',
-      'Marca blanca',
-      'Soporte prioritario',
-    ],
-    highlighted: true,
-    buttonText: 'Más Popular',
-    buttonVariant: 'elevated' as const,
-  },
-  {
-    title: 'Firma',
-    value: 'firma',
-    monthlyPrice: 899,
-    yearlyPrice: 8990,
-    currency: 'Q',
-    description: 'Para firmas de auditoría y consultoría',
-    icon: 'ri-bank-line',
-    iconColor: 'warning',
-    features: [
-      'Empresas ilimitadas',
-      'Usuarios ilimitados',
-      'Consolidación',
-      'API completa',
-      'Capacitación incluida',
-      'Gerente de cuenta',
-    ],
-    highlighted: false,
-    buttonText: 'Contactar Ventas',
-    buttonVariant: 'outlined' as const,
-  },
-]
-
-const currentPlans = computed(() => {
-  return pricingTab.value === 'empresa' ? planesEmpresa : planesContador
+// Cargar planes al montar
+onMounted(async () => {
+  await loadPricingData()
 })
 
-// Función para obtener el precio a mostrar
-const getDisplayPrice = (plan: typeof planesEmpresa[0]) => {
-  if (billingPeriod.value === 'yearly') {
-    return Math.floor(plan.yearlyPrice / 12)
-  }
-  return plan.monthlyPrice
-}
+// Planes filtrados por tipo
+const currentPlans = computed(() => {
+  return plans.value
+    .filter(p => p.planType === pricingTab.value)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+})
 
-// Ahorro total anual (2 meses gratis)
-const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
-  const fullYearPrice = plan.monthlyPrice * 12
-  return fullYearPrice - plan.yearlyPrice
+// Determinar variante del botón
+const getButtonVariant = (plan: any): 'elevated' | 'outlined' => {
+  return plan.isPopular ? 'elevated' : 'outlined'
 }
 </script>
 
@@ -268,7 +140,7 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
               @click="billingPeriod = 'yearly'"
             >
               Anual
-              <VChip color="success" size="x-small" class="ms-2">−17%</VChip>
+              <VChip color="success" size="x-small" class="ms-2">{{ discountLabel }}</VChip>
             </VBtn>
           </div>
         </VCard>
@@ -278,21 +150,27 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
       <div v-if="billingPeriod === 'yearly'" class="text-center">
         <VChip color="success" variant="flat" size="small">
           <VIcon icon="ri-gift-line" size="16" class="me-1" />
-          ¡Paga 10 meses y obtén 12! Ahorra 2 meses completos
+          {{ discountPromoText }}
         </VChip>
       </div>
 
-      <VRow>
+      <!-- Loading state -->
+      <div v-if="isLoading" class="d-flex justify-center py-12">
+        <VProgressCircular indeterminate color="primary" size="48" />
+      </div>
+
+      <!-- Plans grid -->
+      <VRow v-else>
         <VCol
-          v-for="(plan, index) in currentPlans"
-          :key="`${pricingTab}-${billingPeriod}-${index}`"
+          v-for="plan in currentPlans"
+          :key="`${pricingTab}-${billingPeriod}-${plan.id}`"
           cols="12"
           md="4"
         >
           <VCard
             flat
             border
-            :style="plan.highlighted ? 'border:2px solid rgb(var(--v-theme-primary))' : ''"
+            :style="plan.isPopular ? 'border:2px solid rgb(var(--v-theme-primary))' : ''"
             class="h-100"
           >
             <VCardText class="pa-lg-8 text-no-wrap d-flex flex-column h-100">
@@ -300,10 +178,10 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
                 <div class="d-flex flex-column gap-y-3">
                   <div class="d-flex align-center justify-space-between">
                     <h4 class="text-h4">
-                      {{ plan.title }}
+                      {{ plan.name }}
                     </h4>
                     <VChip
-                      v-if="plan.highlighted"
+                      v-if="plan.isPopular"
                       color="primary"
                       size="small"
                     >
@@ -330,8 +208,8 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
                   <div class="d-flex flex-column align-center">
                     <div class="d-flex align-end gap-x-1 justify-center">
                       <div class="d-flex align-start">
-                        <span class="text-h6 mt-1">{{ plan.currency }}</span>
-                        <span class="plan-price-text">{{ formatCurrency(getDisplayPrice(plan)) }}</span>
+                        <span class="text-h6 mt-1">{{ currencySymbol }}</span>
+                        <span class="plan-price-text">{{ formatCurrency(getDisplayPrice(plan, billingPeriod)) }}</span>
                       </div>
                       <span class="text-body-1 text-medium-emphasis mb-2">/mes</span>
                     </div>
@@ -339,10 +217,10 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
                     <!-- Precio original tachado si es anual -->
                     <div v-if="billingPeriod === 'yearly'" class="text-center">
                       <span class="text-body-2 text-medium-emphasis text-decoration-line-through">
-                        Q{{ formatCurrency(plan.monthlyPrice) }}/mes
+                        {{ currencySymbol }}{{ formatCurrency(plan.price) }}/mes
                       </span>
                       <div class="text-caption text-success font-weight-medium">
-                        Q{{ formatCurrency(plan.yearlyPrice) }}/año
+                        {{ currencySymbol }}{{ formatCurrency(plan.yearlyPrice) }}/año
                       </div>
                     </div>
                   </div>
@@ -373,16 +251,16 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
 
                 <VBtn
                   block
-                  :variant="plan.buttonVariant"
+                  :variant="getButtonVariant(plan)"
                   :to="{ 
                     name: 'front-pages-payment', 
                     query: { 
                       modalidad: pricingTab, 
-                      plan: plan.value,
+                      plan: plan.code,
                       billing: billingPeriod 
                     } 
                   }"
-                  :color="plan.highlighted ? 'primary' : undefined"
+                  :color="plan.isPopular ? 'primary' : undefined"
                 >
                   {{ plan.buttonText }}
                 </VBtn>
@@ -413,6 +291,9 @@ const getYearlySavings = (plan: typeof planesEmpresa[0]) => {
         </p>
       </div>
     </div>
+
+    <!-- Indicador de Realtime (solo desarrollo) -->
+    <RealtimeIndicator :is-connected="isRealtimeConnected" label="Pricing Realtime" />
   </VContainer>
 </template>
 

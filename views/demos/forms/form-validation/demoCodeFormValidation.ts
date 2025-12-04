@@ -309,7 +309,7 @@ const refForm = ref<VForm>()
         <VTextField
           v-model="requiredField"
           persistent-placeholder
-          placeholder="This field is required"
+          placeholder="Este campo es obligatorio"
           :rules="[requiredValidator]"
         />
       </VCol>
@@ -493,7 +493,7 @@ const refForm = ref()
         <VTextField
           v-model="requiredField"
           persistent-placeholder
-          placeholder="This field is required"
+          placeholder="Este campo es obligatorio"
           :rules="[requiredValidator]"
         />
       </VCol>

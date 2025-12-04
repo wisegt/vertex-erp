@@ -10,9 +10,18 @@ import NavbarShortcuts from '@/layouts/components/NavbarShortcuts.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import NavBarI18n from '@core/components/I18n.vue'
+import TrialBanner from '@/components/trial/TrialBanner.vue'
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
+
+// Composable para suscripción
+const { loadSubscriptionStatus, isTrialing } = useSubscription()
+
+// Cargar estado de suscripción al montar
+onMounted(() => {
+  loadSubscriptionStatus()
+})
 </script>
 
 <template>
@@ -44,14 +53,14 @@ import { VerticalNavLayout } from '@layouts'
     </template>
 
     <!-- 👉 Pages -->
+    <!-- Banner de Trial - Se muestra en todas las páginas si el usuario está en trial -->
+    <TrialBanner v-if="isTrialing" :auto-load="false" />
+    
     <slot />
 
     <!-- 👉 Footer -->
     <template #footer>
       <Footer />
     </template>
-
-    <!-- 👉 Customizer -->
-    <!-- <TheCustomizer /> -->
   </VerticalNavLayout>
 </template>

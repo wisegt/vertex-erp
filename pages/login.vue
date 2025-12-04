@@ -15,7 +15,7 @@ import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 
 interface ApiError { data?: Record<string, string | undefined> }
 
-const { signIn, data: sessionData, getSession } = useAuth()
+const { signIn, data: sessionData } = useAuth()
 
 const isHydrated = ref(false)
 
@@ -48,9 +48,10 @@ const errors = ref<Record<string, string | undefined>>({
 
 const refVForm = ref<any>()
 
+// Campos vacíos por defecto
 const credentials = ref({
-  email: 'admin@vertex-erp.com',
-  password: 'Demo123!',
+  email: '',
+  password: '',
 })
 
 const rememberMe = ref(false)
@@ -70,95 +71,71 @@ async function login() {
   let response
 
   try {
-    console.log('[login] Iniciando login con:', credentials.value.email)
     response = await signIn('credentials', {
       callbackUrl: defaultRedirect,
       redirect: false,
       ...credentials.value,
     })
-    console.log('[login] Respuesta de signIn:', response)
   }
   catch (err) {
     console.error('[login] signIn error', err)
-    errors.value.form = 'No se pudo conectar. Verifica que el servidor esté en el mismo puerto (ej: 127.0.0.1:3001).'
+    errors.value.form = 'No se pudo conectar con el servidor. Intenta de nuevo.'
     isSubmitting.value = false
-
     return
   }
 
-  // If error is not null => Error is occurred
+  // If error is not null => Error occurred
   if (response && response.error) {
-    console.warn('[login] Error en response:', response.error)
     try {
       const apiError: ApiError = JSON.parse(response.error)
-
       errors.value = apiError.data as Record<string, string | undefined>
     }
     catch {
-      errors.value.form = response.error
+      errors.value.form = 'Credenciales incorrectas. Verifica tu correo y contraseña.'
     }
     isSubmitting.value = false
-
-    // If err => Don't execute further
     return
   }
 
-  console.log('[login] Login exitoso, obteniendo sesión')
-
   // Reset error on successful login
   errors.value = {}
-
-  // Usar sessionData que ya está disponible
-  console.log('[login] Usando sessionData:', sessionData.value?.user?.email)
 
   const user = sessionData.value?.user
 
   if (!user) {
     console.error('[login] No hay usuario en la sesión')
+    errors.value.form = 'Error al obtener la sesión. Intenta de nuevo.'
     isSubmitting.value = false
-
     return
   }
 
   useCookie<Partial<User>>('userData').value = user
-
-  // Save user abilities in cookie so we can retrieve it back on refresh
   useCookie<User['abilityRules']>('userAbilityRules').value = user.abilityRules
 
   ability.update(user.abilityRules ?? [])
 
   isSubmitting.value = false
 
-  // Determinar a dónde redirigir:
-  // 1. Si hay un query param "to", usar ese (pero no si es "/" que es la landing)
-  // 2. Si no, usar el dashboard por defecto
+  // Determinar a dónde redirigir
   const redirectTo = route.query.to 
     ? (String(route.query.to) === '/' ? defaultRedirect : String(route.query.to))
     : defaultRedirect
 
-  console.log('[login] Redirigiendo a:', redirectTo)
   await navigateTo(redirectTo, { replace: true })
 }
 
 const onSubmit = () => {
-  console.log('[onSubmit] Intentando validar formulario...')
-  
   if (!refVForm.value) {
-    console.error('[onSubmit] refVForm no está definido')
     login()
     return
   }
 
   refVForm.value.validate()
     .then(({ valid: isValid }: { valid: boolean }) => {
-      console.log('[onSubmit] Validación completada, isValid:', isValid)
       if (isValid)
         login()
-      else
-        console.warn('[onSubmit] Formulario no válido')
     })
-    .catch((err: any) => {
-      console.error('[onSubmit] Error en validación:', err)
+    .catch(() => {
       login()
     })
 }
@@ -219,24 +196,11 @@ const onSubmit = () => {
         >
           <VCardText>
             <h4 class="text-h4 mb-1">
-              Bienvenidos a <span class="text-capitalize">{{ themeConfig.app.title }}!</span> 👋🏻
+              Bienvenido a <span class="text-capitalize">{{ themeConfig.app.title }}</span> 👋🏻
             </h4>
             <p class="mb-0">
-              Por favor ingresa con tu cuenta y que empiece la aventura
+              Ingresa con tu cuenta para continuar
             </p>
-          </VCardText>
-          <VCardText>
-            <VAlert
-              color="primary"
-              variant="tonal"
-            >
-              <p class="text-caption mb-2 text-primary">
-                Admin: <strong>admin@vertex-erp.com</strong> / Pass: <strong>Demo123!</strong>
-              </p>
-              <p class="text-caption mb-0 text-primary">
-                Gerente: <strong>gerente@comercialexito.com</strong> / Pass: <strong>Demo123!</strong>
-              </p>
-            </VAlert>
           </VCardText>
 
           <VCardText>
@@ -258,8 +222,8 @@ const onSubmit = () => {
                 <VCol cols="12">
                   <VTextField
                     v-model="credentials.email"
-                    label="Email"
-                    placeholder="johndoe@email.com"
+                    label="Correo electrónico"
+                    placeholder="tu@correo.com"
                     type="email"
                     autofocus
                     :rules="[requiredValidator, emailValidator]"
@@ -271,11 +235,11 @@ const onSubmit = () => {
                 <VCol cols="12">
                   <VTextField
                     v-model="credentials.password"
-                    label="Password"
-                    placeholder="············"
+                    label="Contraseña"
+                    placeholder="Ingresa tu contraseña"
                     :rules="[requiredValidator]"
                     :type="isPasswordVisible ? 'text' : 'password'"
-                    autocomplete="password"
+                    autocomplete="current-password"
                     :error-messages="errors.password"
                     :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
                     @click:append-inner="isPasswordVisible = !isPasswordVisible"
@@ -321,7 +285,7 @@ const onSubmit = () => {
                   class="d-flex align-center"
                 >
                   <VDivider />
-                  <span class="mx-4">or</span>
+                  <span class="mx-4 text-medium-emphasis">o</span>
                   <VDivider />
                 </VCol>
 

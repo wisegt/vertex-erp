@@ -15,6 +15,8 @@ import CrmWeeklySales from '@/views/dashboards/crm/CrmWeeklySales.vue'
 import illustration1 from '@images/cards/illustration-1.png'
 import illustration2 from '@images/cards/illustration-2.png'
 
+// El banner de trial ahora se maneja globalmente en el layout
+
 const cardStatisticsWithImages = [
   {
     title: 'Ratings',
@@ -46,6 +48,8 @@ const statistic = {
 
 <template>
   <section>
+    <!-- El TrialBanner ahora se muestra globalmente desde el layout -->
+    
     <VRow class="match-height">
       <VCol
         v-for="statistics in cardStatisticsWithImages"

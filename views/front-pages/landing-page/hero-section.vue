@@ -65,7 +65,7 @@ onMounted(() => {
           </div>
           <div class="text-body-1 font-weight-medium text-high-emphasis pb-8">
             <p class="mb-0">
-              Facturación electrónica FEL, contabilidad, inventario, bancos y más.
+              Facturación electrónica FEL, contabilidad, inventario, bancos y cuentas por cobrar y pagar y más.
             </p>
             <p class="mb-0">
               Todo integrado en una plataforma moderna y fácil de usar.

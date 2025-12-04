@@ -8,28 +8,6 @@ const redirects: RouteRecordRaw[] = [
   // ℹ️ We are redirecting to different pages based on role.
   // NOTE: Role is just for UI purposes. ACL is based on abilities.
   {
-    path: '/',
-    name: 'index',
-    meta: {
-      middleware: to => {
-        const { data: sessionData } = useAuth()
-
-        const userRole = sessionData.value?.user.role
-
-        // Roles de Supabase: SUPER_ADMIN, ADMIN, ACCOUNTANT, SALES, etc.
-        if (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN')
-          return { name: 'dashboards-crm' }
-        if (userRole === 'ACCOUNTANT' || userRole === 'ACCOUNTING_ASSISTANT')
-          return { name: 'dashboards-crm' }
-        if (userRole)
-          return { name: 'dashboards-crm' }
-
-        return { name: 'login', query: to.query }
-      },
-    },
-    component: h('div'),
-  },
-  {
     path: '/pages/user-profile',
     name: 'pages-user-profile',
     redirect: () => ({ name: 'pages-user-profile-tab', params: { tab: 'profile' } }),

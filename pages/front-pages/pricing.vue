@@ -4,6 +4,22 @@ import Navbar from '@/views/front-pages/front-page-navbar.vue'
 import { useConfigStore } from '@core/stores/config'
 import poseFs9 from '@images/pages/pose-fs-9.png'
 
+interface Plan {
+  id: string
+  name: string
+  code: string
+  planType: string
+  description: string
+  price: number
+  yearlyPrice: number
+  features: string[]
+  isPopular: boolean
+  buttonText: string
+  icon: string
+  iconColor: string
+  displayOrder: number
+}
+
 const store = useConfigStore()
 
 store.skin = 'default'
@@ -13,6 +29,31 @@ definePageMeta({
   public: true,
 })
 
+// State
+const pricingTab = ref('empresa')
+const billingPeriod = ref('yearly') // 'monthly' o 'yearly'
+const isLoading = ref(true)
+const allPlans = ref<Plan[]>([])
+
+// Cargar planes al montar
+onMounted(async () => {
+  await fetchPlans()
+})
+
+const fetchPlans = async () => {
+  isLoading.value = true
+  try {
+    const response = await $fetch('/api/plans')
+    if (response.success) {
+      allPlans.value = response.data
+    }
+  } catch (error) {
+    console.error('Error fetching plans:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
 // Función para formatear moneda en Quetzales
 const formatCurrency = (amount: number): string => {
   return amount.toLocaleString('es-GT', {
@@ -21,135 +62,22 @@ const formatCurrency = (amount: number): string => {
   })
 }
 
-const pricingTab = ref('empresa')
-const billingPeriod = ref('yearly') // 'monthly' o 'yearly'
-
-const planesEmpresa = [
-  {
-    name: 'Starter',
-    value: 'starter',
-    tagLine: 'Ideal para pequeños negocios',
-    icon: 'ri-rocket-line',
-    iconColor: 'info',
-    monthlyPrice: 299,
-    yearlyPrice: 2990,
-    isPopular: false,
-    features: [
-      'Hasta 3 usuarios',
-      '500 facturas FEL/mes',
-      'Contabilidad básica',
-      '1 bodega',
-      'Punto de Venta (POS)',
-      'Soporte por email',
-    ],
-  },
-  {
-    name: 'Business',
-    value: 'business',
-    tagLine: 'Para empresas en crecimiento',
-    icon: 'ri-line-chart-line',
-    iconColor: 'primary',
-    monthlyPrice: 599,
-    yearlyPrice: 5990,
-    isPopular: true,
-    features: [
-      'Hasta 10 usuarios',
-      '2,000 facturas FEL/mes',
-      'Contabilidad completa',
-      '3 bodegas + Bancos',
-      'CxC y CxP',
-      'Soporte prioritario',
-    ],
-  },
-  {
-    name: 'Enterprise',
-    value: 'enterprise',
-    tagLine: 'Solución completa para operaciones',
-    icon: 'ri-building-2-line',
-    iconColor: 'warning',
-    monthlyPrice: 999,
-    yearlyPrice: 9990,
-    isPopular: false,
-    features: [
-      'Usuarios ilimitados',
-      'Facturas ilimitadas',
-      'Multi-empresa',
-      'Bodegas ilimitadas',
-      'API e Integraciones',
-      'Soporte dedicado 24/7',
-    ],
-  },
-]
-
-const planesContador = [
-  {
-    name: 'Independiente',
-    value: 'independiente',
-    tagLine: 'Para contadores con pocos clientes',
-    icon: 'ri-user-line',
-    iconColor: 'info',
-    monthlyPrice: 199,
-    yearlyPrice: 1990,
-    isPopular: false,
-    features: [
-      'Hasta 5 empresas',
-      '1 usuario contador',
-      'Contabilidad completa',
-      'Reportes SAT',
-      'Libros contables',
-      'Soporte por email',
-    ],
-  },
-  {
-    name: 'Despacho',
-    value: 'despacho',
-    tagLine: 'Para despachos con cartera de clientes',
-    icon: 'ri-team-line',
-    iconColor: 'primary',
-    monthlyPrice: 499,
-    yearlyPrice: 4990,
-    isPopular: true,
-    features: [
-      'Hasta 20 empresas',
-      '5 usuarios del despacho',
-      'Portal para clientes',
-      'Reportes avanzados',
-      'Marca blanca',
-      'Soporte prioritario',
-    ],
-  },
-  {
-    name: 'Firma',
-    value: 'firma',
-    tagLine: 'Para firmas de auditoría',
-    icon: 'ri-bank-line',
-    iconColor: 'warning',
-    monthlyPrice: 899,
-    yearlyPrice: 8990,
-    isPopular: false,
-    features: [
-      'Empresas ilimitadas',
-      'Usuarios ilimitados',
-      'Consolidación',
-      'API completa',
-      'Capacitación incluida',
-      'Gerente de cuenta',
-    ],
-  },
-]
-
+// Planes filtrados por tipo
 const currentPlans = computed(() => {
-  return pricingTab.value === 'empresa' ? planesEmpresa : planesContador
+  return allPlans.value
+    .filter(p => p.planType === pricingTab.value)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
 })
 
 // Función para obtener el precio a mostrar
-const getDisplayPrice = (plan: typeof planesEmpresa[0]) => {
+const getDisplayPrice = (plan: Plan) => {
   if (billingPeriod.value === 'yearly') {
     return Math.floor(plan.yearlyPrice / 12)
   }
-  return plan.monthlyPrice
+  return plan.price
 }
 
+// Tabla comparativa de características por tipo
 const featuresEmpresa = [
   { feature: 'Prueba gratuita 14 días', starter: true, business: true, enterprise: true },
   { feature: 'Usuarios incluidos', starter: '3', business: '10', enterprise: 'Ilimitados' },
@@ -158,7 +86,7 @@ const featuresEmpresa = [
   { feature: 'Punto de Venta (POS)', starter: true, business: true, enterprise: true },
   { feature: 'Contabilidad completa', starter: false, business: true, enterprise: true },
   { feature: 'Módulo de Bancos', starter: false, business: true, enterprise: true },
-  { feature: 'CxC y CxP', starter: false, business: true, enterprise: true },
+  { feature: 'Cuentas por cobrar y pagar', starter: false, business: true, enterprise: true },
   { feature: 'Multi-empresa', starter: false, business: false, enterprise: true },
   { feature: 'API e Integraciones', starter: false, business: false, enterprise: true },
   { feature: 'Soporte prioritario', starter: false, business: true, enterprise: true },
@@ -183,27 +111,18 @@ const currentFeatures = computed(() => {
 })
 
 const planHeaders = computed(() => {
-  if (pricingTab.value === 'empresa') {
-    return [
-      { plan: 'STARTER', value: 'starter', price: getDisplayPrice(planesEmpresa[0]) },
-      { plan: 'BUSINESS', value: 'business', price: getDisplayPrice(planesEmpresa[1]), popular: true },
-      { plan: 'ENTERPRISE', value: 'enterprise', price: getDisplayPrice(planesEmpresa[2]) },
-    ]
-  }
-  return [
-    { plan: 'INDEPENDIENTE', value: 'independiente', price: getDisplayPrice(planesContador[0]) },
-    { plan: 'DESPACHO', value: 'despacho', price: getDisplayPrice(planesContador[1]), popular: true },
-    { plan: 'FIRMA', value: 'firma', price: getDisplayPrice(planesContador[2]) },
-  ]
+  return currentPlans.value.map(plan => ({
+    plan: plan.name.toUpperCase(),
+    value: plan.code,
+    price: getDisplayPrice(plan),
+    popular: plan.isPopular,
+  }))
 })
 
 const getFeatureValue = (feature: any, planIndex: number) => {
-  if (pricingTab.value === 'empresa') {
-    const keys = ['starter', 'business', 'enterprise']
-    return feature[keys[planIndex]]
-  }
-  const keys = ['independiente', 'despacho', 'firma']
-  return feature[keys[planIndex]]
+  const plan = currentPlans.value[planIndex]
+  if (!plan) return false
+  return feature[plan.code] ?? false
 }
 
 const faqs = [
@@ -325,11 +244,16 @@ const faqs = [
             </VChip>
           </div>
 
+          <!-- Loading state -->
+          <div v-if="isLoading" class="d-flex justify-center py-12">
+            <VProgressCircular indeterminate color="primary" size="48" />
+          </div>
+
           <!-- Pricing Cards -->
-          <VRow>
+          <VRow v-else>
             <VCol
               v-for="plan in currentPlans"
-              :key="`${pricingTab}-${billingPeriod}-${plan.value}`"
+              :key="`${pricingTab}-${billingPeriod}-${plan.id}`"
               cols="12"
               md="4"
             >
@@ -340,7 +264,7 @@ const faqs = [
               >
                 <VCardText class="text-end pt-4" style="block-size: 3.75rem;">
                   <VChip v-show="plan.isPopular" color="primary" size="small">
-                    Popular
+                    Recomendado
                   </VChip>
                 </VCardText>
 
@@ -357,7 +281,7 @@ const faqs = [
                     {{ plan.name }}
                   </h4>
                   <p class="mb-0 text-body-1">
-                    {{ plan.tagLine }}
+                    {{ plan.description }}
                   </p>
                 </VCardText>
 
@@ -373,7 +297,7 @@ const faqs = [
                     <!-- Precio original tachado si es anual -->
                     <div v-if="billingPeriod === 'yearly'" class="text-center">
                       <span class="text-body-2 text-medium-emphasis text-decoration-line-through">
-                        Q{{ formatCurrency(plan.monthlyPrice) }}/mes
+                        Q{{ formatCurrency(plan.price) }}/mes
                       </span>
                       <div class="text-caption text-success font-weight-medium">
                         Q{{ formatCurrency(plan.yearlyPrice) }}/año
@@ -403,12 +327,12 @@ const faqs = [
                       name: 'front-pages-payment', 
                       query: { 
                         modalidad: pricingTab, 
-                        plan: plan.value,
+                        plan: plan.code,
                         billing: billingPeriod
                       } 
                     }"
                   >
-                    Comenzar
+                    {{ plan.buttonText }}
                   </VBtn>
                 </VCardText>
               </VCard>
@@ -466,12 +390,17 @@ const faqs = [
             </p>
           </div>
 
-          <VTable class="text-no-wrap border rounded pricing-table">
+          <!-- Loading state para tabla -->
+          <div v-if="isLoading" class="d-flex justify-center py-12">
+            <VProgressCircular indeterminate color="primary" size="48" />
+          </div>
+
+          <VTable v-else class="text-no-wrap border rounded pricing-table">
             <thead>
               <tr>
                 <th scope="col" class="py-4">CARACTERÍSTICA</th>
                 <th
-                  v-for="(header, index) in planHeaders"
+                  v-for="header in planHeaders"
                   :key="header.plan"
                   scope="col"
                   class="text-center py-4"
@@ -496,7 +425,7 @@ const faqs = [
             <tbody>
               <tr v-for="feature in currentFeatures" :key="feature.feature">
                 <td class="text-high-emphasis">{{ feature.feature }}</td>
-                <td v-for="(_, index) in 3" :key="index" class="text-center">
+                <td v-for="(_, index) in currentPlans" :key="index" class="text-center">
                   <template v-if="typeof getFeatureValue(feature, index) === 'boolean'">
                     <VIcon
                       :color="getFeatureValue(feature, index) ? 'primary' : ''"

@@ -13,6 +13,15 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 import NavBarI18n from '@core/components/I18n.vue'
 import { HorizontalNavLayout } from '@layouts'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
+import TrialBanner from '@/components/trial/TrialBanner.vue'
+
+// Composable para suscripción
+const { loadSubscriptionStatus, isTrialing } = useSubscription()
+
+// Cargar estado de suscripción al montar
+onMounted(() => {
+  loadSubscriptionStatus()
+})
 </script>
 
 <template>
@@ -45,6 +54,9 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
     </template>
 
     <!-- 👉 Pages -->
+    <!-- Banner de Trial - Se muestra en todas las páginas si el usuario está en trial -->
+    <TrialBanner v-if="isTrialing" :auto-load="false" />
+    
     <slot />
 
     <!-- 👉 Footer -->

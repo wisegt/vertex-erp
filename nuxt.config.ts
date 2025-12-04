@@ -88,6 +88,7 @@ export default defineNuxtConfig({
     '@/plugins/casl/index.ts',
     '@/plugins/vuetify/index.ts',
     '@/plugins/iconify/index.ts',
+    '@/plugins/supabase.client.ts',
   ],
 
   imports: {

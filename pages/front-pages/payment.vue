@@ -14,61 +14,71 @@ const paypal = useGenerateImageVariant(paypalLight, paypalDark)
 const store = useConfigStore()
 const route = useRoute()
 
+// Usar composable de pricing con Realtime
+const {
+  plans,
+  isLoading,
+  loadPricingData,
+  getDisplayPrice,
+  getYearlySavings,
+  calculateTax,
+  formatCurrency,
+  discountLabel,
+  discountPromoText,
+  monthsFree,
+  taxPercentage,
+  taxName,
+  currencySymbol,
+  isRealtimeConnected,
+} = usePricing()
+
 store.skin = 'default'
 definePageMeta({
   layout: 'blank',
   public: true,
 })
 
-// Función para formatear moneda en Quetzales
-const formatCurrency = (amount: number): string => {
-  return amount.toLocaleString('es-GT', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
-}
-
 const selectedPaymentMethod = ref('card')
 const isProcessing = ref(false)
 
 // Get modalidad, plan and billing from query params
 const selectedModalidad = ref((route.query.modalidad as string) || 'empresa')
-const selectedPlanValue = ref((route.query.plan as string) || 'business')
-const selectedBilling = ref((route.query.billing as string) || 'monthly')
+const selectedPlanCode = ref((route.query.plan as string) || 'business')
+const selectedBilling = ref<'monthly' | 'yearly'>((route.query.billing as 'monthly' | 'yearly') || 'yearly')
 
-// Plan definitions with monthly and yearly prices
-const planesEmpresa = [
-  { title: 'Starter', value: 'starter', monthlyPrice: 299, yearlyPrice: 2990, icon: 'ri-rocket-line', iconColor: 'info' },
-  { title: 'Business', value: 'business', monthlyPrice: 599, yearlyPrice: 5990, icon: 'ri-line-chart-line', iconColor: 'primary' },
-  { title: 'Enterprise', value: 'enterprise', monthlyPrice: 999, yearlyPrice: 9990, icon: 'ri-building-2-line', iconColor: 'warning' },
-]
-
-const planesContador = [
-  { title: 'Independiente', value: 'independiente', monthlyPrice: 199, yearlyPrice: 1990, icon: 'ri-user-line', iconColor: 'info' },
-  { title: 'Despacho', value: 'despacho', monthlyPrice: 499, yearlyPrice: 4990, icon: 'ri-team-line', iconColor: 'primary' },
-  { title: 'Firma', value: 'firma', monthlyPrice: 899, yearlyPrice: 8990, icon: 'ri-bank-line', iconColor: 'warning' },
-]
-
-const currentPlans = computed(() => {
-  return selectedModalidad.value === 'empresa' ? planesEmpresa : planesContador
+// Cargar planes desde la API
+onMounted(async () => {
+  await loadPricingData()
 })
 
+// Planes filtrados por modalidad actual
+const currentPlans = computed(() => {
+  return plans.value
+    .filter(p => p.planType === selectedModalidad.value)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+})
+
+// Plan seleccionado actualmente
 const selectedPlanDetails = computed(() => {
-  return currentPlans.value.find(p => p.value === selectedPlanValue.value) || currentPlans.value[1]
+  return currentPlans.value.find(p => p.code === selectedPlanCode.value) 
+    || currentPlans.value.find(p => p.isPopular)
+    || currentPlans.value[0]
+})
+
+// Watch for modalidad changes to reset plan selection to the popular plan
+watch(selectedModalidad, (newVal) => {
+  const plansForType = plans.value.filter(p => p.planType === newVal)
+  const popularPlan = plansForType.find(p => p.isPopular)
+  selectedPlanCode.value = popularPlan?.code || plansForType[0]?.code || ''
 })
 
 // Precio base según el tipo de facturación
 const basePrice = computed(() => {
   if (!selectedPlanDetails.value) return 0
-  
-  if (selectedBilling.value === 'yearly') {
-    // Precio mensual equivalente del plan anual
-    return Math.floor(selectedPlanDetails.value.yearlyPrice / 12)
-  }
-  return selectedPlanDetails.value.monthlyPrice
+  return getDisplayPrice(selectedPlanDetails.value, selectedBilling.value)
 })
 
-// Precio total anual (solo para mostrar cuando es anual)
+// Precio total anual
 const yearlyTotal = computed(() => {
   return selectedPlanDetails.value?.yearlyPrice || 0
 })
@@ -76,38 +86,32 @@ const yearlyTotal = computed(() => {
 // Ahorro anual
 const yearlySavings = computed(() => {
   if (!selectedPlanDetails.value || selectedBilling.value !== 'yearly') return 0
-  const fullYearPrice = selectedPlanDetails.value.monthlyPrice * 12
-  return fullYearPrice - selectedPlanDetails.value.yearlyPrice
+  return getYearlySavings(selectedPlanDetails.value)
 })
 
-// Precio original mensual (para mostrar tachado)
-const originalMonthlyPrice = computed(() => {
-  return selectedPlanDetails.value?.monthlyPrice || 0
+// Para pago mensual: precio mensual sin descuento
+const monthlyTotal = computed(() => {
+  return selectedPlanDetails.value?.price || 0
 })
 
-// IVA y total
-const taxAmount = computed(() => Math.round(basePrice.value * 0.12 * 100) / 100)
-const totalAmount = computed(() => basePrice.value + taxAmount.value)
-
-// Para pago anual: total anual con IVA
-const yearlyTotalWithTax = computed(() => {
-  if (selectedBilling.value !== 'yearly') return 0
-  const yearlyBase = selectedPlanDetails.value?.yearlyPrice || 0
-  const yearlyTax = Math.round(yearlyBase * 0.12 * 100) / 100
-  return yearlyBase + yearlyTax
+// Total base según billing
+const totalBase = computed(() => {
+  return selectedBilling.value === 'yearly' ? yearlyTotal.value : monthlyTotal.value
 })
 
-// Watch for modalidad changes to reset plan selection
-watch(selectedModalidad, (newVal) => {
-  selectedPlanValue.value = newVal === 'empresa' ? 'business' : 'despacho'
+// IVA
+const taxAmount = computed(() => {
+  return calculateTax(totalBase.value)
 })
 
-// Función para obtener el precio a mostrar de cada plan
-const getPlanDisplayPrice = (plan: typeof planesEmpresa[0]) => {
-  if (selectedBilling.value === 'yearly') {
-    return Math.floor(plan.yearlyPrice / 12)
-  }
-  return plan.monthlyPrice
+// Total final con IVA
+const totalAmount = computed(() => {
+  return totalBase.value + taxAmount.value
+})
+
+// Función para obtener el precio a mostrar de cada plan en el selector
+const getPlanDisplayPrice = (plan: any) => {
+  return getDisplayPrice(plan, selectedBilling.value)
 }
 
 const handlePayment = () => {
@@ -126,7 +130,12 @@ const handlePayment = () => {
     <VContainer>
       <div class="d-flex justify-center align-center payment-card">
         <VCard width="100%">
-          <VRow>
+          <!-- Loading state -->
+          <div v-if="isLoading" class="d-flex justify-center align-center py-16">
+            <VProgressCircular indeterminate color="primary" size="48" />
+          </div>
+
+          <VRow v-else>
             <VCol
               cols="12"
               md="8"
@@ -376,7 +385,7 @@ const handlePayment = () => {
                     </VBtn>
                     <VBtn value="yearly" class="flex-grow-1">
                       Anual
-                      <VChip color="success" size="x-small" class="ms-1">−17%</VChip>
+                      <VChip color="success" size="x-small" class="ms-1">{{ discountLabel }}</VChip>
                     </VBtn>
                   </VBtnToggle>
                 </div>
@@ -388,29 +397,29 @@ const handlePayment = () => {
                     <div class="d-flex flex-column gap-2">
                       <VCard
                         v-for="plan in currentPlans"
-                        :key="plan.value"
-                        :variant="selectedPlanValue === plan.value ? 'outlined' : 'flat'"
-                        :class="selectedPlanValue === plan.value ? 'border-primary' : ''"
+                        :key="plan.id"
+                        :variant="selectedPlanCode === plan.code ? 'outlined' : 'flat'"
+                        :class="selectedPlanCode === plan.code ? 'border-primary' : ''"
                         class="cursor-pointer"
-                        @click="selectedPlanValue = plan.value"
+                        @click="selectedPlanCode = plan.code"
                       >
                         <VCardText class="d-flex align-center gap-3 pa-3">
                           <VRadio
-                            :model-value="selectedPlanValue"
-                            :value="plan.value"
+                            :model-value="selectedPlanCode"
+                            :value="plan.code"
                           />
                           <VAvatar :color="plan.iconColor" variant="tonal" size="36">
                             <VIcon :icon="plan.icon" size="20" />
                           </VAvatar>
                           <div class="flex-grow-1">
-                            <div class="text-body-1 font-weight-medium">{{ plan.title }}</div>
+                            <div class="text-body-1 font-weight-medium">{{ plan.name }}</div>
                           </div>
                           <div class="text-end">
                             <div class="text-body-1 font-weight-medium text-primary">
-                              Q{{ formatCurrency(getPlanDisplayPrice(plan)) }}
+                              {{ currencySymbol }}{{ formatCurrency(getPlanDisplayPrice(plan)) }}
                             </div>
                             <div v-if="selectedBilling === 'yearly'" class="text-caption text-medium-emphasis text-decoration-line-through">
-                              Q{{ formatCurrency(plan.monthlyPrice) }}
+                              {{ currencySymbol }}{{ formatCurrency(plan.price) }}
                             </div>
                           </div>
                         </VCardText>
@@ -421,7 +430,7 @@ const handlePayment = () => {
 
                 <!-- Alert de ahorro cuando es anual -->
                 <VAlert
-                  v-if="selectedBilling === 'yearly'"
+                  v-if="selectedBilling === 'yearly' && yearlySavings > 0"
                   color="success"
                   variant="tonal"
                   density="compact"
@@ -431,7 +440,7 @@ const handlePayment = () => {
                     <VIcon icon="ri-gift-line" />
                   </template>
                   <div class="text-body-2">
-                    <strong>¡Ahorras Q{{ formatCurrency(yearlySavings) }} al año!</strong>
+                    <strong>¡Ahorras {{ currencySymbol }}{{ formatCurrency(yearlySavings) }} al año!</strong>
                   </div>
                 </VAlert>
 
@@ -439,33 +448,33 @@ const handlePayment = () => {
                 <div class="my-5">
                   <div class="d-flex justify-space-between mb-2">
                     <div class="text-body-1">
-                      Suscripción {{ selectedBilling === 'yearly' ? 'anual' : 'mensual' }}
+                      Plan {{ selectedPlanDetails?.name }} ({{ selectedBilling === 'yearly' ? 'anual' : 'mensual' }})
                     </div>
                     <div class="text-body-1 font-weight-medium text-high-emphasis">
-                      Q{{ formatCurrency(selectedBilling === 'yearly' ? yearlyTotal : basePrice) }}
+                      {{ currencySymbol }}{{ formatCurrency(totalBase) }}
                     </div>
                   </div>
                   <div v-if="selectedBilling === 'yearly'" class="d-flex justify-space-between mb-2 text-success">
-                    <div class="text-body-2">Descuento (2 meses gratis)</div>
+                    <div class="text-body-2">Descuento ({{ monthsFree }} meses gratis)</div>
                     <div class="text-body-2 font-weight-medium">
-                      -Q{{ formatCurrency(yearlySavings) }}
+                      -{{ currencySymbol }}{{ formatCurrency(yearlySavings) }}
                     </div>
                   </div>
                   <div class="d-flex justify-space-between">
-                    <div class="text-body-1">IVA (12%)</div>
+                    <div class="text-body-1">{{ taxName }} ({{ taxPercentage }}%)</div>
                     <div class="text-body-1 font-weight-medium text-high-emphasis">
-                      Q{{ formatCurrency(selectedBilling === 'yearly' ? (yearlyTotal * 0.12) : taxAmount) }}
+                      {{ currencySymbol }}{{ formatCurrency(taxAmount) }}
                     </div>
                   </div>
                   <VDivider class="my-4" />
                   <div class="d-flex justify-space-between">
                     <div class="text-body-1 font-weight-medium">Total a pagar</div>
                     <div class="text-h6 text-primary">
-                      Q{{ formatCurrency(selectedBilling === 'yearly' ? yearlyTotalWithTax : totalAmount) }}
+                      {{ currencySymbol }}{{ formatCurrency(totalAmount) }}
                     </div>
                   </div>
                   <div v-if="selectedBilling === 'yearly'" class="text-caption text-medium-emphasis text-end mt-1">
-                    (equivalente a Q{{ formatCurrency(basePrice) }}/mes)
+                    (equivalente a {{ currencySymbol }}{{ formatCurrency(basePrice) }}/mes)
                   </div>
                 </div>
 
@@ -506,6 +515,9 @@ const handlePayment = () => {
     </VContainer>
 
     <Footer />
+
+    <!-- Indicador de Realtime (solo desarrollo) -->
+    <RealtimeIndicator :is-connected="isRealtimeConnected" label="Pricing Realtime" />
   </div>
 </template>
 

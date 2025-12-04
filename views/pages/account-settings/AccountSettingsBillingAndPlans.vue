@@ -13,13 +13,144 @@ interface CardDetails {
   cvv: string
   image: string
 }
-const selectedPaymentMethod = ref('credit-debit-atm-card')
 
+// Composable para suscripción
+const { 
+  subscription, 
+  isTrialing, 
+  daysRemaining, 
+  trialEndsAt, 
+  loadSubscriptionStatus,
+  bannerColor 
+} = useSubscription()
+
+// Estados
+const selectedPaymentMethod = ref('credit-debit-atm-card')
 const isPricingPlanDialogVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
 const isCardEditDialogVisible = ref(false)
 const isCardDetailSaveBilling = ref(false)
+const isLoadingBilling = ref(true)
 
+// Datos de facturación del tenant
+const billingData = ref({
+  tenant: {
+    id: '',
+    name: '',
+    legalName: '',
+    taxId: '',
+    email: '',
+    phone: '',
+    fiscalAddress: '',
+  },
+  plan: {
+    id: null as string | null,
+    name: 'Prueba Gratis',
+    code: 'trial',
+    price: 0,
+    billingPeriod: 'trial',
+    planType: 'empresa',
+  },
+  subscription: {
+    status: 'trial',
+    currentPeriodEnd: '',
+    trialEndsAt: '',
+  },
+})
+
+// Cargar datos al montar
+onMounted(async () => {
+  await Promise.all([
+    loadSubscriptionStatus(true),
+    loadBillingData(),
+  ])
+})
+
+const loadBillingData = async () => {
+  isLoadingBilling.value = true
+  try {
+    const response = await $fetch('/api/billing/info')
+    if (response.success && response.data) {
+      billingData.value = response.data
+    }
+  } catch (error) {
+    console.error('Error loading billing data:', error)
+  } finally {
+    isLoadingBilling.value = false
+  }
+}
+
+// Computed: progreso de días
+const daysProgress = computed(() => {
+  if (isTrialing.value) {
+    // Trial de 14 días
+    const totalDays = 14
+    const usedDays = totalDays - daysRemaining.value
+    return Math.round((usedDays / totalDays) * 100)
+  }
+  // Para planes activos, calcular desde el período actual
+  return 0
+})
+
+// Computed: fecha de vencimiento formateada
+const formattedEndDate = computed(() => {
+  const dateStr = isTrialing.value 
+    ? trialEndsAt.value 
+    : billingData.value.subscription.currentPeriodEnd
+  
+  if (!dateStr) return 'N/A'
+  
+  return new Date(dateStr).toLocaleDateString('es-GT', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+})
+
+// Computed: color del alert según días restantes
+const alertType = computed(() => {
+  if (daysRemaining.value <= 0) return 'error'
+  if (daysRemaining.value <= 3) return 'error'
+  if (daysRemaining.value <= 7) return 'warning'
+  return 'info'
+})
+
+// Computed: mensaje del alert
+const alertMessage = computed(() => {
+  if (daysRemaining.value <= 0) {
+    return 'Tu período de prueba ha terminado. Selecciona un plan para continuar.'
+  }
+  if (daysRemaining.value <= 3) {
+    return `¡Solo quedan ${daysRemaining.value} días! Actualiza tu plan ahora.`
+  }
+  if (daysRemaining.value <= 7) {
+    return `Quedan ${daysRemaining.value} días de tu período de prueba.`
+  }
+  return `Tienes ${daysRemaining.value} días restantes de acceso completo.`
+})
+
+// Computed: precio formateado
+const formattedPrice = computed(() => {
+  const price = billingData.value.plan.price
+  if (price === 0) return 'Q0'
+  return `Q${price.toLocaleString('es-GT')}`
+})
+
+// Computed: período formateado
+const formattedPeriod = computed(() => {
+  const period = billingData.value.plan.billingPeriod
+  if (period === 'trial') return 'por 14 días'
+  if (period === 'mensual') return 'por Mes'
+  if (period === 'anual') return 'por Año'
+  return ''
+})
+
+// Computed: default tab para el modal
+const defaultPlanTab = computed(() => {
+  return billingData.value.plan.planType === 'contador' ? 'contador' : 'empresa'
+})
+
+// Cards de pago (demo por ahora)
 const creditCards: CardDetails[] = [
   {
     name: 'Tom McBride',
@@ -41,119 +172,178 @@ const creditCards: CardDetails[] = [
   },
 ]
 
-const countryList = ['United States', 'Canada', 'United Kingdom', 'Australia', 'New Zealand', 'India', 'Russia', 'China', 'Japan']
+const countryList = ['Guatemala', 'El Salvador', 'Honduras', 'México', 'Estados Unidos']
 
 const currentCardDetails = ref()
 
 const openEditCardDialog = (cardDetails: CardDetails) => {
   currentCardDetails.value = cardDetails
-
   isCardEditDialogVisible.value = true
 }
 
-const cardNumber = ref(135632156548789)
-const cardName = ref('john Doe')
-const cardExpiryDate = ref('05/24')
-const cardCvv = ref(420)
+const cardNumber = ref('')
+const cardName = ref('')
+const cardExpiryDate = ref('')
+const cardCvv = ref('')
 
 const resetPaymentForm = () => {
-  cardNumber.value = 135632156548789
-  cardName.value = 'john Doe'
-  cardExpiryDate.value = '05/24'
-  cardCvv.value = 420
-
+  cardNumber.value = ''
+  cardName.value = ''
+  cardExpiryDate.value = ''
+  cardCvv.value = ''
   selectedPaymentMethod.value = 'credit-debit-atm-card'
 }
+
+const handlePlanSelected = (plan: any) => {
+  console.log('Plan seleccionado:', plan)
+  // Aquí iría la lógica para procesar el cambio de plan
+  // Por ahora solo mostramos un mensaje
+}
+
+// Datos de dirección de facturación
+const billingAddress = ref({
+  companyName: '',
+  billingEmail: '',
+  taxId: '',
+  vatNumber: '',
+  phone: '',
+  country: 'Guatemala',
+  address: '',
+  state: '',
+  zipCode: '',
+})
+
+// Sincronizar datos cuando se cargan
+watch(() => billingData.value.tenant, (tenant) => {
+  if (tenant) {
+    billingAddress.value.companyName = tenant.legalName || tenant.name
+    billingAddress.value.billingEmail = tenant.email
+    billingAddress.value.taxId = tenant.taxId
+    billingAddress.value.phone = tenant.phone
+    billingAddress.value.address = tenant.fiscalAddress
+  }
+}, { immediate: true })
 </script>
 
 <template>
   <VRow>
     <!-- 👉 Current Plan -->
     <VCol cols="12">
-      <VCard title="Current Plan">
+      <VCard title="Plan Actual">
         <VCardText>
-          <VRow>
-            <VCol
-              cols="12"
-              md="6"
-            >
+          <!-- Loading state -->
+          <div v-if="isLoadingBilling" class="d-flex justify-center py-8">
+            <VProgressCircular indeterminate color="primary" />
+          </div>
+
+          <VRow v-else>
+            <VCol cols="12" md="6">
               <div class="d-flex flex-column gap-y-6">
+                <!-- Plan name -->
                 <div class="d-flex flex-column gap-y-1">
                   <h6 class="text-h6">
-                    Your Current Plan is Basic
+                    Tu plan actual es {{ billingData.plan.name }}
                   </h6>
-                  <div>
-                    A simple start for everyone
+                  <div class="text-body-2 text-medium-emphasis">
+                    {{ billingData.plan.code === 'trial' 
+                      ? 'Acceso completo a todas las funcionalidades durante tu período de prueba' 
+                      : billingData.plan.description || 'Plan activo para tu empresa' 
+                    }}
                   </div>
                 </div>
 
+                <!-- Active until -->
                 <div class="d-flex flex-column gap-y-1">
                   <h6 class="text-h6">
-                    Active until Dec 09, 2021
+                    {{ isTrialing ? 'Prueba activa hasta' : 'Activo hasta' }} {{ formattedEndDate }}
                   </h6>
-                  <div>
-                    We will send you a notification upon Subscription expiration
+                  <div class="text-body-2 text-medium-emphasis">
+                    Te enviaremos una notificación antes de que expire tu {{ isTrialing ? 'prueba' : 'suscripción' }}
                   </div>
                 </div>
 
+                <!-- Price -->
                 <div class="d-flex flex-column gap-y-1">
                   <div class="d-flex align-center gap-x-2">
                     <h6 class="text-h6">
-                      $199 Per Month
+                      {{ formattedPrice }} {{ formattedPeriod }}
                     </h6>
                     <VChip
+                      v-if="isTrialing"
+                      color="success"
+                      size="small"
+                    >
+                      Gratis
+                    </VChip>
+                    <VChip
+                      v-else-if="billingData.plan.code?.includes('plus') || billingData.plan.code?.includes('5')"
                       color="primary"
                       size="small"
                     >
                       Popular
                     </VChip>
                   </div>
-                  <p class="text-base mb-0">
-                    Standard plan for small to medium businesses
+                  <p class="text-body-2 text-medium-emphasis mb-0">
+                    {{ isTrialing 
+                      ? 'Sin tarjeta de crédito requerida durante la prueba' 
+                      : `Plan ${billingData.plan.planType === 'contador' ? 'para contadores' : 'empresarial'}`
+                    }}
                   </p>
                 </div>
               </div>
             </VCol>
 
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
+              <!-- Alert de atención -->
               <VAlert
-                type="warning"
+                :type="alertType"
                 variant="tonal"
-                title="We need your attention!"
-                text="Your plan requires update"
-              />
+                class="mb-4"
+              >
+                <template #title>
+                  <span class="text-body-1 font-weight-semibold">
+                    {{ daysRemaining <= 0 ? '¡Acción requerida!' : '¡Atención!' }}
+                  </span>
+                </template>
+                {{ alertMessage }}
+              </VAlert>
 
-              <!-- progress -->
-              <h6 class="d-flex text-h6 justify-space-between mt-6 mb-1">
-                <div>Days</div>
-                <div>12 of 30 Days</div>
+              <!-- Progress bar -->
+              <h6 class="d-flex text-h6 justify-space-between mb-1">
+                <div>Días</div>
+                <div>{{ 14 - daysRemaining }} de 14 Días</div>
               </h6>
               <VProgressLinear
-                color="primary"
+                :color="bannerColor"
                 rounded
-                height="6"
-                model-value="75"
+                height="8"
+                :model-value="daysProgress"
               />
-              <p class="text-base mt-1">
-                18 days remaining until your plan requires update
+              <p class="text-body-2 text-medium-emphasis mt-2">
+                {{ daysRemaining > 0 
+                  ? `${daysRemaining} días restantes de tu período de prueba`
+                  : 'Tu período de prueba ha terminado'
+                }}
               </p>
             </VCol>
 
             <VCol cols="12">
               <div class="d-flex flex-wrap gap-4">
-                <VBtn @click="isPricingPlanDialogVisible = true">
-                  upgrade plan
+                <VBtn 
+                  color="primary"
+                  @click="isPricingPlanDialogVisible = true"
+                >
+                  <VIcon icon="ri-arrow-up-line" class="me-2" />
+                  {{ isTrialing ? 'Elegir Plan' : 'Cambiar Plan' }}
                 </VBtn>
 
                 <VBtn
+                  v-if="!isTrialing"
                   color="error"
                   variant="outlined"
                   @click="isConfirmDialogVisible = true"
                 >
-                  Cancel Subscription
+                  Cancelar Suscripción
                 </VBtn>
               </div>
             </VCol>
@@ -162,29 +352,31 @@ const resetPaymentForm = () => {
           <!-- 👉 Confirm Dialog -->
           <ConfirmDialog
             v-model:is-dialog-visible="isConfirmDialogVisible"
-            confirmation-question="Are you sure to cancel your subscription?"
-            cancel-msg="Unsubscription Cancelled!!"
-            cancel-title="Cancelled"
-            confirm-msg="Your subscription cancelled successfully."
-            confirm-title="Unsubscribed!"
+            confirmation-question="¿Estás seguro de cancelar tu suscripción?"
+            cancel-msg="Cancelación abortada"
+            cancel-title="Cancelado"
+            confirm-msg="Tu suscripción ha sido cancelada exitosamente."
+            confirm-title="¡Cancelado!"
           />
 
-          <!-- 👉 plan and pricing dialog -->
-          <PricingPlanDialog v-model:is-dialog-visible="isPricingPlanDialogVisible" />
+          <!-- 👉 Plan and pricing dialog -->
+          <PricingPlanDialog 
+            v-model:is-dialog-visible="isPricingPlanDialogVisible"
+            :current-plan-id="billingData.plan.id"
+            :default-tab="defaultPlanTab"
+            @select-plan="handlePlanSelected"
+          />
         </VCardText>
       </VCard>
     </VCol>
 
     <!-- 👉 Payment Methods -->
     <VCol cols="12">
-      <VCard title="Payment Methods">
+      <VCard title="Métodos de Pago">
         <VCardText>
           <VForm @submit.prevent="() => {}">
             <VRow>
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <VCol cols="12" md="6">
                 <VRow>
                   <!-- 👉 card type switch -->
                   <VCol cols="12">
@@ -194,12 +386,12 @@ const resetPaymentForm = () => {
                     >
                       <VRadio
                         value="credit-debit-atm-card"
-                        label="Credit/Debit/ATM Card"
+                        label="Tarjeta de Crédito/Débito"
                         color="primary"
                       />
                       <VRadio
-                        value="cod-cheque"
-                        label="COD/Cheque"
+                        value="bank-transfer"
+                        label="Transferencia Bancaria"
                         color="primary"
                       />
                     </VRadioGroup>
@@ -211,45 +403,34 @@ const resetPaymentForm = () => {
                       <VCol cols="12">
                         <VTextField
                           v-model="cardNumber"
-                          label="Card Number"
+                          label="Número de Tarjeta"
                           placeholder="1234 1234 1234 1234"
-                          type="number"
                         />
                       </VCol>
 
                       <!-- 👉 Name -->
-                      <VCol
-                        cols="12"
-                        md="6"
-                      >
+                      <VCol cols="12" md="6">
                         <VTextField
                           v-model="cardName"
-                          label="Name"
-                          placeholder="John Doe"
+                          label="Nombre en la Tarjeta"
+                          placeholder="Juan Pérez"
                         />
                       </VCol>
 
                       <!-- 👉 Expiry date -->
-                      <VCol
-                        cols="6"
-                        md="3"
-                      >
+                      <VCol cols="6" md="3">
                         <VTextField
                           v-model="cardExpiryDate"
-                          label="Expiry Date"
-                          placeholder="MM/YY"
+                          label="Fecha de Expiración"
+                          placeholder="MM/AA"
                         />
                       </VCol>
 
                       <!-- 👉 Cvv code -->
-                      <VCol
-                        cols="6"
-                        md="3"
-                      >
+                      <VCol cols="6" md="3">
                         <VTextField
                           v-model="cardCvv"
-                          type="number"
-                          label="CVV Code"
+                          label="CVV"
                           placeholder="123"
                         />
                       </VCol>
@@ -259,51 +440,43 @@ const resetPaymentForm = () => {
                         <VSwitch
                           v-model="isCardDetailSaveBilling"
                           density="compact"
-                          label="Save card for future billing?"
+                          label="Guardar tarjeta para futuros pagos"
                         />
                       </VCol>
 
                       <!-- 👉 Payment method action button -->
-                      <VCol
-                        cols="12"
-                        class="d-flex flex-wrap gap-4"
-                      >
+                      <VCol cols="12" class="d-flex flex-wrap gap-4">
                         <VBtn type="submit">
-                          Save changes
+                          Guardar Cambios
                         </VBtn>
                         <VBtn
                           color="secondary"
                           variant="outlined"
                           @click="resetPaymentForm"
                         >
-                          Reset
+                          Limpiar
                         </VBtn>
                       </VCol>
                     </VRow>
 
-                    <p
-                      v-show="selectedPaymentMethod === 'cod-cheque'"
-                      class="text-base"
-                    >
-                      Cash on delivery is a mode of payment where you make the payment after the goods/services are received.
-                    </p>
-                    <p
-                      v-show="selectedPaymentMethod === 'cod-cheque'"
-                      class="text-base"
-                    >
-                      You can pay cash or make the payment via debit/credit card directly to the delivery person.
-                    </p>
+                    <div v-show="selectedPaymentMethod === 'bank-transfer'">
+                      <VAlert type="info" variant="tonal" class="mb-4">
+                        <template #title>Transferencia Bancaria</template>
+                        Para pagos por transferencia, contáctanos y te enviaremos los datos bancarios.
+                      </VAlert>
+                      <VBtn color="primary" variant="outlined">
+                        <VIcon icon="ri-mail-line" class="me-2" />
+                        Solicitar Datos Bancarios
+                      </VBtn>
+                    </div>
                   </VCol>
                 </VRow>
               </VCol>
 
               <!-- 👉 Saved Cards -->
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <VCol cols="12" md="6">
                 <h6 class="text-h6 mb-6">
-                  My Cards
+                  Mis Tarjetas
                 </h6>
 
                 <div class="d-flex flex-column gap-y-4">
@@ -315,7 +488,7 @@ const resetPaymentForm = () => {
                   >
                     <VCardText class="d-flex flex-sm-row flex-column">
                       <div class="text-no-wrap">
-                        <img :src="card.image">
+                        <img :src="card.image" height="24">
                         <div class="d-flex align-center gap-x-4">
                           <h6 class="text-h6 my-2">
                             {{ card.name }}
@@ -325,10 +498,12 @@ const resetPaymentForm = () => {
                             color="primary"
                             size="small"
                           >
-                            Primary
+                            Principal
                           </VChip>
                         </div>
-                        <div>**** **** **** {{ card.number.substring(card.number.length - 4) }}</div>
+                        <div class="text-body-2">
+                          **** **** **** {{ card.number.substring(card.number.length - 4) }}
+                        </div>
                       </div>
 
                       <VSpacer />
@@ -337,21 +512,35 @@ const resetPaymentForm = () => {
                         <div class="d-flex flex-wrap gap-4 order-sm-0 order-1">
                           <VBtn
                             variant="outlined"
+                            size="small"
                             @click="openEditCardDialog(card)"
                           >
-                            Edit
+                            Editar
                           </VBtn>
                           <VBtn
                             color="error"
                             variant="outlined"
+                            size="small"
                           >
-                            Delete
+                            Eliminar
                           </VBtn>
                         </div>
-                        <div class="my-4 text-body-2 order-sm-1 order-0">
-                          Card expires at {{ card.expiry }}
+                        <div class="my-4 text-body-2 text-medium-emphasis order-sm-1 order-0">
+                          Expira {{ card.expiry }}
                         </div>
                       </div>
+                    </VCardText>
+                  </VCard>
+
+                  <!-- Empty state -->
+                  <VCard
+                    v-if="creditCards.length === 0"
+                    color="rgba(var(--v-theme-on-surface), var(--v-hover-opacity))"
+                    flat
+                  >
+                    <VCardText class="text-center py-8">
+                      <VIcon icon="ri-bank-card-line" size="48" color="secondary" class="mb-2" />
+                      <p class="text-body-1 mb-0">No tienes tarjetas guardadas</p>
                     </VCardText>
                   </VCard>
                 </div>
@@ -370,125 +559,85 @@ const resetPaymentForm = () => {
 
     <!-- 👉 Billing Address -->
     <VCol cols="12">
-      <VCard title="Billing Address">
+      <VCard title="Dirección de Facturación">
         <VCardText>
           <VForm @submit.prevent="() => {}">
             <VRow>
               <!-- 👉 Company name -->
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <VCol cols="12" md="6">
                 <VTextField
-                  label="Company Name"
-                  placeholder="Themeselection"
+                  v-model="billingAddress.companyName"
+                  label="Nombre de la Empresa"
+                  placeholder="Mi Empresa S.A."
                 />
               </VCol>
 
               <!-- 👉 Billing Email -->
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <VCol cols="12" md="6">
                 <VTextField
-                  label="Billing Email"
-                  placeholder="themeselection@email.com"
+                  v-model="billingAddress.billingEmail"
+                  label="Correo de Facturación"
+                  placeholder="facturacion@empresa.com"
                 />
               </VCol>
 
-              <!-- 👉 Tax ID -->
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <!-- 👉 Tax ID (NIT) -->
+              <VCol cols="12" md="6">
                 <VTextField
-                  label="Tax ID"
-                  placeholder="123 123 1233"
+                  v-model="billingAddress.taxId"
+                  label="NIT"
+                  placeholder="1234567-8"
                 />
               </VCol>
 
-              <!-- 👉 Vat Number -->
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <!-- 👉 Phone -->
+              <VCol cols="12" md="6">
                 <VTextField
-                  label="VAT Number"
-                  placeholder="121212"
-                />
-              </VCol>
-
-              <!-- 👉 Mobile -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  dirty
-                  label="Phone Number"
-                  type="number"
-                  prefix="US (+1)"
-                  placeholder="+1 123 456 7890"
+                  v-model="billingAddress.phone"
+                  label="Teléfono"
+                  placeholder="+502 2222-3333"
                 />
               </VCol>
 
               <!-- 👉 Country -->
-              <VCol
-                cols="12"
-                md="6"
-              >
+              <VCol cols="12" md="6">
                 <VSelect
-                  label="Country"
+                  v-model="billingAddress.country"
+                  label="País"
                   :items="countryList"
-                  placeholder="Select Country"
+                  placeholder="Selecciona un país"
+                />
+              </VCol>
+
+              <!-- 👉 State -->
+              <VCol cols="12" md="6">
+                <VTextField
+                  v-model="billingAddress.state"
+                  label="Departamento"
+                  placeholder="Guatemala"
                 />
               </VCol>
 
               <!-- 👉 Billing Address -->
               <VCol cols="12">
                 <VTextField
-                  label="Billing Address"
-                  placeholder="1234 Main St"
-                />
-              </VCol>
-
-              <!-- 👉 State -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  label="State"
-                  placeholder="New York"
-                />
-              </VCol>
-
-              <!-- 👉 Zip Code -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  label="Zip Code"
-                  type="number"
-                  placeholder="100006"
+                  v-model="billingAddress.address"
+                  label="Dirección Fiscal"
+                  placeholder="12 Calle 1-25 Zona 10"
                 />
               </VCol>
 
               <!-- 👉 Actions Button -->
-              <VCol
-                cols="12"
-                class="d-flex flex-wrap gap-4"
-              >
+              <VCol cols="12" class="d-flex flex-wrap gap-4">
                 <VBtn type="submit">
-                  Save changes
+                  Guardar Cambios
                 </VBtn>
                 <VBtn
                   type="reset"
                   color="secondary"
                   variant="outlined"
                 >
-                  Reset
+                  Restaurar
                 </VBtn>
               </VCol>
             </VRow>
