@@ -191,7 +191,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    transpile: ['vuetify'],
+    transpile: ['vuetify', 'vue3-perfect-scrollbar'],
   },
 
   compatibilityDate: '2025-07-15',
