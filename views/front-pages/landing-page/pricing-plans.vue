@@ -22,10 +22,21 @@ onMounted(async () => {
   await loadPricingData()
 })
 
-// Planes filtrados por tipo
+// Planes filtrados por tipo y periodo de facturación
 const currentPlans = computed(() => {
+  // Mapear el billingPeriod del frontend al billing_interval de la BD
+  const targetInterval = billingPeriod.value === 'yearly' ? 'annual' : 'monthly'
+  
   return plans.value
-    .filter(p => p.planType === pricingTab.value)
+    .filter(p => {
+      // Filtrar por tipo de plan
+      if (p.planType !== pricingTab.value) return false
+      
+      // Filtrar por intervalo de facturación
+      // Verificar ambos campos para compatibilidad
+      const planInterval = p.billingInterval || p.billingPeriod
+      return planInterval === targetInterval
+    })
     .sort((a, b) => a.displayOrder - b.displayOrder)
 })
 
@@ -33,6 +44,39 @@ const currentPlans = computed(() => {
 const getButtonVariant = (plan: any): 'elevated' | 'outlined' => {
   return plan.isPopular ? 'elevated' : 'outlined'
 }
+
+// Tabla comparativa de características por tipo
+const featuresEmpresa = [
+  { feature: 'Prueba gratuita 14 días', starter: true, business: true, enterprise: true },
+  { feature: 'Usuarios incluidos', starter: '3', business: '10', enterprise: 'Ilimitados' },
+  { feature: 'Facturas FEL mensuales', starter: '500', business: '2,000', enterprise: 'Ilimitadas' },
+  { feature: 'Bodegas', starter: '1', business: '3', enterprise: 'Ilimitadas' },
+  { feature: 'Punto de Venta (POS)', starter: true, business: true, enterprise: true },
+  { feature: 'Contabilidad completa', starter: false, business: true, enterprise: true },
+  { feature: 'Módulo de Bancos', starter: false, business: true, enterprise: true },
+  { feature: 'Cuentas por cobrar y pagar', starter: false, business: true, enterprise: true },
+  { feature: 'Multi-empresa', starter: false, business: false, enterprise: true },
+  { feature: 'API e Integraciones', starter: false, business: false, enterprise: true },
+  { feature: 'Soporte prioritario', starter: false, business: true, enterprise: true },
+  { feature: 'Soporte dedicado 24/7', starter: false, business: false, enterprise: true },
+]
+
+const featuresContador = [
+  { feature: 'Prueba gratuita 14 días', independiente: true, despacho: true, firma: true },
+  { feature: 'Empresas incluidas', independiente: '5', despacho: '20', firma: 'Ilimitadas' },
+  { feature: 'Usuarios del despacho', independiente: '1', despacho: '5', firma: 'Ilimitados' },
+  { feature: 'Contabilidad completa', independiente: true, despacho: true, firma: true },
+  { feature: 'Reportes SAT', independiente: true, despacho: true, firma: true },
+  { feature: 'Portal para clientes', independiente: false, despacho: true, firma: true },
+  { feature: 'Marca blanca', independiente: false, despacho: true, firma: true },
+  { feature: 'Consolidación', independiente: false, despacho: false, firma: true },
+  { feature: 'API completa', independiente: false, despacho: false, firma: true },
+  { feature: 'Capacitación incluida', independiente: false, despacho: false, firma: true },
+]
+
+const currentFeatures = computed(() => {
+  return pricingTab.value === 'empresa' ? featuresEmpresa : featuresContador
+})
 </script>
 
 <template>
@@ -209,18 +253,25 @@ const getButtonVariant = (plan: any): 'elevated' | 'outlined' => {
                     <div class="d-flex align-end gap-x-1 justify-center">
                       <div class="d-flex align-start">
                         <span class="text-h6 mt-1">{{ currencySymbol }}</span>
-                        <span class="plan-price-text">{{ formatCurrency(getDisplayPrice(plan, billingPeriod)) }}</span>
+                        <!-- Para planes anuales, mostrar precio mensual equivalente -->
+                        <span class="plan-price-text">{{ 
+                          formatCurrency(
+                            billingPeriod === 'yearly' 
+                              ? Math.floor(plan.price / 12) 
+                              : plan.price
+                          ) 
+                        }}</span>
                       </div>
                       <span class="text-body-1 text-medium-emphasis mb-2">/mes</span>
                     </div>
                     
-                    <!-- Precio original tachado si es anual -->
+                    <!-- Precio total anual cuando está en modo anual -->
                     <div v-if="billingPeriod === 'yearly'" class="text-center">
-                      <span class="text-body-2 text-medium-emphasis text-decoration-line-through">
-                        {{ currencySymbol }}{{ formatCurrency(plan.price) }}/mes
-                      </span>
                       <div class="text-caption text-success font-weight-medium">
-                        {{ currencySymbol }}{{ formatCurrency(plan.yearlyPrice) }}/año
+                        {{ currencySymbol }}{{ formatCurrency(plan.price) }}/año
+                      </div>
+                      <div class="text-caption text-medium-emphasis">
+                        Ahorras {{ currencySymbol }}{{ formatCurrency(Math.round((plan.price / 10) * 2)) }}
                       </div>
                     </div>
                   </div>
@@ -290,6 +341,100 @@ const getButtonVariant = (plan: any): 'elevated' | 'outlined' => {
           Todos los precios están en Quetzales (GTQ). IVA incluido.
         </p>
       </div>
+
+      <!-- Tabla comparativa detallada -->
+      <div class="mt-16">
+        <div class="text-center pb-8">
+          <h4 class="text-h4 mb-2">
+            Comparación detallada de planes
+          </h4>
+          <p class="text-body-1 mb-0">
+            Todas las funcionalidades para que elijas mejor
+          </p>
+        </div>
+
+        <!-- Loading state para tabla -->
+        <div v-if="isLoading" class="d-flex justify-center py-12">
+          <VProgressCircular indeterminate color="primary" size="48" />
+        </div>
+
+        <VTable v-else class="text-no-wrap border rounded pricing-table">
+          <thead>
+            <tr>
+              <th scope="col" class="py-4">CARACTERÍSTICA</th>
+              <th
+                v-for="plan in currentPlans"
+                :key="plan.code"
+                scope="col"
+                class="text-center py-4"
+              >
+                <div class="position-relative">
+                  {{ plan.name.toUpperCase() }}
+                  <VAvatar
+                    v-if="plan.isPopular"
+                    rounded="lg"
+                    color="primary"
+                    size="18"
+                    class="position-absolute ms-2"
+                    style="inset-block-start: -0.25rem;"
+                  >
+                    <VIcon icon="ri-star-s-fill" size="14" />
+                  </VAvatar>
+                </div>
+                <div class="text-body-2">
+                  {{ currencySymbol }}{{ 
+                    formatCurrency(
+                      billingPeriod === 'yearly' 
+                        ? Math.floor(plan.price / 12) 
+                        : plan.price
+                    ) 
+                  }}/mes
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="feature in currentFeatures" :key="feature.feature">
+              <td class="text-high-emphasis">{{ feature.feature }}</td>
+              <td v-for="plan in currentPlans" :key="plan.code" class="text-center">
+                <template v-if="typeof feature[plan.code] === 'boolean'">
+                  <VIcon
+                    :color="feature[plan.code] ? 'primary' : ''"
+                    size="20"
+                    :icon="feature[plan.code] ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
+                  />
+                </template>
+                <template v-else>
+                  <span class="text-body-1 font-weight-medium">
+                    {{ feature[plan.code] }}
+                  </span>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="py-4" />
+              <td v-for="plan in currentPlans" :key="plan.code" class="text-center py-4">
+                <VBtn
+                  :variant="getButtonVariant(plan)"
+                  :color="plan.isPopular ? 'primary' : undefined"
+                  :to="{ 
+                    name: 'front-pages-payment', 
+                    query: { 
+                      modalidad: pricingTab, 
+                      plan: plan.code,
+                      billing: billingPeriod 
+                    } 
+                  }"
+                >
+                  Elegir Plan
+                </VBtn>
+              </td>
+            </tr>
+          </tfoot>
+        </VTable>
+      </div>
     </div>
 
     <!-- Indicador de Realtime (solo desarrollo) -->
@@ -304,6 +449,23 @@ const getButtonVariant = (plan: any): 'elevated' | 'outlined' => {
 
 .pricing-plans {
   margin-block: 5.25rem;
+}
+
+.pricing-table {
+  --v-table-header-color: rgb(var(--v-theme-surface));
+
+  &.v-table {
+    .v-table__wrapper {
+      table {
+        thead tr th {
+          border-block-end: 1px solid rgba(var(--v-theme-on-surface), var(--v-border-opacity)) !important;
+        }
+        tbody tr:nth-child(even) {
+          background: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
+        }
+      }
+    }
+  }
 }
 </style>
 

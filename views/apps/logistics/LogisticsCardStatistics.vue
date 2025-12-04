@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const logisticData = ref([
-  { icon: 'ri-car-line', color: 'primary', title: 'On route vehicles', value: 42, change: 18.2, isHover: false },
-  { icon: 'ri-alert-line', color: 'warning', title: 'Vehicles with errors', value: 8, change: -8.7, isHover: false },
-  { icon: 'ri-stackshare-line', color: 'error', title: 'Deviated from route', value: 27, change: 4.3, isHover: false },
-  { icon: 'ri-timer-line', color: 'info', title: 'Late vehicles', value: 13, change: -2.5, isHover: false },
+  { icon: 'ri-car-line', color: 'primary', title: 'Vehículos en ruta', value: 42, change: 18.2, isHover: false },
+  { icon: 'ri-alert-line', color: 'warning', title: 'Vehículos con errores', value: 8, change: -8.7, isHover: false },
+  { icon: 'ri-stackshare-line', color: 'error', title: 'Desviados de ruta', value: 27, change: 4.3, isHover: false },
+  { icon: 'ri-timer-line', color: 'info', title: 'Vehículos tarde', value: 13, change: -2.5, isHover: false },
 ])
 </script>
 
@@ -46,7 +46,7 @@ const logisticData = ref([
               <div class="text-body-1 font-weight-medium me-2">
                 {{ data.change }}%
               </div>
-              <span class="text-sm text-disabled">than last week</span>
+              <span class="text-sm text-disabled">respecto a la semana pasada</span>
             </div>
           </VCardText>
         </VCard>

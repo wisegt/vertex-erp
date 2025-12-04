@@ -53,13 +53,13 @@ watch(() => props.emailsMeta, emailsMeta => {
 
 const folders: ComputedRef<Folder[]> = computed(() => [
   {
-    title: 'Inbox',
+    title: 'Bandeja de entrada',
     prependIcon: 'ri-mail-line',
     to: { name: 'apps-email' },
     badge: { content: inboxEmails.value, color: 'primary' },
   },
   {
-    title: 'Sent',
+    title: 'Enviados',
     prependIcon: 'ri-send-plane-line',
     to: {
       name: 'apps-email-filter',
@@ -67,7 +67,7 @@ const folders: ComputedRef<Folder[]> = computed(() => [
     },
   },
   {
-    title: 'Draft',
+    title: 'Borradores',
     prependIcon: 'ri-edit-box-line',
     to: {
       name: 'apps-email-filter',
@@ -76,7 +76,7 @@ const folders: ComputedRef<Folder[]> = computed(() => [
     badge: { content: draftEmails.value, color: 'warning' },
   },
   {
-    title: 'Starred',
+    title: 'Destacados',
     prependIcon: 'ri-star-line',
     to: {
       name: 'apps-email-filter',
@@ -94,7 +94,7 @@ const folders: ComputedRef<Folder[]> = computed(() => [
     badge: { content: spamEmails.value, color: 'error' },
   },
   {
-    title: 'Trash',
+    title: 'Papelera',
     prependIcon: 'ri-delete-bin-7-line',
     to: {
       name: 'apps-email-filter',
@@ -113,7 +113,7 @@ const labels: Label[] = [
     },
   },
   {
-    title: 'Company',
+    title: 'Empresa',
     color: 'primary',
     to: {
       name: 'apps-email-label',
@@ -121,7 +121,7 @@ const labels: Label[] = [
     },
   },
   {
-    title: 'Important',
+    title: 'Importante',
     color: 'warning',
     to: {
       name: 'apps-email-label',
@@ -129,7 +129,7 @@ const labels: Label[] = [
     },
   },
   {
-    title: 'Private',
+    title: 'Privado',
     color: 'error',
     to: {
       name: 'apps-email-label',
@@ -147,7 +147,7 @@ const labels: Label[] = [
         block
         @click="$emit('toggleComposeDialogVisibility')"
       >
-        Compose
+        Redactar
       </VBtn>
     </div>
 

@@ -2,7 +2,7 @@
 import cardMeetup from '@images/cards/meetup-img.png'
 
 const developerMeetup = [
-  { icon: 'ri-time-line', title: 'Tuesday, 24 january, 10:20 - 12:30', subtitle: 'After 1 week' },
+  { icon: 'ri-time-line', title: 'Martes, 24 de enero, 10:20 - 12:30', subtitle: 'Después de 1 semana' },
   { icon: 'ri-map-pin-line', title: 'The Richard NYC', subtitle: '1305 Lexington Ave, New York' },
 ]
 </script>
@@ -37,10 +37,10 @@ const developerMeetup = [
 
         <div>
           <h6 class="text-h6 mb-1">
-            Developer Meetup
+            Reunión de desarrolladores
           </h6>
           <div class="text-body-2">
-            The WordPress open source,free software project is the community behind the…
+            El proyecto de código abierto de WordPress es la comunidad detrás de…
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@ const developerMeetup = [
             class="mb-1"
           />
           <div class="text-body-1">
-            Interested
+            Interesado
           </div>
         </div>
 
@@ -66,7 +66,7 @@ const developerMeetup = [
             class="mb-1"
           />
           <div class="text-body-1">
-            Joined
+            Unido
           </div>
         </div>
 
@@ -78,7 +78,7 @@ const developerMeetup = [
             class="mb-1"
           />
           <div class="text-body-1 text-primary">
-            Invited
+            Invitado
           </div>
         </div>
 
@@ -91,7 +91,7 @@ const developerMeetup = [
             />
           </div>
           <span class="text-xs text-no-wrap">
-            More
+            Más
           </span>
         </div>
       </div>

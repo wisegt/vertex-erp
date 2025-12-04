@@ -20,10 +20,10 @@ const updateOptions = (options: any) => {
 }
 
 const widgetData = ref([
-  { title: 'Clients', value: 24, icon: 'ri-user-line' },
-  { title: 'Invoices', value: 165, icon: 'ri-pages-line' },
-  { title: 'Paid', value: '$2.46k', icon: 'ri-wallet-line' },
-  { title: 'Unpaid', value: '$876', icon: 'ri-money-dollar-circle-line' },
+  { title: 'Clientes', value: 24, icon: 'ri-user-line' },
+  { title: 'Facturas', value: 165, icon: 'ri-pages-line' },
+  { title: 'Pagado', value: 'Q2.46k', icon: 'ri-wallet-line' },
+  { title: 'No pagado', value: 'Q876', icon: 'ri-money-dollar-circle-line' },
 ])
 
 // 👉 headers
@@ -49,8 +49,8 @@ const { data: invoiceData, execute: fetchInvoices } = await useApi<any>(createUr
   },
 }))
 
-const invoices = computed((): Invoice[] => invoiceData.value.invoices)
-const totalInvoices = computed(() => invoiceData.value.totalInvoices)
+const invoices = computed((): Invoice[] => invoiceData.value?.invoices || [])
+const totalInvoices = computed(() => invoiceData.value?.totalInvoices || 0)
 
 // 👉 Invoice balance variant resolver
 const resolveInvoiceBalanceVariant = (balance: string | number, total: number) => {

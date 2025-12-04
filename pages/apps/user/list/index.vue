@@ -23,12 +23,12 @@ const updateOptions = (options: any) => {
 
 // Headers
 const headers = [
-  { title: 'User', key: 'user' },
-  { title: 'Email', key: 'email' },
-  { title: 'Role', key: 'role' },
+  { title: 'Usuario', key: 'user' },
+  { title: 'Correo', key: 'email' },
+  { title: 'Rol', key: 'role' },
   { title: 'Plan', key: 'plan' },
-  { title: 'Status', key: 'status' },
-  { title: 'Actions', key: 'actions', sortable: false },
+  { title: 'Estado', key: 'status' },
+  { title: 'Acciones', key: 'actions', sortable: false },
 ]
 
 // 👉 Fetching users
@@ -45,29 +45,29 @@ const { data: usersData, execute: fetchUsers } = await useApi<any>(createUrl('/a
   },
 }))
 
-const users = computed((): UserProperties[] => usersData.value.users)
-const totalUsers = computed(() => usersData.value.totalUsers)
+const users = computed((): UserProperties[] => usersData.value?.users || [])
+const totalUsers = computed(() => usersData.value?.totalUsers || 0)
 
 // 👉 search filters
 const roles = [
-  { title: 'Admin', value: 'admin' },
-  { title: 'Author', value: 'author' },
+  { title: 'Administrador', value: 'admin' },
+  { title: 'Autor', value: 'author' },
   { title: 'Editor', value: 'editor' },
-  { title: 'Maintainer', value: 'maintainer' },
-  { title: 'Subscriber', value: 'subscriber' },
+  { title: 'Mantenedor', value: 'maintainer' },
+  { title: 'Suscriptor', value: 'subscriber' },
 ]
 
 const plans = [
-  { title: 'Basic', value: 'basic' },
-  { title: 'Company', value: 'company' },
+  { title: 'Básico', value: 'basic' },
+  { title: 'Empresa', value: 'company' },
   { title: 'Enterprise', value: 'enterprise' },
-  { title: 'Team', value: 'team' },
+  { title: 'Equipo', value: 'team' },
 ]
 
 const status = [
-  { title: 'Pending', value: 'pending' },
-  { title: 'Active', value: 'active' },
-  { title: 'Inactive', value: 'inactive' },
+  { title: 'Pendiente', value: 'pending' },
+  { title: 'Activo', value: 'active' },
+  { title: 'Inactivo', value: 'inactive' },
 ]
 
 const resolveUserRoleVariant = (role: string) => {

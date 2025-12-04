@@ -2,23 +2,23 @@
 const salesByCountries = [
   {
     abbr: 'US',
-    amount: '$8,656k',
-    country: 'United states of america',
+    amount: 'Q8,656k',
+    country: 'Estados Unidos de América',
     change: '+25.8%',
     sales: '894k',
     color: 'success',
   },
   {
     abbr: 'UK',
-    amount: '$2,415k',
-    country: 'United kingdom',
+    amount: 'Q2,415k',
+    country: 'Reino Unido',
     change: '-6.2%',
     sales: '645k',
     color: 'error',
   },
   {
     abbr: 'IN',
-    amount: '$865k',
+    amount: 'Q865k',
     country: 'India',
     change: '+12.4%',
     sales: '148k',
@@ -26,23 +26,23 @@ const salesByCountries = [
   },
   {
     abbr: 'JA',
-    amount: '$745k',
-    country: 'Japan',
+    amount: 'Q745k',
+    country: 'Japón',
     change: '-11.9%',
     sales: '86k',
     color: 'secondary',
   },
   {
     abbr: 'KO',
-    amount: '$45k',
-    country: 'Korea',
+    amount: 'Q45k',
+    country: 'Corea',
     change: '+16.2%',
     sales: '42k',
     color: 'error',
   },
   {
     abbr: 'CH',
-    amount: '$12k',
+    amount: 'Q12k',
     country: 'China',
     change: '+14.8%',
     sales: '8k',
@@ -54,7 +54,7 @@ const salesByCountries = [
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Sales by Countries</VCardTitle>
+      <VCardTitle>Ventas por países</VCardTitle>
 
       <template #append>
         <div class="me-n3">
@@ -108,7 +108,7 @@ const salesByCountries = [
                 {{ data.sales }}
               </h6>
               <div class="text-body-2 text-disabled text-end">
-                Sales
+                Ventas
               </div>
             </div>
           </template>

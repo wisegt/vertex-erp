@@ -62,18 +62,31 @@ const formatCurrency = (amount: number): string => {
   })
 }
 
-// Planes filtrados por tipo
+// Planes filtrados por tipo y periodo de facturación
 const currentPlans = computed(() => {
+  // Mapear el billingPeriod del frontend al billing_interval de la BD
+  const targetInterval = billingPeriod.value === 'yearly' ? 'annual' : 'monthly'
+  
   return allPlans.value
-    .filter(p => p.planType === pricingTab.value)
+    .filter(p => {
+      // Filtrar por tipo de plan
+      if (p.planType !== pricingTab.value) return false
+      
+      // Filtrar por intervalo de facturación
+      const planInterval = p.billingInterval || p.billingPeriod
+      return planInterval === targetInterval
+    })
     .sort((a, b) => a.displayOrder - b.displayOrder)
 })
 
 // Función para obtener el precio a mostrar
 const getDisplayPrice = (plan: Plan) => {
+  // Con la nueva estructura, los planes anuales ya tienen su precio en plan.price
+  // Si es anual, dividir entre 12 para mostrar el equivalente mensual
   if (billingPeriod.value === 'yearly') {
-    return Math.floor(plan.yearlyPrice / 12)
+    return Math.floor(plan.price / 12)
   }
+  // Si es mensual, mostrar el precio directo
   return plan.price
 }
 
@@ -294,13 +307,13 @@ const faqs = [
                       </h1>
                       <span class="text-body-1 font-weight-medium align-self-end">/mes</span>
                     </div>
-                    <!-- Precio original tachado si es anual -->
+                    <!-- Precio total anual cuando está en modo anual -->
                     <div v-if="billingPeriod === 'yearly'" class="text-center">
-                      <span class="text-body-2 text-medium-emphasis text-decoration-line-through">
-                        Q{{ formatCurrency(plan.price) }}/mes
-                      </span>
                       <div class="text-caption text-success font-weight-medium">
-                        Q{{ formatCurrency(plan.yearlyPrice) }}/año
+                        Q{{ formatCurrency(plan.price) }}/año
+                      </div>
+                      <div class="text-caption text-medium-emphasis">
+                        Ahorras Q{{ formatCurrency(Math.round((plan.price / 10) * 2)) }}
                       </div>
                     </div>
                   </div>

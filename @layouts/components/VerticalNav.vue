@@ -54,6 +54,16 @@ const handleNavScroll = (evt: Event) => {
 }
 
 const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
+
+const handlePinClick = () => {
+  // Colapsar el menú cuando se presiona el pin
+  configStore.isVerticalNavCollapsed = true
+}
+
+const handleUnpinClick = () => {
+  // Expandir el menú cuando se presiona el unpin
+  configStore.isVerticalNavCollapsed = false
+}
 </script>
 
 <template>
@@ -98,7 +108,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
             class="d-none nav-unpin"
             :class="configStore.isVerticalNavCollapsed && 'd-lg-block'"
             v-bind="layoutConfig.icons.verticalNavUnPinned"
-            @click="configStore.isVerticalNavCollapsed = !configStore.isVerticalNavCollapsed"
+            @click="handleUnpinClick"
           />
           <Component
             :is="layoutConfig.app.iconRenderer || 'div'"
@@ -106,7 +116,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
             class="d-none nav-pin"
             :class="!configStore.isVerticalNavCollapsed && 'd-lg-block'"
             v-bind="layoutConfig.icons.verticalNavPinned"
-            @click="configStore.isVerticalNavCollapsed = !configStore.isVerticalNavCollapsed"
+            @click="handlePinClick"
           />
           <Component
             :is="layoutConfig.app.iconRenderer || 'div'"

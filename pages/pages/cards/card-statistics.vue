@@ -36,7 +36,7 @@ const statisticsHorizontal = [
     change: -42.4,
   },
   {
-    title: 'Total Profit',
+    title: 'Ganancia total',
     color: 'warning',
     icon: 'ri-bar-chart-line',
     stats: 2856,
@@ -61,7 +61,7 @@ const statisticsVertical = [
     subtitle: 'Yearly Project',
   },
   {
-    title: 'Total Profit',
+    title: 'Ganancia total',
     color: 'secondary',
     icon: 'ri-pie-chart-2-line',
     stats: '$25.6k',
@@ -257,7 +257,7 @@ const statisticsWithImages = [
       <CardStatisticsSessionsBarCharts />
     </VCol>
 
-    <!-- 👉 Total Profit Line Chart -->
+    <!-- 👉 Ganancia total Line Chart -->
     <VCol
       cols="12"
       sm="6"

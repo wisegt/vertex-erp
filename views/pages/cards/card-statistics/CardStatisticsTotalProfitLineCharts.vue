@@ -86,7 +86,7 @@ const chartOptions = computed(() => {
       />
 
       <h6 class="text-h6 text-center">
-        Total Profit
+        Ganancia total
       </h6>
     </VCardText>
   </VCard>

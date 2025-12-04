@@ -57,16 +57,16 @@ const options = computed(() => {
   }
 })
 
-const series = [{ name: 'Total Sales', data: [0, 258, 30, 240, 150, 400] }]
+const series = [{ name: 'Ventas totales', data: [0, 258, 30, 240, 150, 400] }]
 </script>
 
 <template>
   <VCard>
     <VCardItem>
       <VCardTitle class="mb-1">
-        Total Sales
+        Ventas totales
       </VCardTitle>
-      <VCardSubtitle>$21,845</VCardSubtitle>
+      <VCardSubtitle>Q21,845</VCardSubtitle>
 
       <template #append>
         <div class="mt-n7 me-n3">

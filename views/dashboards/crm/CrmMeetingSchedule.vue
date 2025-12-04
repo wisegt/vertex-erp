@@ -7,10 +7,10 @@ import avatar7 from '@images/avatars/avatar-7.png'
 import avatar8 from '@images/avatars/avatar-8.png'
 
 interface UiColors {
-  Business: string
-  Meditation: string
-  Meetup: string
-  Dinner: string
+  'Negocios': string
+  'Meditación': string
+  'Encuentro': string
+  'Cena': string
 }
 interface MeetingSchedule {
   profile: string
@@ -22,47 +22,47 @@ interface MeetingSchedule {
 const meetingSchedules: MeetingSchedule[] = [
   {
     profile: avatar4,
-    with: 'Call with Woods',
+    with: 'Llamada con Woods',
     dateTime: '21 Jul | 08:20-10:30',
-    type: 'Business',
+    type: 'Negocios',
   },
   {
     profile: avatar8,
-    with: 'Call with hilda',
+    with: 'Llamada con Hilda',
     dateTime: '24 Jul | 11:30-12:00',
-    type: 'Meditation',
+    type: 'Meditación',
   },
   {
     profile: avatar7,
-    with: 'Conference call',
+    with: 'Llamada de conferencia',
     dateTime: '28 Jul | 05:00-6:45',
-    type: 'Dinner',
+    type: 'Cena',
   },
   {
     profile: avatar3,
-    with: 'Meeting with Mark',
+    with: 'Reunión con Mark',
     dateTime: '03 Aug | 07:00-8:30',
-    type: 'Meetup',
+    type: 'Encuentro',
   },
   {
     profile: avatar2,
-    with: 'Meeting in Oakland',
+    with: 'Reunión en Oakland',
     dateTime: '14 Aug | 04:15-05:30',
-    type: 'Dinner',
+    type: 'Cena',
   },
   {
     profile: avatar1,
-    with: 'Meeting with Carl',
+    with: 'Reunión con Carl',
     dateTime: '05 Oct | 10:00-12:45',
-    type: 'Business',
+    type: 'Negocios',
   },
 ]
 
 const meetingTypeUiColors: UiColors = {
-  Business: 'primary',
-  Meditation: 'success',
-  Meetup: 'secondary',
-  Dinner: 'error',
+  Negocios: 'primary',
+  Meditación: 'success',
+  Encuentro: 'secondary',
+  Cena: 'error',
 }
 </script>
 
@@ -71,7 +71,7 @@ const meetingTypeUiColors: UiColors = {
     <!-- SECTION Card Header and Menu -->
     <VCardItem>
       <!-- 👉 Title -->
-      <VCardTitle>Meeting Schedule</VCardTitle>
+      <VCardTitle>Calendario de reuniones</VCardTitle>
 
       <!-- 👉 menu -->
 

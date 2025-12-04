@@ -55,7 +55,7 @@ const series = [80]
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Total Profit</VCardTitle>
+      <VCardTitle>Ganancia total</VCardTitle>
 
       <template #append>
         <div class="me-n3">

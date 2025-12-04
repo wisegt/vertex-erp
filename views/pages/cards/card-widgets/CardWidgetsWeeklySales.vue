@@ -86,7 +86,7 @@ const weeklySalesData = [
       color: 'success',
     },
     title: '$482k',
-    subtitle: 'Total Profit',
+    subtitle: 'Ganancia total',
   },
 ]
 </script>
@@ -94,7 +94,7 @@ const weeklySalesData = [
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Weekly Sales</VCardTitle>
+      <VCardTitle>Ventas semanales</VCardTitle>
       <VCardSubtitle>Total 85.4k Sales</VCardSubtitle>
 
       <template #append>

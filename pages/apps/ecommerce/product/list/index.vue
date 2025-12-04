@@ -2,10 +2,10 @@
 import type { ECommerceProduct } from '@db/apps/ecommerce/types'
 
 const widgetData = ref([
-  { title: 'In-Store Sales', value: '$5,345', icon: 'ri-home-6-line', desc: '5k orders', change: 5.7 },
-  { title: 'Website Sales', value: '$74,347', icon: 'ri-computer-line', desc: '21k orders', change: 12.4 },
-  { title: 'Discount', value: '$14,235', icon: 'ri-gift-line', desc: '6k orders' },
-  { title: 'Affiliate', value: '$8,345', icon: 'ri-money-dollar-circle-line', desc: '150 orders', change: -3.5 },
+  { title: 'Ventas en tienda', value: 'Q5,345', icon: 'ri-home-6-line', desc: '5k órdenes', change: 5.7 },
+  { title: 'Ventas en línea', value: 'Q74,347', icon: 'ri-computer-line', desc: '21k órdenes', change: 12.4 },
+  { title: 'Descuento', value: 'Q14,235', icon: 'ri-gift-line', desc: '6k órdenes' },
+  { title: 'Afiliado', value: 'Q8,345', icon: 'ri-money-dollar-circle-line', desc: '150 órdenes', change: -3.5 },
 ])
 
 const headers = [
@@ -96,8 +96,8 @@ const { data: productsData, execute: fetchProducts } = await useApi<any>(createU
   },
 ))
 
-const products = computed((): ECommerceProduct[] => productsData.value.products)
-const totalProduct = computed(() => productsData.value.total)
+const products = computed((): ECommerceProduct[] => productsData.value?.products || [])
+const totalProduct = computed(() => productsData.value?.total || 0)
 
 const deleteProduct = async (id: number) => {
   await $api(`apps/ecommerce/products/${id}`, {
@@ -187,7 +187,7 @@ const deleteProduct = async (id: number) => {
     </VCard>
 
     <!-- 👉 products -->
-    <VCard title="Filters">
+    <VCard title="Filtros">
       <VCardText>
         <VRow>
           <!-- 👉 Select Status -->
@@ -244,7 +244,7 @@ const deleteProduct = async (id: number) => {
           <!-- 👉 Search  -->
           <VTextField
             v-model="searchQuery"
-            placeholder="Search Product"
+            placeholder="Buscar producto"
             style="inline-size: 200px;"
             density="compact"
             class="me-3"
@@ -270,7 +270,7 @@ const deleteProduct = async (id: number) => {
             prepend-icon="ri-add-line"
             @click="$router.push('/apps/ecommerce/product/add')"
           >
-            Add Product
+            Agregar producto
           </VBtn>
         </div>
       </VCardText>

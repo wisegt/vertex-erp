@@ -214,23 +214,22 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23]
       >
         <div class="pe-3">
           <h5 class="text-h5 text-high-emphasis mb-1">
-            Welcome back, Felecia 👋🏻
+            Bienvenido de nuevo, Mauricio 👋🏻
           </h5>
 
           <div
             class="text-wrap text-medium-emphasis mb-4"
             style="max-inline-size: 400px;"
           >
-            Your progress this week is Awesome. let's keep it up
-            and get a lot of points reward!
+            Tu progreso esta semana es increíble. vamos a seguir así y conseguir muchos puntos de recompensa!
           </div>
 
           <div class="d-flex justify-space-between flex-wrap gap-6 flex-column flex-md-row">
             <div
               v-for="{ title, value, icon, color } in [
-                { title: 'Hours Spent', value: '34h', icon: customLaptop, color: 'primary' },
-                { title: 'Test Results', value: '82%', icon: customLightbulb, color: 'info' },
-                { title: 'Course Completed', value: '14', icon: customCheck, color: 'warning' },
+                { title: 'Horas invertidas', value: '34h', icon: customLaptop, color: 'primary' },
+                { title: 'Resultados de test', value: '82%', icon: customLightbulb, color: 'info' },
+                { title: 'Cursos completados', value: '14', icon: customCheck, color: 'warning' },
               ]"
               :key="title"
             >
@@ -273,10 +272,10 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23]
         <div class="d-flex justify-space-between align-center">
           <div class="d-flex flex-column ps-3">
             <h5 class="text-h5 mb-1 text-no-wrap">
-              Time Spending
+              Horas invertidas
             </h5>
             <div class="mb-6 text-body-1">
-              Weekly Report
+              Reporte semanal
             </div>
             <h4 class="text-h4 mb-2">
               231<span class="text-medium-emphasis">h</span> 14<span class="text-medium-emphasis">m</span>

@@ -4,7 +4,7 @@ import pdf from '@images/icons/project-icons/pdf.png'
 </script>
 
 <template>
-  <VCard title="Activity Timeline">
+  <VCard title="Línea de tiempo de actividad">
     <VCardText>
       <VTimeline
         side="end"
@@ -20,15 +20,15 @@ import pdf from '@images/icons/project-icons/pdf.png'
           <!-- 👉 Header -->
           <div class="d-flex justify-space-between align-center gap-2 flex-wrap mb-3">
             <div class="app-timeline-title align-self-start">
-              12 Invoices have been paid
+              12 facturas han sido pagadas
             </div>
             <div class="app-timeline-meta">
-              12 min ago
+              hace 12 min
             </div>
           </div>
 
           <p class="app-timeline-text mb-2">
-            Invoices have been paid to the company.
+            Las facturas han sido pagadas a la empresa.
           </p>
 
           <div class="d-inline-flex align-center timeline-chip mb-2">
@@ -51,15 +51,15 @@ import pdf from '@images/icons/project-icons/pdf.png'
           <!-- 👉 Header -->
           <div class="d-flex justify-space-between align-center gap-2 flex-wrap mb-3">
             <div class="app-timeline-title align-self-start">
-              Client Meeting
+              Reunión con cliente
             </div>
             <div class="app-timeline-meta">
-              45 min ago
+              hace 45 min
             </div>
           </div>
 
           <p class="app-timeline-text mb-2">
-            Project meeting with john @10:15am
+            Reunión de proyecto con john @10:15am
           </p>
 
           <div class="d-flex align-center mb-2">
@@ -71,10 +71,10 @@ import pdf from '@images/icons/project-icons/pdf.png'
 
             <div>
               <div class="text-body-2 font-weight-medium">
-                Lester McCarthy (Client)
+                Lester McCarthy (Cliente)
               </div>
               <div class="text-body-2">
-                CEO of ThemeSelection
+                CEO de ThemeSelection
               </div>
             </div>
           </div>
@@ -86,15 +86,15 @@ import pdf from '@images/icons/project-icons/pdf.png'
         >
           <div class="d-flex justify-space-between align-center gap-2 flex-wrap mb-3">
             <div class="app-timeline-title align-self-start">
-              Create a new project for client
+              Crear un nuevo proyecto para cliente
             </div>
             <div class="app-timeline-meta">
-              2 Day Ago
+              hace 2 días
             </div>
           </div>
 
           <p class="mb-0 app-timeline-text">
-            6 team members in a project
+            6 miembros del equipo en un proyecto
           </p>
         </VTimelineItem>
       </VTimeline>

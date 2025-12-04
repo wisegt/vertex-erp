@@ -1,15 +1,15 @@
 <script setup lang="ts">
 const assignmentData = [
-  { title: 'User Experience Design', tasks: 120, progress: 72, color: 'primary' },
-  { title: 'Basic fundamentals', tasks: 32, progress: 48, color: 'success' },
-  { title: 'React Native components', tasks: 182, progress: 15, color: 'error' },
-  { title: 'Basic of music theory', tasks: 56, progress: 24, color: 'info' },
+  { title: 'Diseño de Experiencia de Usuario', tasks: 120, progress: 72, color: 'primary' },
+  { title: 'Fundamentos básicos', tasks: 32, progress: 48, color: 'success' },
+  { title: 'Componentes de React Native', tasks: 182, progress: 15, color: 'error' },
+  { title: 'Teoría básica de música', tasks: 56, progress: 24, color: 'info' },
 ]
 </script>
 
 <template>
   <VCard>
-    <VCardItem title="Assignment progress">
+    <VCardItem title="Progreso de tareas">
       <template #append>
         <MoreBtn />
       </template>
@@ -38,7 +38,7 @@ const assignmentData = [
             </div>
           </template>
 
-          <VListItemSubtitle>{{ assignment.tasks }} Tasks</VListItemSubtitle>
+          <VListItemSubtitle>{{ assignment.tasks }} Tareas</VListItemSubtitle>
           <template #append>
             <VBtn
               variant="tonal"

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 const coursesData = [
-  { title: 'Videography Basic Design Course', views: '1.2k', icon: 'ri-video-download-line', color: 'primary' },
-  { title: 'Basic Front-end Development Course', views: '834', icon: 'ri-code-view', color: 'info' },
-  { title: 'Basic Fundamentals of Photography', views: '3.7k', icon: 'ri-image-2-line', color: 'success' },
-  { title: 'Advance Dribble Base Visual Design', views: '2.5k', icon: 'ri-palette-line', color: 'warning' },
-  { title: 'Your First Singing Lesson', views: '948', icon: 'ri-music-2-line', color: 'error' },
+  { title: 'Curso básico de diseño de videografía', views: '1.2k', icon: 'ri-video-download-line', color: 'primary' },
+  { title: 'Curso básico de desarrollo Front-end', views: '834', icon: 'ri-code-view', color: 'info' },
+  { title: 'Fundamentos básicos de fotografía', views: '3.7k', icon: 'ri-image-2-line', color: 'success' },
+  { title: 'Diseño visual avanzado base Dribble', views: '2.5k', icon: 'ri-palette-line', color: 'warning' },
+  { title: 'Tu primera lección de canto', views: '948', icon: 'ri-music-2-line', color: 'error' },
 ]
 </script>
 
 <template>
   <VCard>
-    <VCardItem title="Top Courses">
+    <VCardItem title="Mejores cursos">
       <template #append>
         <MoreBtn />
       </template>
@@ -47,7 +47,7 @@ const coursesData = [
               color="secondary"
               size="small"
             >
-              {{ course.views }} Views
+              {{ course.views }} Vistas
             </VChip>
           </template>
         </VListItem>

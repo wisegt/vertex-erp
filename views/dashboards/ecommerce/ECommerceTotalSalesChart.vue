@@ -83,7 +83,7 @@ const chartOptions = computed(() => {
         </div>
         <div class="d-flex align-center">
           <h4 class="text-h4">
-            $25,980
+            Q25,980
           </h4>
           <div class="d-flex align-center">
             <VIcon

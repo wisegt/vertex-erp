@@ -26,8 +26,8 @@ const { data: coursesData } = await useApi<any>(createUrl('/apps/academy/courses
   },
 }))
 
-const courses = computed(() => coursesData.value.courses)
-const totalCourse = computed(() => coursesData.value.total)
+const courses = computed(() => coursesData.value?.courses || [])
+const totalCourse = computed(() => coursesData.value?.total || 0)
 
 watch([hideCompleted, label, () => props.searchQuery], () => {
   page.value = 1
@@ -54,10 +54,10 @@ const resolveChipColor = (tags: string) => {
       <div class="d-flex justify-space-between align-center flex-wrap gap-4 mb-6">
         <div>
           <h5 class="text-h5">
-            My Courses
+            Mis cursos
           </h5>
           <div class="text-body-1">
-            Total 6 course you have purchased
+            Total de 6 cursos que has adquirido
           </div>
         </div>
 
@@ -67,17 +67,17 @@ const resolveChipColor = (tags: string) => {
             density="compact"
             :items="[
               { title: 'Web', value: 'web' },
-              { title: 'Art', value: 'art' },
+              { title: 'Arte', value: 'art' },
               { title: 'UI/UX', value: 'ui/ux' },
-              { title: 'Psychology', value: 'psychology' },
-              { title: 'Design', value: 'design' },
-              { title: 'All Courses', value: 'All Courses' },
+              { title: 'Psicología', value: 'psychology' },
+              { title: 'Diseño', value: 'design' },
+              { title: 'Todos los cursos', value: 'All Courses' },
             ]"
             style="min-inline-size: 250px;"
           />
           <VSwitch
             v-model="hideCompleted"
-            label="Hide Completed"
+            label="Ocultar completados"
           />
         </div>
       </div>
@@ -166,7 +166,7 @@ const resolveChipColor = (tags: string) => {
                       color="success"
                       class="me-1"
                     />
-                    <span class="text-success text-body-1">Completed</span>
+                    <span class="text-success text-body-1">Completado</span>
                   </div>
 
                   <VProgressLinear
@@ -191,7 +191,7 @@ const resolveChipColor = (tags: string) => {
                           class="flip-in-rtl"
                         />
                       </template>
-                      Start Over
+                      Comenzar de nuevo
                     </VBtn>
                     <VBtn
                       v-if="course.completedTasks !== course.totalTasks"
@@ -205,7 +205,7 @@ const resolveChipColor = (tags: string) => {
                           class="flip-in-rtl"
                         />
                       </template>
-                      Continue
+                      Continuar
                     </VBtn>
                   </div>
                 </VCardText>
@@ -217,7 +217,7 @@ const resolveChipColor = (tags: string) => {
 
       <div v-else>
         <h4 class="text-h4 text-center mb-6">
-          No Course Found
+          No se encontraron cursos
         </h4>
       </div>
 

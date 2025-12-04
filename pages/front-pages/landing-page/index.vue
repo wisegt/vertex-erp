@@ -7,7 +7,6 @@ import FaqSection from '@/views/front-pages/landing-page/faq-section.vue'
 import Features from '@/views/front-pages/landing-page/features.vue'
 import FutureFeatures from '@/views/front-pages/landing-page/future-features.vue'
 import HeroSection from '@/views/front-pages/landing-page/hero-section.vue'
-import PricingPlans from '@/views/front-pages/landing-page/pricing-plans.vue'
 import ProductStats from '@/views/front-pages/landing-page/product-stats.vue'
 import { useConfigStore } from '@core/stores/config'
 
@@ -24,12 +23,11 @@ const activeSectionId = ref()
 const refHome = ref()
 const refFeatures = ref()
 const refRoadmap = ref()
-const refPricing = ref()
 const refFaq = ref()
 const refContact = ref()
 
 useIntersectionObserver(
-  [refHome, refFeatures, refRoadmap, refPricing, refFaq, refContact],
+  [refHome, refFeatures, refRoadmap, refFaq, refContact],
   ([{ isIntersecting, target }]) => {
     if (isIntersecting)
       activeSectionId.value = target.id
@@ -54,9 +52,6 @@ useIntersectionObserver(
 
     <!-- Módulos Futuros -->
     <FutureFeatures ref="refRoadmap" />
-
-    <!-- Planes y Precios -->
-    <PricingPlans ref="refPricing" />
 
     <!-- Estadísticas -->
     <ProductStats />

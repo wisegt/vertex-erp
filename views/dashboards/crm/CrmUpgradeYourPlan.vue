@@ -6,12 +6,12 @@ import logoMastercardSmall from '@images/cards/logo-mastercard-small.png'
 const savedCards = [
   {
     logo: logoMastercardSmall,
-    type: 'Credit card',
+    type: 'Tarjeta de crédito',
     number: '2566 xxxx xxxx 8908',
   },
   {
     logo: logoCreditCard2,
-    type: 'Credit card',
+    type: 'Tarjeta de crédito',
     number: '8990 xxxx xxxx 6852',
   },
 ]
@@ -22,7 +22,7 @@ const savedCards = [
     <!-- SECTION Card Header and Menu -->
     <VCardItem>
       <!-- 👉 Title -->
-      <VCardTitle>Upgrade Your Plan</VCardTitle>
+      <VCardTitle>Actualiza tu plan</VCardTitle>
 
       <!-- 👉 menu -->
       <template #append>
@@ -35,7 +35,7 @@ const savedCards = [
 
     <VCardText>
       <p class="text-body-2">
-        Please make the payment to start enjoying all the features of our premium plan as soon as possible.
+        Por favor realiza el pago para comenzar a disfrutar de todas las funciones de nuestro plan premium lo antes posible.
       </p>
 
       <!-- SECTION Upgrade plan banner -->
@@ -56,7 +56,7 @@ const savedCards = [
           <h6 class="text-h6">
             Platinum
           </h6>
-          <span class="text-primary text-body-2">Upgrade Plan</span>
+          <span class="text-primary text-body-2">Actualizar plan</span>
         </div>
         <VSpacer />
         <div class="d-flex align-center">
@@ -67,7 +67,7 @@ const savedCards = [
             5,250
           </h4>
           <sub>
-            <div class="text-body-2 text-high-emphasis">/Year</div>
+            <div class="text-body-2 text-high-emphasis">/Año</div>
           </sub>
         </div>
       </div>
@@ -76,7 +76,7 @@ const savedCards = [
       <!-- SECTION Payment Details -->
       <VList class="card-list mt-1">
         <h6 class="text-h6 my-2">
-          Payment details
+          Detalles de pago
         </h6>
 
         <VListItem
@@ -118,7 +118,7 @@ const savedCards = [
 
         <!-- 👉 Add Payment  -->
         <VListItem class="mb-3 text-body-1">
-          <a href="javascript:void(0)">Add Payment Method</a>
+          <a href="javascript:void(0)">Agregar método de pago</a>
         </VListItem>
       </VList>
       <!-- !SECTION -->
@@ -128,12 +128,12 @@ const savedCards = [
         <VRow>
           <VCol cols="12">
             <VTextField
-              placeholder="Email Address"
+              placeholder="Correo electrónico"
               density="compact"
               class="mb-3"
             />
             <VBtn block>
-              Contact Now
+              Contactar ahora
             </VBtn>
           </VCol>
         </VRow>

@@ -12,10 +12,10 @@ const store = useChatStore()
 const { resolveAvatarBadgeVariant } = useChat()
 
 const userStatusRadioOptions = [
-  { title: 'Online', value: 'online', color: 'success' },
-  { title: 'Away', value: 'away', color: 'warning' },
-  { title: 'Do not disturb', value: 'busy', color: 'error' },
-  { title: 'Offline', value: 'offline', color: 'secondary' },
+  { title: 'En línea', value: 'online', color: 'success' },
+  { title: 'Ausente', value: 'away', color: 'warning' },
+  { title: 'No molestar', value: 'busy', color: 'error' },
+  { title: 'Desconectado', value: 'offline', color: 'secondary' },
 ]
 
 const isTwoStepVerified = ref(true)
@@ -80,7 +80,7 @@ const isNotificationEnabled = ref(false)
           for="textarea-user-about"
           class="text-base text-disabled mb-0"
         >
-          ABOUT
+          ACERCA DE
         </p>
         <VTextarea
           id="textarea-user-about"
@@ -94,7 +94,7 @@ const isNotificationEnabled = ref(false)
       <!-- Status -->
       <div class="mb-6">
         <p class="text-base text-disabled mb-1">
-          STATUS
+          ESTADO
         </p>
         <VRadioGroup v-model="store.profileUser.status">
           <VRadio
@@ -112,7 +112,7 @@ const isNotificationEnabled = ref(false)
       <!-- Settings -->
       <div class="text-medium-emphasis chat-settings-section">
         <p class="text-base text-disabled mb-0">
-          SETTINGS
+          CONFIGURACIÓN
         </p>
         <div class="d-flex align-center pa-2">
           <VIcon
@@ -122,7 +122,7 @@ const isNotificationEnabled = ref(false)
             color="high-emphasis"
           />
           <h6 class="text-h6 font-weight-regular">
-            Two-step Verification
+            Verificación en dos pasos
           </h6>
 
           <VSpacer />
@@ -141,7 +141,7 @@ const isNotificationEnabled = ref(false)
             color="high-emphasis"
           />
           <h6 class="text-h6 font-weight-regular">
-            Notification
+            Notificaciones
           </h6>
 
           <VSpacer />
@@ -160,7 +160,7 @@ const isNotificationEnabled = ref(false)
             color="high-emphasis"
           />
           <h6 class="text-h6 font-weight-regular">
-            Invite Friends
+            Invitar amigos
           </h6>
         </div>
         <div class="d-flex align-center pa-2">
@@ -171,7 +171,7 @@ const isNotificationEnabled = ref(false)
             color="high-emphasis"
           />
           <h6 class="text-h6 font-weight-regular">
-            Delete Account
+            Eliminar cuenta
           </h6>
         </div>
       </div>
@@ -183,7 +183,7 @@ const isNotificationEnabled = ref(false)
         class="mt-11"
         append-icon="ri-logout-box-r-line"
       >
-        Logout
+        Cerrar sesión
       </VBtn>
     </PerfectScrollbar>
   </template>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const currentTab = ref('New')
-const tabsData = ['New', 'Preparing', 'Shipping']
+const tabsData = ['Nuevo', 'Preparando', 'Enviando']
 </script>
 
 <template>
   <VCard>
     <VCardItem
-      title="Orders by countries"
-      subtitle="62 deliveries in progress"
+      title="Pedidos por país"
+      subtitle="62 entregas en progreso"
     >
       <template #append>
         <MoreBtn class="mt-n5" />
@@ -48,7 +48,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-uppercase text-success">
-                  Sender
+                  Remitente
                 </div>
                 <div class="app-timeline-title">
                   Myrtle Ullrich
@@ -67,7 +67,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-primary text-uppercase">
-                  Receiver
+                  Destinatario
                 </div>
                 <div class="app-timeline-title">
                   Barry Schowalter
@@ -100,7 +100,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-uppercase text-success">
-                  Sender
+                  Remitente
                 </div>
                 <div class="app-timeline-title">
                   Veronica Herman
@@ -119,7 +119,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-primary text-uppercase">
-                  Receiver
+                  Destinatario
                 </div>
                 <div class="app-timeline-title">
                   Helen Jacobs
@@ -151,7 +151,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-uppercase text-success">
-                  Sender
+                  Remitente
                 </div>
                 <div class="app-timeline-title">
                   Barry Schowalter
@@ -170,7 +170,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-primary text-uppercase">
-                  Receiver
+                  Destinatario
                 </div>
                 <div class="app-timeline-title">
                   Myrtle Ullrich
@@ -203,7 +203,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-uppercase text-success">
-                  Sender
+                  Remitente
                 </div>
                 <div class="app-timeline-title">
                   Veronica Herman
@@ -222,7 +222,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-primary text-uppercase">
-                  Receiver
+                  Destinatario
                 </div>
                 <div class="app-timeline-title">
                   Helen Jacobs
@@ -254,7 +254,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-uppercase text-success">
-                  Sender
+                  Remitente
                 </div>
                 <div class="app-timeline-title">
                   Myrtle Ullrich
@@ -272,7 +272,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-primary text-uppercase">
-                  Receiver
+                  Destinatario
                 </div>
                 <div class="app-timeline-title">
                   Barry Schowalter
@@ -305,7 +305,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-uppercase text-success">
-                  Sender
+                  Remitente
                 </div>
                 <div class="app-timeline-title">
                   Veronica Herman
@@ -324,7 +324,7 @@ const tabsData = ['New', 'Preparing', 'Shipping']
                 :elevation="0"
               >
                 <div class="text-caption text-primary text-uppercase">
-                  Receiver
+                  Destinatario
                 </div>
                 <div class="app-timeline-title">
                   Helen Jacobs

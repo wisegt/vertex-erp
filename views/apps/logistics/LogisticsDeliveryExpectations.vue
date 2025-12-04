@@ -14,7 +14,7 @@ const labelColor = 'rgba(var(--v-theme-on-background), var(--v-medium-emphasis-o
 const deliveryExceptionsChartSeries = [13, 25, 22, 40]
 
 const deliveryExceptionsChartConfig = {
-  labels: ['Incorrect address', 'Weather conditions', 'Federal Holidays', 'Damage during transit'],
+  labels: ['Dirección incorrecta', 'Condiciones climáticas', 'Días festivos', 'Daño durante el tránsito'],
   colors: [
     chartColors.donut.series1,
     chartColors.donut.series2,
@@ -77,7 +77,7 @@ const deliveryExceptionsChartConfig = {
           total: {
             show: true,
             fontSize: '1rem',
-            label: 'AVG. Exceptions',
+            label: 'Promedio de excepciones',
             color: labelColor,
             formatter() {
               return '30%'
@@ -102,7 +102,7 @@ const deliveryExceptionsChartConfig = {
 
 <template>
   <VCard>
-    <VCardItem title="Delivery exceptions">
+    <VCardItem title="Excepciones de entrega">
       <template #append>
         <MoreBtn />
       </template>

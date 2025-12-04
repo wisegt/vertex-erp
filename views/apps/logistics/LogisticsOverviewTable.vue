@@ -21,15 +21,15 @@ const { data: vehiclesData } = await useApi<any>(createUrl('/apps/logistics/vehi
   },
 }))
 
-const vehicles = computed((): Vehicle[] => vehiclesData.value.vehicles)
-const totalVehicles = computed(() => vehiclesData.value.totalVehicles)
+const vehicles = computed((): Vehicle[] => vehiclesData.value?.vehicles || [])
+const totalVehicles = computed(() => vehiclesData.value?.totalVehicles || 0)
 
 const headers = [
-  { title: 'LOCATION', key: 'location' },
-  { title: 'STARTING ROUTE', key: 'startRoute' },
-  { title: 'ENDING ROUTE', key: 'endRoute' },
-  { title: 'WARNINGS', key: 'warnings' },
-  { title: 'PROGRESS', key: 'progress' },
+  { title: 'UBICACIÓN', key: 'location' },
+  { title: 'RUTA DE INICIO', key: 'startRoute' },
+  { title: 'RUTA DE FIN', key: 'endRoute' },
+  { title: 'ADVERTENCIAS', key: 'warnings' },
+  { title: 'PROGRESO', key: 'progress' },
 ]
 
 const resolveChipColor = (warning: string) => {
@@ -48,7 +48,7 @@ const resolveChipColor = (warning: string) => {
 
 <template>
   <VCard>
-    <VCardItem title="On Route vehicles">
+    <VCardItem title="Vehículos en ruta">
       <template #append>
         <MoreBtn />
       </template>
@@ -164,8 +164,8 @@ const resolveChipColor = (warning: string) => {
               density="comfortable"
               variant="text"
               color="high-emphasis"
-              :disabled="page >= Math.ceil(totalVehicles / itemsPerPage)"
-              @click="page >= Math.ceil(totalVehicles / itemsPerPage) ? page = Math.ceil(totalVehicles / itemsPerPage) : page++ "
+              :disabled="page >= Math.ceil((totalVehicles || 0) / itemsPerPage)"
+              @click="page >= Math.ceil((totalVehicles || 0) / itemsPerPage) ? page = Math.ceil((totalVehicles || 0) / itemsPerPage) : page++ "
             />
           </div>
         </div>

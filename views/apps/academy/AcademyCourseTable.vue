@@ -16,10 +16,10 @@ const updateOptions = (options: any) => {
 }
 
 const headers = [
-  { title: 'Course Name', key: 'courseName' },
-  { title: 'Time', key: 'time', sortable: false },
-  { title: 'Progress', key: 'progress' },
-  { title: 'Status', key: 'status', sortable: false },
+  { title: 'Nombre del curso', key: 'courseName' },
+  { title: 'Tiempo', key: 'time', sortable: false },
+  { title: 'Progreso', key: 'progress' },
+  { title: 'Estado', key: 'status', sortable: false },
 ]
 
 // Fetch course Data
@@ -33,8 +33,8 @@ const { data: courseData } = await useApi<any>(createUrl('/apps/academy/courses'
   },
 }))
 
-const courses = computed((): Course[] => courseData.value.courses)
-const totalCourse = computed(() => courseData.value.total)
+const courses = computed((): Course[] => courseData.value?.courses || [])
+const totalCourse = computed(() => courseData.value?.total || 0)
 </script>
 
 <template>
@@ -42,11 +42,11 @@ const totalCourse = computed(() => courseData.value.total)
     <VCardText>
       <div class="d-flex flex-wrap justify-space-between align-center gap-4">
         <h5 class="text-h5">
-          Courses you are taking
+          Cursos que estás tomando
         </h5>
         <VTextField
           v-model="searchQuery"
-          placeholder="Search Course"
+          placeholder="Buscar curso"
           density="compact"
           style="max-inline-size: 300px; min-inline-size: 200px;"
         />
@@ -167,7 +167,7 @@ const totalCourse = computed(() => courseData.value.total)
 
         <div class="d-flex justify-end flex-wrap gap-x-6 px-2 py-1">
           <div class="d-flex align-center gap-x-2 text-medium-emphasis text-base">
-            Rows Per Page:
+            Filas por página:
             <VSelect
               v-model="itemsPerPage"
               class="per-page-select"

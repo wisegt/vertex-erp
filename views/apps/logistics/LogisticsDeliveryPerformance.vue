@@ -1,19 +1,19 @@
 <script setup lang="ts">
 const deliveryData = [
-  { title: 'Packages in transit', value: '10k', change: 25.8, icon: 'ri-gift-line', color: 'primary' },
-  { title: 'Packages out for delivery', value: '5k', change: 4.3, icon: 'ri-car-line', color: 'info' },
-  { title: 'Packages delivered', value: '15k', change: -12.5, icon: 'ri-check-line', color: 'success' },
-  { title: 'Delivery success rate', value: '95%', change: 35.6, icon: 'ri-home-line', color: 'warning' },
-  { title: 'Average delivery time', value: '2.5 Days', change: -2.15, icon: 'ri-timer-line', color: 'secondary' },
-  { title: 'Customer satisfaction', value: '4.5/5', change: 5.7, icon: 'ri-user-line', color: 'error' },
+  { title: 'Paquetes en tránsito', value: '10k', change: 25.8, icon: 'ri-gift-line', color: 'primary' },
+  { title: 'Paquetes en reparto', value: '5k', change: 4.3, icon: 'ri-car-line', color: 'info' },
+  { title: 'Paquetes entregados', value: '15k', change: -12.5, icon: 'ri-check-line', color: 'success' },
+  { title: 'Tasa de éxito de entrega', value: '95%', change: 35.6, icon: 'ri-home-line', color: 'warning' },
+  { title: 'Tiempo promedio de entrega', value: '2.5 Días', change: -2.15, icon: 'ri-timer-line', color: 'secondary' },
+  { title: 'Satisfacción del cliente', value: '4.5/5', change: 5.7, icon: 'ri-user-line', color: 'error' },
 ]
 </script>
 
 <template>
   <VCard>
     <VCardItem
-      title="Delivery performance"
-      subtitle="12% increase in this month"
+      title="Rendimiento de entregas"
+      subtitle="12% de incremento este mes"
     >
       <template #append>
         <MoreBtn class="mt-n5" />

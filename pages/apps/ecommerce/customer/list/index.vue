@@ -39,8 +39,8 @@ const { data: customerData } = await useApi<any>(createUrl('/apps/ecommerce/cust
   }),
 )
 
-const customers = computed((): Customer[] => customerData.value.customers)
-const totalCustomers = computed(() => customerData.value.total)
+const customers = computed((): Customer[] => customerData.value?.customers || [])
+const totalCustomers = computed(() => customerData.value?.total || 0)
 </script>
 
 <template>
@@ -52,7 +52,7 @@ const totalCustomers = computed(() => customerData.value.total)
             v-model="searchQuery"
             style="max-inline-size: 200px; min-inline-size: 200px;"
             density="compact"
-            placeholder="Search .."
+            placeholder="Buscar..."
           />
           <div class="d-flex flex-row gap-4 align-center flex-wrap">
             <VBtn
@@ -66,7 +66,7 @@ const totalCustomers = computed(() => customerData.value.total)
               prepend-icon="ri-add-line"
               @click="isAddCustomerDrawerOpen = !isAddCustomerDrawerOpen"
             >
-              Add Customer
+              Agregar cliente
             </VBtn>
           </div>
         </div>

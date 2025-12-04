@@ -22,7 +22,7 @@ const panelStatus = ref(0)
     >
       <VCard>
         <VCardItem
-          title="UI/UX Basic Fundamentals"
+          title="Fundamentos básicos de UI/UX"
           class="pb-6"
         >
           <template #subtitle>

@@ -44,8 +44,8 @@ const { data: usersData, execute: fetchUsers } = await useApi<any>(createUrl('/a
   },
 }))
 
-const users = computed((): UserProperties[] => usersData.value.users)
-const totalUsers = computed(() => usersData.value.totalUsers)
+const users = computed((): UserProperties[] => usersData.value?.users || [])
+const totalUsers = computed(() => usersData.value?.totalUsers || 0)
 
 // 👉 search filters
 const roles = [

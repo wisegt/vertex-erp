@@ -56,7 +56,7 @@ const closeNavigationDrawer = () => {
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      title="Add a Customer"
+      title="Agregar un cliente"
       @cancel="closeNavigationDrawer"
     />
     <VDivider />
@@ -74,32 +74,32 @@ const closeNavigationDrawer = () => {
             <VRow>
               <VCol>
                 <div class="text-body-1 font-weight-medium text-high-emphasis">
-                  Basic Information
+                  Información básica
                 </div>
               </VCol>
 
               <VCol cols="12">
                 <VTextField
                   v-model="name"
-                  label="Full Name"
+                  label="Nombre completo"
                   :rules="[requiredValidator]"
-                  placeholder="John Doe"
+                  placeholder="Juan Pérez"
                 />
               </VCol>
 
               <VCol cols="12">
                 <VTextField
                   v-model="email"
-                  label="Email Address"
+                  label="Correo electrónico"
                   :rules="[requiredValidator, emailValidator]"
-                  placeholder="johndoe@email.com"
+                  placeholder="juan@email.com"
                 />
               </VCol>
 
               <VCol cols="12">
                 <VTextField
                   v-model="mobile"
-                  label="Mobile Number"
+                  label="Número de móvil"
                   type="number"
                   :rules="[requiredValidator]"
                   placeholder="+(123) 456-7890"

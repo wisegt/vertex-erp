@@ -51,7 +51,7 @@ const store = useChatStore()
     <VTextField
       id="search"
       v-model="search"
-      placeholder="Search..."
+      placeholder="Buscar..."
       prepend-inner-icon="ri-search-line"
       density="compact"
       class="chat-list-search"
@@ -87,9 +87,9 @@ const store = useChatStore()
     <span
       v-show="!store.chatsContacts.length"
       class="no-chat-items-text text-disabled"
-    >No chats found</span>
+    >No se encontraron chats</span>
     <li class="list-none">
-      <span class="chat-contact-header d-block text-primary text-lg font-weight-medium">Contacts</span>
+      <span class="chat-contact-header d-block text-primary text-lg font-weight-medium">Contactos</span>
     </li>
     <ChatContact
       v-for="contact in store.contacts"
@@ -100,7 +100,7 @@ const store = useChatStore()
     <span
       v-show="!store.contacts.length"
       class="no-chat-items-text text-disabled"
-    >No contacts found</span>
+    >No se encontraron contactos</span>
   </PerfectScrollbar>
 </template>
 

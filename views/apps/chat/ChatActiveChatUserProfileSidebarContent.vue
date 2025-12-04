@@ -72,7 +72,7 @@ const { resolveAvatarBadgeVariant } = useChat()
           for="textarea-user-about"
           class="text-base text-disabled mb-1"
         >
-          ABOUT
+          ACERCA DE
         </p>
         <p class="mb-0">
           {{ store.activeChat.contact.about }}
@@ -82,7 +82,7 @@ const { resolveAvatarBadgeVariant } = useChat()
       <!-- Personal Information -->
       <div class="mb-6">
         <p class="text-base text-disabled mb-1">
-          PERSONAL INFORMATION
+          INFORMACIÓN PERSONAL
         </p>
 
         <div class="d-flex align-center pa-2">
@@ -115,7 +115,7 @@ const { resolveAvatarBadgeVariant } = useChat()
             color="high-emphasis"
           />
           <h6 class="text-h6 font-weight-regular">
-            Mon - Fri 10AM - 8PM
+            Lun - Vie 10AM - 8PM
           </h6>
         </div>
       </div>
@@ -123,7 +123,7 @@ const { resolveAvatarBadgeVariant } = useChat()
       <!-- Options -->
       <div>
         <p class="text-base text-disabled mb-1">
-          OPTIONS
+          OPCIONES
         </p>
         <div class="d-flex align-center pa-2">
           <VIcon
@@ -133,7 +133,7 @@ const { resolveAvatarBadgeVariant } = useChat()
             icon="ri-bookmark-line"
           />
           <h6 class="text-h6 font-weight-regular">
-            Add Tag
+            Agregar etiqueta
           </h6>
         </div>
         <div class="d-flex align-center pa-2">
@@ -144,7 +144,7 @@ const { resolveAvatarBadgeVariant } = useChat()
             icon="ri-star-line"
           />
           <h6 class="text-h6 font-weight-regular">
-            Important Contact
+            Contacto importante
           </h6>
         </div>
         <div class="d-flex align-center pa-2">
@@ -155,7 +155,7 @@ const { resolveAvatarBadgeVariant } = useChat()
             icon="ri-file-image-line"
           />
           <h6 class="text-h6 font-weight-regular">
-            Shared Media
+            Medios compartidos
           </h6>
         </div>
         <div class="d-flex align-center pa-2">
@@ -166,7 +166,7 @@ const { resolveAvatarBadgeVariant } = useChat()
             class="me-2"
           />
           <h6 class="text-h6 font-weight-regular">
-            Delete Contact
+            Eliminar contacto
           </h6>
         </div>
         <div class="d-flex align-center pa-2">
@@ -177,7 +177,7 @@ const { resolveAvatarBadgeVariant } = useChat()
             class="me-2"
           />
           <h6 class="text-h6 font-weight-regular">
-            Block Contact
+            Bloquear contacto
           </h6>
         </div>
       </div>
@@ -188,7 +188,7 @@ const { resolveAvatarBadgeVariant } = useChat()
         append-icon="ri-delete-bin-7-line"
         class="mt-12"
       >
-        Delete Contact
+        Eliminar contacto
       </VBtn>
     </PerfectScrollbar>
   </template>

@@ -44,10 +44,18 @@ export default defineNuxtConfig({
     APPLE_ID: process.env.APPLE_ID,
     APPLE_SECRET: process.env.APPLE_SECRET,
 
+    // Recurrente Payment Gateway (server-side only - secrets)
+    recurrentePublicKey: process.env.RECURRENTE_PUBLIC_KEY,
+    recurrenteSecretKey: process.env.RECURRENTE_SECRET_KEY,
+
+    // Resend Email Service (server-side only - secret)
+    resendApiKey: process.env.RESEND_API_KEY,
+
     // Public keys that are exposed to the client.
     public: {
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
 
       // Supabase
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,

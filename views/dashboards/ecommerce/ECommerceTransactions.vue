@@ -26,7 +26,7 @@ interface Transactions {
 const transactions: Transactions[] = [
   {
     gateway: 'PayPal',
-    for: 'Received Money',
+    for: 'Dinero recibido',
     amount: 2482,
     img: paypal,
     imgHeight: 22,
@@ -54,7 +54,7 @@ const transactions: Transactions[] = [
   },
   {
     gateway: 'Transfer',
-    for: 'Refund',
+    for: 'Reembolso',
     amount: 8934,
     img: arrowGrowth,
     imgHeight: 12,
@@ -70,7 +70,7 @@ const transactionsColors: Colors = {
 }
 
 const formateAmount = (amount: number) => {
-  return Math.sign(amount) === 1 ? `+$${kFormatter(amount)}` : `-$${Math.abs(amount)}`
+  return Math.sign(amount) === 1 ? `+Q${kFormatter(amount)}` : `-Q${Math.abs(amount)}`
 }
 </script>
 
@@ -79,7 +79,7 @@ const formateAmount = (amount: number) => {
     <!-- SECTION Card Header and Menu -->
     <VCardItem>
       <!-- 👉 Title -->
-      <VCardTitle>Transactions</VCardTitle>
+      <VCardTitle>Transacciones</VCardTitle>
 
       <!-- 👉 menu -->
       <template #append>

@@ -95,7 +95,7 @@ const resetForm = () => {
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      title="Add Category"
+      title="Agregar categoría"
       @cancel="$emit('update:isDrawerOpen', false)"
     />
 
@@ -112,9 +112,9 @@ const resetForm = () => {
               <VCol cols="12">
                 <VTextField
                   v-model="categoryTitle"
-                  label="Title"
+                  label="Título"
                   :rules="[requiredValidator]"
-                  placeholder="Fashion"
+                  placeholder="Moda"
                 />
               </VCol>
 

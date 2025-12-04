@@ -109,11 +109,11 @@ const options = computed(() => {
 
 const series = [
   {
-    name: 'Earning',
+    name: 'Ganancias',
     data: [95, 177, 284, 256, 105, 63, 168, 218, 72],
   },
   {
-    name: 'Expense',
+    name: 'Gastos',
     data: [-145, -80, -60, -180, -100, -60, -85, -75, -100],
   },
 ]
@@ -122,7 +122,7 @@ const series = [
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Revenue Report</VCardTitle>
+      <VCardTitle>Reporte de ingresos</VCardTitle>
 
       <template #append>
         <div class="me-n3">

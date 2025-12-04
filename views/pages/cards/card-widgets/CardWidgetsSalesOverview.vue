@@ -53,7 +53,7 @@ const options = computed(() => {
             },
             total: {
               show: true,
-              label: 'Weekly Sales',
+              label: 'Ventas semanales',
               fontSize: '15px',
               color: secondaryTextColor,
 
@@ -125,7 +125,7 @@ const salesOverviews = [
             </div>
             <div>
               <p class="mb-0">
-                Number of Sales
+                Número de ventas
               </p>
               <h5 class="text-h5">
                 $86,400

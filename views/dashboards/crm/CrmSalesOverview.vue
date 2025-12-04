@@ -24,7 +24,7 @@ const options = computed(() => {
     stroke: { width: 0 },
     legend: { show: false },
     dataLabels: { enabled: false },
-    labels: ['Apparel', 'Electronics', 'FMCG', 'Other Sales'],
+    labels: ['Ropa', 'Electrónica', 'Consumo masivo', 'Otras ventas'],
     states: {
       hover: {
         filter: { type: 'none' },
@@ -53,7 +53,7 @@ const options = computed(() => {
             },
             total: {
               show: true,
-              label: 'Weekly Visits',
+              label: 'Visitas semanales',
               fontSize: '15px',
               color: secondaryTextColor,
 
@@ -70,20 +70,20 @@ const series = [12, 25, 15, 50]
 
 const salesOverviews = [
   {
-    product: 'Apparel',
-    sales: '$1,840',
+    product: 'Ropa',
+    sales: 'Q1,840',
   },
   {
-    product: 'Electronic',
-    sales: '$11,420',
+    product: 'Electrónica',
+    sales: 'Q11,420',
   },
   {
-    product: 'FMCG',
-    sales: '$1,840',
+    product: 'Consumo masivo',
+    sales: 'Q1,840',
   },
   {
-    product: 'Other Sales',
-    sales: '$11,420',
+    product: 'Otras ventas',
+    sales: 'Q11,420',
   },
 ]
 </script>
@@ -91,7 +91,7 @@ const salesOverviews = [
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Sales Overview</VCardTitle>
+      <VCardTitle>Vista general de ventas</VCardTitle>
 
       <template #append>
         <div class="me-n3">
@@ -125,10 +125,10 @@ const salesOverviews = [
             </div>
             <div>
               <p class="mb-0">
-                Number of Sales
+                Número de ventas
               </p>
               <h5 class="text-h5">
-                $86,400
+                Q86,400
               </h5>
             </div>
           </div>

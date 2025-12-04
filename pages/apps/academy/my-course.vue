@@ -25,17 +25,17 @@ const searchQuery = ref('')
             class="text-h4 text-center text-wrap mx-auto"
             :class="$vuetify.display.mdAndUp ? 'w-75' : 'w-100'"
           >
-            Education, talents, and career
-            opportunities. <span class="text-primary"> All in one place.</span>
+            Educación, talentos y oportunidades
+            profesionales. <span class="text-primary"> Todo en un solo lugar.</span>
           </h4>
           <p class="text-center text-wrap text-body-1 mx-auto mb-0">
-            Grow your skill with the most reliable online courses and certifications in marketing, information technology, programming, and data science.
+            Desarrolla tus habilidades con los cursos en línea y certificaciones más confiables en marketing, tecnología de la información, programación y ciencia de datos.
           </p>
           <div class="d-flex justify-center align-center gap-x-4">
             <VTextField
               v-model="searchQuery"
               density="compact"
-              placeholder="Find your course"
+              placeholder="Encuentra tu curso"
               style="max-inline-size: 400px;"
             />
             <VBtn
@@ -74,12 +74,12 @@ const searchQuery = ref('')
               <div class="d-flex flex-column-reverse flex-sm-row gap-4 justify-space-between">
                 <div class="text-center text-sm-start">
                   <h5 class="text-h5 text-primary mb-1">
-                    Earn a Certificate
+                    Obtén un certificado
                   </h5>
                   <p class="text-body-1 text-high-emphasis mb-6">
-                    Get the right professional certificate program for you.
+                    Obtén el programa de certificación profesional adecuado para ti.
                   </p>
-                  <VBtn>View Programs</VBtn>
+                  <VBtn>Ver programas</VBtn>
                 </div>
 
                 <div class="text-center">
@@ -102,13 +102,13 @@ const searchQuery = ref('')
               <div class="d-flex flex-column-reverse flex-sm-row gap-4 justify-space-between">
                 <div class="text-center text-sm-start">
                   <h5 class="text-h5 text-error mb-1">
-                    Best Rated Courses
+                    Cursos mejor valorados
                   </h5>
                   <p class="text-body-1 text-high-emphasis text-wrap mb-6">
-                    Enroll now in the most popular and best rated courses.
+                    Inscríbete ahora en los cursos más populares y mejor valorados.
                   </p>
                   <VBtn color="error">
-                    View Courses
+                    Ver cursos
                   </VBtn>
                 </div>
 
@@ -142,12 +142,12 @@ const searchQuery = ref('')
                 />
               </VAvatar>
               <h4 class="text-h4">
-                Today's Free Courses
+                Cursos gratuitos de hoy
               </h4>
               <p class="text-body-1 text-center mb-0">
-                We offers 284 Free Online courses from top tutors and companies to help you start or advance your career skills. Learn online for free and fast today!
+                Ofrecemos 284 cursos en línea gratuitos de tutores y empresas líderes para ayudarte a iniciar o avanzar en tus habilidades profesionales. ¡Aprende en línea gratis y rápido hoy!
               </p>
-              <VBtn>Get Premium Courses</VBtn>
+              <VBtn>Obtener cursos Premium</VBtn>
             </div>
           </VCol>
           <VCol
@@ -172,10 +172,10 @@ const searchQuery = ref('')
               </div>
               <VCardText class="pt-3">
                 <h5 class="text-h5 mb-2">
-                  Your First Singing Lesson
+                  Tu primera lección de canto
                 </h5>
                 <p class="text-body-1 mb-0">
-                  In the same way as any other artistic domain, singing lends itself perfectly to self-teaching.
+                  De la misma manera que cualquier otro dominio artístico, el canto se presta perfectamente para el autoaprendizaje.
                 </p>
               </VCardText>
             </VCard>
@@ -202,10 +202,10 @@ const searchQuery = ref('')
               </div>
               <VCardText class="pt-3">
                 <h5 class="text-h5 mb-2">
-                  Guitar for Beginners
+                  Guitarra para principiantes
                 </h5>
                 <p class="text-body-1 mb-0">
-                  The Fender Acoustic Guitar is best choice for beginners and professionals.
+                  La guitarra acústica Fender es la mejor opción para principiantes y profesionales.
                 </p>
               </VCardText>
             </VCard>

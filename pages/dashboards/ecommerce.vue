@@ -12,39 +12,39 @@ import ECommerceWebsiteTransactions from '@/views/dashboards/ecommerce/ECommerce
 
 const statisticsVertical = [
   {
-    title: 'Revenue',
+    title: 'Ingresos',
     color: 'success',
     icon: 'ri-money-dollar-circle-line',
     stats: '95.2k',
     change: 12,
-    subtitle: 'Revenue Increase',
+    subtitle: 'Incremento de ingresos',
   },
   {
-    title: 'Transactions',
+    title: 'Transacciones',
     color: 'info',
     icon: 'ri-bank-card-line',
-    stats: '$1.2k',
+    stats: 'Q1.2k',
     change: 38,
-    subtitle: 'Daily Transactions',
+    subtitle: 'Transacciones diarias',
   },
 ]
 
 const statisticsVerticalTwo = [
   {
-    title: 'Logistics',
+    title: 'Logística',
     color: 'error',
     icon: 'ri-car-line',
     stats: '44.10k',
     change: 12,
-    subtitle: 'Revenue Increase',
+    subtitle: 'Incremento de ingresos',
   },
   {
-    title: 'Reports',
+    title: 'Reportes',
     color: 'warning',
     icon: 'ri-file-chart-line',
     stats: '268',
     change: -28,
-    subtitle: 'System Bugs',
+    subtitle: 'Errores del sistema',
   },
 ]
 </script>
@@ -143,5 +143,5 @@ const statisticsVerticalTwo = [
 </template>
 
 <style lang="scss">
-@use "@core/scss/template/libs/apex-chart.scss";
+@use "@core/scss/template/libs/apex-chart";
 </style>

@@ -124,7 +124,7 @@ const chartOptions = computed(() => {
       />
 
       <h6 class="text-h6 text-center">
-        Sessions
+        Sesiones
       </h6>
     </VCardText>
   </VCard>

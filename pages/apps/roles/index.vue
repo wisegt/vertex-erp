@@ -7,10 +7,10 @@ import UserList from '@/views/apps/roles/UserList.vue'
   <VRow>
     <VCol cols="12">
       <h5 class="text-h5 mb-1">
-        Roles List
+        Lista de roles
       </h5>
       <p class="text-body-1 mb-0">
-        A role provided access to predefined menus and features so that depending on assigned role an administrator can have access to what he need
+        Un rol proporciona acceso a menús y funciones predefinidas para que, dependiendo del rol asignado, un administrador pueda tener acceso a lo que necesita
       </p>
     </VCol>
 
@@ -21,10 +21,10 @@ import UserList from '@/views/apps/roles/UserList.vue'
 
     <VCol cols="12">
       <h5 class="text-h5 mt-6">
-        Total users with their roles
+        Total de usuarios con sus roles
       </h5>
       <p class="text-body-1 mb-6">
-        Find all of your company's administrator accounts and their associate roles.
+        Encuentra todas las cuentas de administrador de tu empresa y sus roles asociados.
       </p>
 
       <!-- 👉 User List  -->

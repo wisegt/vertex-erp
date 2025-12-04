@@ -49,7 +49,7 @@ const options = computed(() => {
       active: { filter: { type: 'none' } },
     },
     xaxis: {
-      categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      categories: ['DOM', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
       tickPlacement: 'on',
       labels: { show: false },
       crosshairs: { opacity: 0 },
@@ -99,7 +99,7 @@ const series = [{ data: [37, 57, 45, 75, 57, 40, 65] }]
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Weekly Overview</VCardTitle>
+      <VCardTitle>Vista semanal</VCardTitle>
 
       <template #append>
         <div class="me-n3">
@@ -121,12 +121,12 @@ const series = [{ data: [37, 57, 45, 75, 57, 40, 65] }]
           45%
         </h4>
         <p class="mb-0">
-          Your sales performance is 45% <span class="text-high-emphasis">😎</span> better compared to last month
+          Tu rendimiento de ventas es 45% <span class="text-high-emphasis">😎</span> mejor comparado con el mes pasado
         </p>
       </div>
 
       <VBtn block>
-        Details
+        Detalles
       </VBtn>
     </VCardText>
   </VCard>

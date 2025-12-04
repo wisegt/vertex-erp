@@ -9,10 +9,10 @@ import avatar7 from '@images/avatars/avatar-7.png'
 import avatar8 from '@images/avatars/avatar-8.png'
 
 const headers = [
-  { title: 'User', key: 'username' },
-  { title: 'Email', key: 'email' },
-  { title: 'Role', key: 'role' },
-  { title: 'Status', key: 'status' },
+  { title: 'Usuario', key: 'username' },
+  { title: 'Correo', key: 'email' },
+  { title: 'Rol', key: 'role' },
+  { title: 'Estado', key: 'status' },
 ]
 
 const userData = [

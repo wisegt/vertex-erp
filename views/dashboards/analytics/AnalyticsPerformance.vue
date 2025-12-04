@@ -62,11 +62,11 @@ const options = computed(() => {
 
 const series = [
   {
-    name: 'Income',
+    name: 'Ingresos',
     data: [70, 90, 90, 90, 80, 90],
   },
   {
-    name: 'Net Worth',
+    name: 'Patrimonio neto',
     data: [120, 80, 100, 80, 100, 80],
   },
 ]
@@ -75,7 +75,7 @@ const series = [
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Performance</VCardTitle>
+      <VCardTitle>Rendimiento</VCardTitle>
 
       <template #append>
         <div class="me-n3">

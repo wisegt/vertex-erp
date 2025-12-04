@@ -13,32 +13,32 @@ import stripe from '@images/logos/stripe.png'
 const deposits = [
   {
     title: 'Gumroad Account',
-    subtitle: 'Sell UI Kit',
-    amount: '+$4,650',
+    subtitle: 'Vender UI Kit',
+    amount: '+Q4,650',
     logo: gumroad,
   },
   {
     title: 'Mastercard',
-    subtitle: 'Wallet deposit',
-    amount: '+$92,705',
+    subtitle: 'Depósito en billetera',
+    amount: '+Q92,705',
     logo: mastercardLabel,
   },
   {
     title: 'Stripe Account',
-    subtitle: 'iOS Application',
-    amount: '+$957',
+    subtitle: 'Aplicación iOS',
+    amount: '+Q957',
     logo: stripe,
   },
   {
     title: 'American Bank',
     subtitle: 'American Bank',
-    amount: '+$6,837',
+    amount: '+Q6,837',
     logo: americanBank,
   },
   {
     title: 'Bank Account',
-    subtitle: 'Wallet deposit',
-    amount: '+$8,934',
+    subtitle: 'Depósito en billetera',
+    amount: '+Q8,934',
     logo: citiBank,
   },
 ]
@@ -46,32 +46,32 @@ const deposits = [
 const withdraws = [
   {
     title: 'Google Adsense',
-    subtitle: 'PayPal deposit',
-    amount: '-$145',
+    subtitle: 'Depósito PayPal',
+    amount: '-Q145',
     logo: google,
   },
   {
     title: 'GitHub Enterprise',
-    subtitle: 'Security & compliance',
-    amount: '-$1870',
+    subtitle: 'Seguridad y cumplimiento',
+    amount: '-Q1870',
     logo: github,
   },
   {
     title: 'Upgrade Slack Plan',
-    subtitle: 'Debit card deposit',
-    amount: '-$450',
+    subtitle: 'Depósito con tarjeta',
+    amount: '-Q450',
     logo: slack,
   },
   {
     title: 'DigitalOcean',
-    subtitle: 'Cloud Hosting',
-    amount: '-$540',
+    subtitle: 'Hosting en la nube',
+    amount: '-Q540',
     logo: digitalOcean,
   },
   {
     title: 'AWS Account',
-    subtitle: 'Choosing a Cloud Platform',
-    amount: '-$21',
+    subtitle: 'Elegir plataforma en la nube',
+    amount: '-Q21',
     logo: aws,
   },
 ]
@@ -85,14 +85,14 @@ const withdraws = [
         md="6"
       >
         <VCardItem>
-          <VCardTitle>Deposit</VCardTitle>
+          <VCardTitle>Depósito</VCardTitle>
 
           <template #append>
             <h6 class="text-h6">
               <a
                 href="javascript:void(0)"
                 class="text-primary"
-              >View All</a>
+              >Ver todo</a>
             </h6>
           </template>
         </VCardItem>
@@ -137,14 +137,14 @@ const withdraws = [
         md="6"
       >
         <VCardItem>
-          <VCardTitle>Withdraw</VCardTitle>
+          <VCardTitle>Retiro</VCardTitle>
 
           <template #append>
             <h6 class="text-h6">
               <a
                 href="javascript:void(0)"
                 class="text-primary"
-              >View All</a>
+              >Ver todo</a>
             </h6>
           </template>
         </VCardItem>

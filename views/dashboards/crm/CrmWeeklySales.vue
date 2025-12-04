@@ -78,15 +78,15 @@ const weeklySalesData = [
       color: 'primary',
     },
     title: '34.6k',
-    subtitle: 'Sales',
+    subtitle: 'Ventas',
   },
   {
     avatar: {
       icon: 'ri-money-dollar-circle-line',
       color: 'success',
     },
-    title: '$482k',
-    subtitle: 'Total Profit',
+    title: 'Q482k',
+    subtitle: 'Ganancia total',
   },
 ]
 </script>
@@ -94,14 +94,16 @@ const weeklySalesData = [
 <template>
   <VCard>
     <VCardItem>
-      <VCardTitle>Weekly Sales</VCardTitle>
-      <VCardSubtitle>Total 85.4k Sales</VCardSubtitle>
+      <VCardTitle>Ventas semanales</VCardTitle>
+      <Parameter name="new_string">
+        <VCardSubtitle>Total 85.4k ventas</VCardSubtitle>
 
-      <template #append>
-        <div class="mt-n7 me-n3">
-          <MoreBtn density="compact" />
-        </div>
-      </template>
+        <template #append>
+          <div class="mt-n7 me-n3">
+            <MoreBtn density="compact" />
+          </div>
+        </template>
+      </Parameter>
     </VCardItem>
 
     <VCardText>

@@ -200,7 +200,7 @@ const series = [
     data: [0, 16000, 11000, 15500, 0, 12500, 9500],
   },
   {
-    name: 'Total Profit',
+    name: 'Ganancia total',
     data: [0, 0, 0, 14000, 0, 11500, 12000],
   },
 ]
@@ -209,7 +209,7 @@ const lastThreeTransactions = [
   {
     avatar: { icon: 'ri-pie-chart-2-line', color: 'success' },
     title: '$48,568.20',
-    subtitle: 'Total Profit',
+    subtitle: 'Ganancia total',
   },
   {
     avatar: { icon: 'ri-money-dollar-circle-line', color: 'primary' },
@@ -234,7 +234,7 @@ const lastThreeTransactions = [
       >
         <VCardText>
           <h5 class="text-h5">
-            Total Profit
+            Ganancia total
           </h5>
 
           <VueApexCharts

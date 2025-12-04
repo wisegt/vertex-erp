@@ -12,6 +12,8 @@ import CrmTotalSales from '@/views/dashboards/crm/CrmTotalSales.vue'
 import CrmTransactions from '@/views/dashboards/crm/CrmTransactions.vue'
 import CrmUpgradeYourPlan from '@/views/dashboards/crm/CrmUpgradeYourPlan.vue'
 import CrmWeeklySales from '@/views/dashboards/crm/CrmWeeklySales.vue'
+import CardStatisticsVertical from '@core/components/cards/CardStatisticsVertical.vue'
+import CardStatisticsWithImages from '@core/components/cards/CardStatisticsWithImages.vue'
 import illustration1 from '@images/cards/illustration-1.png'
 import illustration2 from '@images/cards/illustration-2.png'
 
@@ -19,16 +21,16 @@ import illustration2 from '@images/cards/illustration-2.png'
 
 const cardStatisticsWithImages = [
   {
-    title: 'Ratings',
-    subtitle: 'Year of 2021',
+    title: 'Calificaciones',
+    subtitle: 'Año 2025',
     stats: '13k',
     change: 15.6,
     image: illustration1,
     color: 'primary',
   },
   {
-    title: 'Sessions',
-    subtitle: 'Last Week',
+    title: 'Sesiones',
+    subtitle: 'Última semana',
     stats: '24.5k',
     change: -20,
     image: illustration2,
@@ -37,19 +39,19 @@ const cardStatisticsWithImages = [
 ]
 
 const statistic = {
-  title: 'New Project',
+  title: 'Nuevo proyecto',
   color: 'primary',
   icon: 'ri-file-word-2-line',
   stats: '862',
   change: -18,
-  subtitle: 'Yearly Project',
+  subtitle: 'Proyecto anual',
 }
 </script>
 
 <template>
   <section>
     <!-- El TrialBanner ahora se muestra globalmente desde el layout -->
-    
+
     <VRow class="match-height">
       <VCol
         v-for="statistics in cardStatisticsWithImages"

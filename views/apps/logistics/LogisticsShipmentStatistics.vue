@@ -12,12 +12,12 @@ const borderColor = 'rgba(var(--v-border-color), var(--v-border-opacity))'
 
 const series = [
   {
-    name: 'Shipment',
+    name: 'Envío',
     type: 'column',
     data: [38, 45, 33, 38, 32, 50, 48, 40, 42, 37],
   },
   {
-    name: 'Delivery',
+    name: 'Entrega',
     type: 'line',
     data: [23, 28, 23, 32, 28, 44, 32, 38, 26, 34],
   },
@@ -194,8 +194,8 @@ const shipmentConfig = {
 <template>
   <VCard>
     <VCardItem
-      title="Shipment statistics"
-      subtitle="Total number of deliveries 23.8k"
+      title="Estadísticas de envíos"
+      subtitle="Número total de entregas 23.8k"
     >
       <template #append>
         <VBtnGroup
@@ -204,7 +204,7 @@ const shipmentConfig = {
           divided
         >
           <VBtn color="primary">
-            January
+            Enero
           </VBtn>
 
           <VBtn

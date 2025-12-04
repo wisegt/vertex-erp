@@ -10,16 +10,16 @@ const userInfoIcon = h('div', { innerHTML: paperImg, style: 'font-size: 2.625rem
 const paperIcon = h('div', { innerHTML: userInfoImg, style: 'font-size: 2.625rem; color: rgb(var(--v-theme-primary))' })
 
 const widgetData = [
-  { title: 'Total Earning', value: '$24,983', icon: 'ri-money-dollar-circle-line', color: 'primary' },
-  { title: 'Unpaid Earning', value: '$8,647', icon: 'ri-gift-line', color: 'success' },
-  { title: 'Signups', value: '2,367', icon: 'ri-group-line', color: 'error' },
-  { title: 'Conversion Rate', value: '4.5%', icon: 'ri-refresh-line', color: 'info' },
+  { title: 'Ganancias totales', value: 'Q24,983', icon: 'ri-money-dollar-circle-line', color: 'primary' },
+  { title: 'Ganancias no pagadas', value: 'Q8,647', icon: 'ri-gift-line', color: 'success' },
+  { title: 'Registros', value: '2,367', icon: 'ri-group-line', color: 'error' },
+  { title: 'Tasa de conversión', value: '4.5%', icon: 'ri-refresh-line', color: 'info' },
 ]
 
 const stepsData = [
-  { icon: rocketIcon, desc: 'Create & validate your referral link and get', value: '$50' },
-  { icon: paperIcon, desc: 'For every new signup you get', value: '10%' },
-  { icon: userInfoIcon, desc: 'Get other friends to generate link and get', value: '$100' },
+  { icon: rocketIcon, desc: 'Crea y valida tu enlace de referido y obtén', value: 'Q50' },
+  { icon: paperIcon, desc: 'Por cada nuevo registro obtienes', value: '10%' },
+  { icon: userInfoIcon, desc: 'Haz que otros amigos generen enlaces y obtén', value: 'Q100' },
 ]
 
 // Data table options
@@ -53,8 +53,8 @@ const { data: referralData } = await useApi<any>(createUrl('/apps/ecommerce/refe
   },
 }))
 
-const referrals = computed((): Referrals[] => referralData.value.referrals)
-const totalReferrals = computed(() => referralData.value.total)
+const referrals = computed((): Referrals[] => referralData.value?.referrals || [])
+const totalReferrals = computed(() => referralData.value?.total || 0)
 
 const resolveStatus = (status: string) => {
   if (status === 'Rejected')

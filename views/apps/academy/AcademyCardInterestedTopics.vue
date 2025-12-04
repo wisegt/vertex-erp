@@ -60,7 +60,7 @@ const topicsChartConfig = {
       return topicsChartConfig.labels[opt.dataPointIndex]
     },
   },
-  labels: ['UI Design', 'UX Design', 'Music', 'Animation', 'Vue', 'SEO'],
+  labels: ['Diseño UI', 'Diseño UX', 'Música', 'Animación', 'Vue', 'SEO'],
 
   xaxis: {
     categories: ['6', '5', '4', '3', '2', '1'],
@@ -113,13 +113,13 @@ const topicsChartSeries = [
 ]
 
 const topicsData = [
-  { title: 'UI Design', value: 35, color: 'primary' },
-  { title: 'UX Design', value: 20, color: 'info' },
-  { title: 'Music', value: 14, color: 'success' },
+  { title: 'Diseño UI', value: 35, color: 'primary' },
+  { title: 'Diseño UX', value: 20, color: 'info' },
+  { title: 'Música', value: 14, color: 'success' },
 ]
 
 const moreTopics = [
-  { title: 'Animation', value: 12, color: 'secondary' },
+  { title: 'Animación', value: 12, color: 'secondary' },
   { title: 'Vue', value: 10, color: 'error' },
   { title: 'SEO', value: 9, color: 'warning' },
 ]
@@ -127,7 +127,7 @@ const moreTopics = [
 
 <template>
   <VCard class="topicCard">
-    <VCardItem title="Topic you are interested in">
+    <VCardItem title="Temas de tu interés">
       <template #append>
         <MoreBtn />
       </template>

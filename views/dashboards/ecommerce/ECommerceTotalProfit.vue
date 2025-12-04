@@ -200,7 +200,7 @@ const series = [
     data: [0, 16000, 11000, 15500, 0, 12500, 9500],
   },
   {
-    name: 'Total Profit',
+    name: 'Ganancia total',
     data: [0, 0, 0, 14000, 0, 11500, 12000],
   },
 ]
@@ -208,18 +208,18 @@ const series = [
 const lastThreeTransactions = [
   {
     avatar: { icon: 'ri-pie-chart-2-line', color: 'success' },
-    title: '$48,568.20',
-    subtitle: 'Total Profit',
+    title: 'Q48,568.20',
+    subtitle: 'Ganancia total',
   },
   {
     avatar: { icon: 'ri-money-dollar-circle-line', color: 'primary' },
-    title: '$38,453.25',
-    subtitle: 'Total Income',
+    title: 'Q38,453.25',
+    subtitle: 'Ingresos totales',
   },
   {
     avatar: { icon: 'ri-bank-card-line', color: 'secondary' },
-    title: '$2,453.45',
-    subtitle: 'Total Expense',
+    title: 'Q2,453.45',
+    subtitle: 'Gastos totales',
   },
 ]
 </script>
@@ -234,7 +234,7 @@ const lastThreeTransactions = [
       >
         <VCardItem>
           <VCardTitle>
-            Total Profit
+            Ganancia total
           </VCardTitle>
         </VCardItem>
 
@@ -254,9 +254,9 @@ const lastThreeTransactions = [
       >
         <VCardItem>
           <VCardTitle>
-            $482.85k
+            Q482.85k
           </VCardTitle>
-          <VCardSubtitle>Last month balance $234.40k</VCardSubtitle>
+          <VCardSubtitle>Balance del mes pasado Q234.40k</VCardSubtitle>
 
           <template #append>
             <div class="mt-n7 me-n3">

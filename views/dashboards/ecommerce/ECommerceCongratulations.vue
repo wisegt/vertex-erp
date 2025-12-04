@@ -14,15 +14,15 @@ import illustrationJohn2 from '@images/cards/illustration-john-2.png'
         <VCardItem>
           <VCardTitle>
             <h4 class="text-h4 text-wrap">
-              Congratulations <strong>John!</strong> <span class="text-high-emphasis">🎉</span>
+              ¡Felicitaciones <strong>John!</strong> <span class="text-high-emphasis">🎉</span>
             </h4>
           </VCardTitle>
         </VCardItem>
 
         <VCardText class="pt-sm-4">
           <div class="mb-0 text-body-1 me-2">
-            You have done 72% <span class="text-high-emphasis">😎</span> more sales today.
-            Check your new raising badge in your profile.
+            Has realizado 72% <span class="text-high-emphasis">😎</span> más ventas hoy.
+            Revisa tu nueva insignia en tu perfil.
           </div>
         </VCardText>
       </VCol>

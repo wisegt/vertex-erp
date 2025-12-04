@@ -32,7 +32,7 @@ const editor = useEditor({
     StarterKit,
     Image,
     Placeholder.configure({
-      placeholder: 'Message',
+      placeholder: 'Mensaje',
     }),
     Underline,
     Link.configure(
@@ -80,7 +80,7 @@ const addImage = () => {
   >
     <VCardItem class="py-3">
       <VCardTitle class="text-medium-emphasis">
-        Compose Mail
+        Redactar correo
       </VCardTitle>
 
       <template #append>

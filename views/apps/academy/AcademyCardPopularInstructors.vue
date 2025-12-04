@@ -7,15 +7,15 @@ import avatar4 from '@images/avatars/avatar-4.png'
 
 <template>
   <VCard>
-    <VCardItem title="Popular Instructors">
+    <VCardItem title="Instructores populares">
       <template #append>
         <MoreBtn />
       </template>
     </VCardItem>
     <VDivider />
     <div class="text-overline d-flex justify-space-between px-5 py-4">
-      <div>instructors</div>
-      <div>Courses</div>
+      <div>Instructores</div>
+      <div>Cursos</div>
     </div>
     <VDivider />
     <VCardText>

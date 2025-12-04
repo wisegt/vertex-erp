@@ -118,7 +118,7 @@ const analytics = [
     profit: false,
   },
   {
-    title: 'Total Profit',
+    title: 'Ganancia total',
     amount: '$27.6k',
     percentage: '42%',
     profit: true,

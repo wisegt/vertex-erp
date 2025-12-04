@@ -14,14 +14,14 @@ import girlWithLaptop from '@images/pages/pose-fs-9.png'
       </div>
       <div>
         <h5 class="text-h5 mb-1">
-          Upcoming Webinar
+          Próximo webinar
         </h5>
         <div class="text-body-1">
-          Next Generation Frontend Architecture Using Layout Engine And Vue.
+          Arquitectura Frontend de próxima generación usando Layout Engine y Vue.
         </div>
         <div class="d-flex justify-space-between my-6 gap-4 flex-wrap">
           <div
-            v-for="{ icon, title, value } in [{ icon: 'ri-calendar-line', title: '17 Nov 23', value: 'Date' }, { icon: 'ri-time-line', title: '32 Minutes', value: 'Duration' }]"
+            v-for="{ icon, title, value } in [{ icon: 'ri-calendar-line', title: '17 Nov 23', value: 'Fecha' }, { icon: 'ri-time-line', title: '32 Minutos', value: 'Duración' }]"
             :key="title"
             class="d-flex gap-x-4 align-center"
           >
@@ -43,7 +43,7 @@ import girlWithLaptop from '@images/pages/pose-fs-9.png'
           </div>
         </div>
         <VBtn block>
-          Join the event
+          Unirse al evento
         </VBtn>
       </div>
     </VCardText>

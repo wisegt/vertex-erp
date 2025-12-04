@@ -122,7 +122,7 @@ const dialogModelValueUpdate = (val: boolean) => {
   >
     <!-- 👉 Header -->
     <AppDrawerHeaderSection
-      :title="event.id ? 'Update Event' : 'Add Event'"
+      :title="event.id ? 'Actualizar evento' : 'Agregar evento'"
       @cancel="$emit('update:isDrawerOpen', false)"
     >
       <template #beforeClose>
@@ -154,8 +154,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                 <VTextField
                   id="event-title"
                   v-model="event.title"
-                  label="Title"
-                  placeholder="Meeting with Jane"
+                  label="Título"
+                  placeholder="Reunión con Jane"
                   :rules="[requiredValidator]"
                 />
               </VCol>
@@ -165,8 +165,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                 <VSelect
                   id="event-label"
                   v-model="event.extendedProps.calendar"
-                  label="Label"
-                  placeholder="Select Event Label"
+                  label="Etiqueta"
+                  placeholder="Seleccionar etiqueta de evento"
                   :rules="[requiredValidator]"
                   :items="store.availableCalendars"
                   :item-title="item => item.label"
@@ -209,8 +209,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                   :key="JSON.stringify(startDateTimePickerConfig)"
                   v-model="event.start"
                   :rules="[requiredValidator]"
-                  label="Start date"
-                  placeholder="Select Date"
+                  label="Fecha de inicio"
+                  placeholder="Seleccionar fecha"
                   :config="startDateTimePickerConfig"
                 />
               </VCol>
@@ -222,8 +222,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                   :key="JSON.stringify(endDateTimePickerConfig)"
                   v-model="event.end"
                   :rules="[requiredValidator]"
-                  label="End date"
-                  placeholder="Select End Date"
+                  label="Fecha de fin"
+                  placeholder="Seleccionar fecha de fin"
                   :config="endDateTimePickerConfig"
                 />
               </VCol>
@@ -234,7 +234,7 @@ const dialogModelValueUpdate = (val: boolean) => {
                   id="event-all-day"
 
                   v-model="event.allDay"
-                  label="All day"
+                  label="Todo el día"
                 />
               </VCol>
 
@@ -244,8 +244,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                   id="event-url"
 
                   v-model="event.url"
-                  label="Event URL"
-                  placeholder="https://event.com/meeting"
+                  label="URL del evento"
+                  placeholder="https://evento.com/reunion"
                   :rules="[urlValidator]"
                   type="url"
                 />
@@ -257,8 +257,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                   id="event-guests"
 
                   v-model="event.extendedProps.guests"
-                  label="Guests"
-                  placeholder="Select guests"
+                  label="Invitados"
+                  placeholder="Seleccionar invitados"
                   :items="guestsOptions"
                   :item-title="item => item.name"
                   :item-value="item => item.name"
@@ -273,8 +273,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                 <VTextField
                   id="event-location"
                   v-model="event.extendedProps.location"
-                  label="Location"
-                  placeholder="Meeting room"
+                  label="Ubicación"
+                  placeholder="Sala de reuniones"
                 />
               </VCol>
 
@@ -283,8 +283,8 @@ const dialogModelValueUpdate = (val: boolean) => {
                 <VTextarea
                   id="event-description"
                   v-model="event.extendedProps.description"
-                  label="Description"
-                  placeholder="Meeting description"
+                  label="Descripción"
+                  placeholder="Descripción de la reunión"
                 />
               </VCol>
 
@@ -294,14 +294,14 @@ const dialogModelValueUpdate = (val: boolean) => {
                   type="submit"
                   class="me-3"
                 >
-                  Submit
+                  Enviar
                 </VBtn>
                 <VBtn
                   variant="outlined"
                   color="secondary"
                   @click="onCancel"
                 >
-                  Cancel
+                  Cancelar
                 </VBtn>
               </VCol>
             </VRow>

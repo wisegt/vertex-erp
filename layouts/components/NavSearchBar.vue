@@ -29,7 +29,7 @@ const isAppSearchBarVisible = ref(false)
 
 const suggestionGroups: SuggestionGroup[] = [
   {
-    title: 'Popular Searches',
+    title: 'Búsquedas populares',
     content: [
       { icon: 'ri-bar-chart-line', title: 'Analytics', url: { name: 'dashboards-analytics' } },
       { icon: 'ri-pie-chart-2-line', title: 'CRM', url: { name: 'dashboards-crm' } },
@@ -38,7 +38,7 @@ const suggestionGroups: SuggestionGroup[] = [
     ],
   },
   {
-    title: 'Apps & Pages',
+    title: 'Apps y páginas',
     content: [
       { icon: 'ri-calendar-line', title: 'Calendar', url: { name: 'apps-calendar' } },
       { icon: 'ri-lock-unlock-line', title: 'Roles & Permissions', url: { name: 'apps-roles' } },
@@ -47,7 +47,7 @@ const suggestionGroups: SuggestionGroup[] = [
     ],
   },
   {
-    title: 'User Interface',
+    title: 'Interfaz de usuario',
     content: [
       { icon: 'ri-text', title: 'Typography', url: { name: 'pages-typography' } },
       { icon: 'ri-menu-line', title: 'Accordion', url: { name: 'components-expansion-panel' } },
@@ -56,7 +56,7 @@ const suggestionGroups: SuggestionGroup[] = [
     ],
   },
   {
-    title: 'Radio & Tables',
+    title: 'Radio y tablas',
     content: [
       { icon: 'ri-radio-button-line', title: 'Radio', url: { name: 'forms-radio' } },
       { icon: 'ri-file-text-line', title: 'Form Layouts', url: { name: 'forms-form-layouts' } },
@@ -126,7 +126,7 @@ const LazyAppBarSearch = defineAsyncComponent(() => import('@core/components/App
       class="d-none d-md-flex align-center text-disabled ms-2"
       @click="Shepherd.activeTour?.cancel()"
     >
-      <span class="me-3">Search</span>
+      <span class="me-3">Buscar</span>
       <span class="meta-key">&#8984;K</span>
     </span>
   </div>
@@ -226,7 +226,7 @@ const LazyAppBarSearch = defineAsyncComponent(() => import('@core/components/App
 </template>
 
 <style lang="scss">
-@use "@styles/variables/vuetify.scss";
+@use "@styles/variables/vuetify";
 
 .meta-key {
   border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));

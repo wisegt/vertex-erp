@@ -2,10 +2,10 @@
 import type { Permission } from '@db/apps/permission/types'
 
 const headers = [
-  { title: 'Name', key: 'name' },
-  { title: 'Assigned To', key: 'assignedTo', sortable: false },
-  { title: 'Created Date', key: 'createdDate', sortable: false },
-  { title: 'Actions', key: 'actions', sortable: false },
+  { title: 'Nombre', key: 'name' },
+  { title: 'Asignado a', key: 'assignedTo', sortable: false },
+  { title: 'Fecha de creación', key: 'createdDate', sortable: false },
+  { title: 'Acciones', key: 'actions', sortable: false },
 ]
 
 const search = ref('')
@@ -27,11 +27,11 @@ const isAddPermissionDialogVisible = ref(false)
 const permissionName = ref('')
 
 const colors: any = {
-  'support': { color: 'info', text: 'Support' },
-  'users': { color: 'success', text: 'Users' },
-  'manager': { color: 'warning', text: 'Manager' },
-  'administrator': { color: 'primary', text: 'Administrator' },
-  'restricted-user': { color: 'error', text: 'Restricted User' },
+  'support': { color: 'info', text: 'Soporte' },
+  'users': { color: 'success', text: 'Usuarios' },
+  'manager': { color: 'warning', text: 'Gerente' },
+  'administrator': { color: 'primary', text: 'Administrador' },
+  'restricted-user': { color: 'error', text: 'Usuario restringido' },
 }
 
 const { data: permissionsData } = await useApi<any>(createUrl('/apps/permissions', {
@@ -44,8 +44,8 @@ const { data: permissionsData } = await useApi<any>(createUrl('/apps/permissions
   },
 }))
 
-const permissions = computed((): Permission[] => permissionsData.value.permissions)
-const totalPermissions = computed(() => permissionsData.value.totalPermissions)
+const permissions = computed((): Permission[] => permissionsData.value?.permissions || [])
+const totalPermissions = computed(() => permissionsData.value?.totalPermissions || 0)
 
 const editPermission = (name: string) => {
   isPermissionDialogVisible.value = true
@@ -59,7 +59,7 @@ const editPermission = (name: string) => {
       <VTextField
         v-model="search"
         density="compact"
-        placeholder="Search Permission"
+        placeholder="Buscar permiso"
         style="max-inline-size: 15rem;min-inline-size: 12rem;"
       />
 
@@ -67,7 +67,7 @@ const editPermission = (name: string) => {
         density="default"
         @click="isAddPermissionDialogVisible = true"
       >
-        Add Permission
+        Agregar permiso
       </VBtn>
     </VCardText>
 

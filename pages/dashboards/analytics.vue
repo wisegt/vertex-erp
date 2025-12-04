@@ -14,21 +14,21 @@ import AnalyticsUserTable from '@/views/dashboards/analytics/AnalyticsUserTable.
 import AnalyticsWeeklyOverview from '@/views/dashboards/analytics/AnalyticsWeeklyOverview.vue'
 
 const totalProfit = {
-  title: 'Total Profit',
+  title: 'Ganancia total',
   color: 'secondary',
   icon: 'ri-pie-chart-2-line',
-  stats: '$25.6k',
+  stats: 'Q25.6k',
   change: 42,
-  subtitle: 'Weekly Project',
+  subtitle: 'Proyecto semanal',
 }
 
 const newProject = {
-  title: 'New Project',
+  title: 'Nuevo proyecto',
   color: 'primary',
   icon: 'ri-file-word-2-line',
   stats: '862',
   change: -18,
-  subtitle: 'Yearly Project',
+  subtitle: 'Proyecto anual',
 }
 </script>
 

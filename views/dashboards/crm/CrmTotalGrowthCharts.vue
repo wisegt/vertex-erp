@@ -7,7 +7,7 @@ const currentTheme = vuetifyTheme.current.value.colors
 
 const series = [
   {
-    name: 'Subscribers',
+    name: 'Suscriptores',
     data: [28, 40, 36, 52, 38, 60, 55],
   },
 ]
@@ -91,7 +91,7 @@ const chartOptions = {
         :height="110"
       />
       <h6 class="text-h6 text-center">
-        Total Growth
+        Crecimiento total
       </h6>
     </VCardText>
   </VCard>

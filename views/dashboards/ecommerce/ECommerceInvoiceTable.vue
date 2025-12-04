@@ -14,10 +14,10 @@ const currentMonth = now.toLocaleString('default', { month: '2-digit' })
 // 👉 Invoice balance variant resolver
 const resolveInvoiceBalanceVariant = (balance: string | number, total: number) => {
   if (balance === total)
-    return { status: 'Unpaid', chip: { color: 'error' } }
+    return { status: 'No pagado', chip: { color: 'error' } }
 
   if (balance === 0)
-    return { status: 'Paid', chip: { color: 'success' } }
+    return { status: 'Pagado', chip: { color: 'success' } }
 
   return { status: balance, chip: { variant: 'text' } }
 }

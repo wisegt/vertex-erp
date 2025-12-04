@@ -23,8 +23,8 @@ const { data: ReviewData, execute: fetchReviews } = await useApi<any>(createUrl(
   },
 }))
 
-const reviews = computed((): Review[] => ReviewData.value.reviews)
-const totalReviews = computed(() => ReviewData.value.total)
+const reviews = computed((): Review[] => ReviewData.value?.reviews || [])
+const totalReviews = computed(() => ReviewData.value?.total || 0)
 
 // Update data table options
 const updateOptions = (options: any) => {
@@ -400,7 +400,7 @@ const reviewStatChartConfig = {
             <VTextField
               v-model="searchQuery"
               style="max-inline-size: 250px; min-inline-size: 200px;"
-              placeholder="Search"
+              placeholder="Buscar"
               density="compact"
             />
             <div class="d-flex flex-row gap-4 align-center flex-wrap">
