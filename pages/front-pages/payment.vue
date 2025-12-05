@@ -912,6 +912,10 @@ const handleManageSubscription = () => {
                         placeholder="NIT (sin guiones)"
                         hint="Sin guiones ni espacios"
                         persistent-hint
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9A-Za-z]*"
+                        autocomplete="off"
                         :rules="[requiredValidator]"
                         @input="billingData.nit = formatNIT(billingData.nit)"
                       />
@@ -924,7 +928,9 @@ const handleManageSubscription = () => {
                         v-model="billingData.email"
                         label="Correo electrónico"
                         type="email"
+                        inputmode="email"
                         placeholder="facturacion@empresa.com"
+                        autocomplete="email"
                         :rules="[requiredValidator, emailValidator]"
                       />
                     </VCol>
@@ -938,6 +944,10 @@ const handleManageSubscription = () => {
                         placeholder="22223333"
                         hint="Solo números, sin espacios"
                         persistent-hint
+                        type="text"
+                        inputmode="tel"
+                        pattern="[0-9]*"
+                        autocomplete="tel-national"
                         :rules="[requiredValidator]"
                       >
                         <template #prepend-inner>

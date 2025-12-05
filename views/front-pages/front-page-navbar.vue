@@ -13,6 +13,10 @@ const props = defineProps({
 const display = useDisplay()
 const route = useRoute()
 
+// Verificar si el usuario tiene sesión activa
+const { status } = useAuth()
+const isAuthenticated = computed(() => status.value === 'authenticated')
+
 const { y } = useWindowScroll()
 
 const sidebar = ref(false)
@@ -69,11 +73,30 @@ const getLandingRoute = () => {
 
           <VDivider class="my-2" />
 
+          <!-- Botón Dashboard o Login según autenticación (móvil) -->
           <a
+            v-if="isAuthenticated"
+            href="/dashboards/crm"
+            class="text-body-1 font-weight-medium nav-link px-0 d-flex align-center gap-2"
+          >
+            <VIcon icon="ri-dashboard-line" size="18" />
+            Dashboard ERP
+          </a>
+          <a
+            v-else
             href="/login"
             class="text-body-1 font-weight-medium nav-link px-0"
           >
             Iniciar Sesión
+          </a>
+
+          <!-- Botón Prueba Gratis (móvil) -->
+          <a
+            href="/front-pages/checkout"
+            class="text-body-1 font-weight-medium text-primary d-flex align-center gap-2"
+          >
+            <VIcon icon="ri-rocket-line" size="18" />
+            Prueba Gratis
           </a>
         </div>
       </div>
@@ -145,16 +168,24 @@ const getLandingRoute = () => {
       <div class="d-flex gap-x-4 align-center">
         <NavbarThemeSwitcher class="me-0 me-sm-2" />
 
-        <!-- Botón Login usando <a> directo -->
+        <!-- Botón Dashboard o Login según autenticación (desktop) -->
         <a
-          v-if="$vuetify.display.mdAndUp"
+          v-if="$vuetify.display.mdAndUp && isAuthenticated"
+          href="/dashboards/crm"
+          class="dashboard-btn"
+        >
+          <VIcon icon="ri-dashboard-line" size="18" class="me-2" />
+          Dashboard ERP
+        </a>
+        <a
+          v-else-if="$vuetify.display.mdAndUp"
           href="/login"
           class="login-btn"
         >
           Iniciar Sesión
         </a>
 
-        <!-- Botón Prueba Gratis -->
+        <!-- Botón Prueba Gratis (siempre visible en desktop) -->
         <a
           v-if="$vuetify.display.lgAndUp"
           href="/front-pages/checkout"
@@ -213,6 +244,30 @@ const getLandingRoute = () => {
   text-decoration: none;
   color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
   background-color: transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+
+  &:hover {
+    background-color: rgba(var(--v-theme-on-surface), 0.04);
+    border-color: rgba(var(--v-theme-on-surface), 0.32);
+  }
+}
+
+// Botón Dashboard ERP con estilo destacado
+.dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+  background-color: transparent;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.22);
   transition: all 0.2s ease;
   cursor: pointer;
   position: relative;

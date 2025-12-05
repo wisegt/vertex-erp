@@ -313,6 +313,10 @@ const openPricingNewTab = () => {
                     class="mb-4"
                     maxlength="15"
                     hint="Solo números, sin guiones ni espacios"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    autocomplete="off"
                   />
                   
                   <VSelect
@@ -382,6 +386,8 @@ const openPricingNewTab = () => {
                         label="Correo electrónico *"
                         placeholder="juan@empresa.com"
                         type="email"
+                        inputmode="email"
+                        autocomplete="email"
                       />
                     </VCol>
                     <VCol cols="12">
@@ -415,6 +421,10 @@ const openPricingNewTab = () => {
                           label="Teléfono"
                           placeholder="5555 5555"
                           class="flex-grow-1"
+                          type="text"
+                          inputmode="tel"
+                          pattern="[0-9]*"
+                          autocomplete="tel-national"
                         />
                       </div>
                     </VCol>

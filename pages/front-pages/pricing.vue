@@ -62,6 +62,11 @@ const formatCurrency = (amount: number): string => {
   })
 }
 
+// Función para extraer el código base del plan (sin sufijo "anual")
+const getBaseCode = (code: string): string => {
+  return code.toLowerCase().replace('anual', '')
+}
+
 // Planes filtrados por tipo y periodo de facturación
 const currentPlans = computed(() => {
   // Mapear el billingPeriod del frontend al billing_interval de la BD
@@ -132,10 +137,15 @@ const planHeaders = computed(() => {
   }))
 })
 
+// Función para obtener el valor de una característica para un plan específico
+// Usa el código base (sin "anual") para hacer match con las claves de las features
 const getFeatureValue = (feature: any, planIndex: number) => {
   const plan = currentPlans.value[planIndex]
   if (!plan) return false
-  return feature[plan.code] ?? false
+  
+  // Extraer código base: "starteranual" -> "starter", "businessanual" -> "business"
+  const baseCode = getBaseCode(plan.code)
+  return feature[baseCode] ?? false
 }
 
 const faqs = [
@@ -458,19 +468,28 @@ const faqs = [
               <tr>
                 <td class="py-4" />
                 <td v-for="(header, index) in planHeaders" :key="index" class="text-center py-4">
-                  <VBtn
-                    :variant="header.popular ? 'elevated' : 'outlined'"
-                    :to="{ 
-                      name: 'front-pages-payment',
-                      query: {
-                        modalidad: pricingTab,
-                        plan: header.value,
-                        billing: billingPeriod
-                      }
-                    }"
-                  >
-                    Elegir Plan
-                  </VBtn>
+                  <div class="d-flex flex-column gap-2 align-center">
+                    <VBtn
+                      color="primary"
+                      variant="flat"
+                      :to="{ name: 'front-pages-checkout' }"
+                    >
+                      Prueba Gratis
+                    </VBtn>
+                    <VBtn
+                      :variant="header.popular ? 'elevated' : 'outlined'"
+                      :to="{ 
+                        name: 'front-pages-payment',
+                        query: {
+                          modalidad: pricingTab,
+                          plan: header.value,
+                          billing: billingPeriod
+                        }
+                      }"
+                    >
+                      Elegir Plan
+                    </VBtn>
+                  </div>
                 </td>
               </tr>
             </tfoot>

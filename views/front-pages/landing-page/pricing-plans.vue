@@ -22,6 +22,11 @@ onMounted(async () => {
   await loadPricingData()
 })
 
+// Función para extraer el código base del plan (sin sufijo "anual")
+const getBaseCode = (code: string): string => {
+  return code.toLowerCase().replace('anual', '')
+}
+
 // Planes filtrados por tipo y periodo de facturación
 const currentPlans = computed(() => {
   // Mapear el billingPeriod del frontend al billing_interval de la BD
@@ -43,6 +48,15 @@ const currentPlans = computed(() => {
 // Determinar variante del botón
 const getButtonVariant = (plan: any): 'elevated' | 'outlined' => {
   return plan.isPopular ? 'elevated' : 'outlined'
+}
+
+// Función para obtener el valor de una característica para un plan específico
+// Usa el código base (sin "anual") para hacer match con las claves de las features
+const getFeatureValue = (feature: any, plan: any) => {
+  if (!plan) return false
+  // Extraer código base: "starteranual" -> "starter", "businessanual" -> "business"
+  const baseCode = getBaseCode(plan.code)
+  return feature[baseCode] ?? false
 }
 
 // Tabla comparativa de características por tipo
@@ -397,16 +411,16 @@ const currentFeatures = computed(() => {
             <tr v-for="feature in currentFeatures" :key="feature.feature">
               <td class="text-high-emphasis">{{ feature.feature }}</td>
               <td v-for="plan in currentPlans" :key="plan.code" class="text-center">
-                <template v-if="typeof feature[plan.code] === 'boolean'">
+                <template v-if="typeof getFeatureValue(feature, plan) === 'boolean'">
                   <VIcon
-                    :color="feature[plan.code] ? 'primary' : ''"
+                    :color="getFeatureValue(feature, plan) ? 'primary' : ''"
                     size="20"
-                    :icon="feature[plan.code] ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
+                    :icon="getFeatureValue(feature, plan) ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"
                   />
                 </template>
                 <template v-else>
                   <span class="text-body-1 font-weight-medium">
-                    {{ feature[plan.code] }}
+                    {{ getFeatureValue(feature, plan) }}
                   </span>
                 </template>
               </td>
@@ -416,20 +430,29 @@ const currentFeatures = computed(() => {
             <tr>
               <td class="py-4" />
               <td v-for="plan in currentPlans" :key="plan.code" class="text-center py-4">
-                <VBtn
-                  :variant="getButtonVariant(plan)"
-                  :color="plan.isPopular ? 'primary' : undefined"
-                  :to="{ 
-                    name: 'front-pages-payment', 
-                    query: { 
-                      modalidad: pricingTab, 
-                      plan: plan.code,
-                      billing: billingPeriod 
-                    } 
-                  }"
-                >
-                  Elegir Plan
-                </VBtn>
+                <div class="d-flex flex-column gap-2 align-center">
+                  <VBtn
+                    color="primary"
+                    variant="flat"
+                    :to="{ name: 'front-pages-checkout' }"
+                  >
+                    Prueba Gratis
+                  </VBtn>
+                  <VBtn
+                    :variant="getButtonVariant(plan)"
+                    :color="plan.isPopular ? 'primary' : undefined"
+                    :to="{ 
+                      name: 'front-pages-payment', 
+                      query: { 
+                        modalidad: pricingTab, 
+                        plan: plan.code,
+                        billing: billingPeriod 
+                      } 
+                    }"
+                  >
+                    Elegir Plan
+                  </VBtn>
+                </div>
               </td>
             </tr>
           </tfoot>
